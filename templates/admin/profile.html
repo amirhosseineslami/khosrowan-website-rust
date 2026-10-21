@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en" data-theme="{{ view.base.default_theme }}">
+<head>
+{% include "admin/partials/head.html" %}
+</head>
+<body>
+<div class="admin-body">
+  {% include "admin/partials/sidebar.html" %}
+
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <div>
+        <h1>My profile</h1>
+        <p>Your account details</p>
+      </div>
+    </header>
+
+    <div class="admin-content">
+      {% if !view.error.is_empty() %}
+      <div class="alert alert-error"><span>{{ view.error }}</span></div>
+      {% endif %}
+      {% if view.success %}
+      <div class="alert alert-success"><span>Your profile has been updated.</span></div>
+      {% endif %}
+
+      <form method="post" action="/admin/profile">
+        <input type="hidden" name="csrf_token" value="{{ view.csrf_token }}">
+
+        <div class="admin-grid-2" style="align-items:start;">
+          <section class="card">
+            <h2 style="font-size:var(--step-1);margin-bottom:1rem;">Details</h2>
+            <div class="form">
+              <div class="field">
+                <label for="username">Username</label>
+                <input id="username" type="text" value="{{ view.username }}" disabled>
+                <span class="hint">Usernames cannot be changed.</span>
+              </div>
+              <div class="field">
+                <label for="display_name">Display name</label>
+                <input id="display_name" type="text" name="display_name" value="{{ view.display_name }}">
+              </div>
+              <div class="field">
+                <label for="email">E-mail</label>
+                <input id="email" type="email" name="email" value="{{ view.email }}" required>
+              </div>
+              <div class="field">
+                <label for="bio">Bio</label>
+                <textarea id="bio" name="bio" style="min-height:120px;">{{ view.bio }}</textarea>
+                <span class="hint">Shown at the bottom of every article.</span>
+              </div>
+              <div class="field">
+                <label for="avatar">Avatar URL</label>
+                <input id="avatar" type="text" name="avatar" value="{{ view.avatar }}" placeholder="/media/me.jpg">
+              </div>
+            </div>
+          </section>
+
+          <section class="card">
+            <h2 style="font-size:var(--step-1);margin-bottom:1rem;">Change password</h2>
+            <div class="form">
+              <div class="field">
+                <label for="current_password">Current password</label>
+                <input id="current_password" type="password" name="current_password" autocomplete="current-password">
+              </div>
+              <div class="field">
+                <label for="new_password">New password</label>
+                <input id="new_password" type="password" name="new_password" autocomplete="new-password">
+                <span class="hint">At least 10 characters, mixing cases, digits and symbols.</span>
+              </div>
+              <div class="field">
+                <label for="new_password_confirmation">Confirm new password</label>
+                <input id="new_password_confirmation" type="password" name="new_password_confirmation" autocomplete="new-password">
+              </div>
+            </div>
+
+            <div class="form-actions" style="margin-top:1.4rem;">
+              <button class="btn btn-primary" type="submit">Save profile</button>
+            </div>
+          </section>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<script src="/assets/js/main.js" defer></script>
+</body>
+</html>

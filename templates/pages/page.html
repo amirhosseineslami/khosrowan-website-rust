@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en" data-theme="{{ view.base.default_theme }}">
+<head>
+{% include "partials/head.html" %}
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+{% include "partials/header.html" %}
+
+<main id="main">
+  <section class="section-tight" style="padding-top:var(--space-xl);">
+    <div class="container {% if view.is_full_width %}container-narrow{% endif %}">
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <a href="/">Home</a><span aria-hidden="true">/</span>
+        <span>{{ view.title }}</span>
+      </nav>
+
+      <article style="margin-top:var(--space-m);">
+        <h1 style="font-size:var(--step-4);">{{ view.title }}</h1>
+        <div class="prose" style="margin-top:var(--space-m);">{{ view.content_html|safe }}</div>
+      </article>
+    </div>
+  </section>
+</main>
+
+{% include "partials/footer.html" %}

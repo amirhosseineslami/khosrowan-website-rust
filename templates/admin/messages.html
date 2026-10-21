@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en" data-theme="{{ view.base.default_theme }}">
+<head>
+{% include "admin/partials/head.html" %}
+</head>
+<body>
+<div class="admin-body">
+  {% include "admin/partials/sidebar.html" %}
+
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <div>
+        <h1>Messages</h1>
+        <p>Contact form inbox</p>
+      </div>
+    </header>
+
+    <div class="admin-content">
+      <div class="admin-tabs">
+        <a href="/admin/messages" class="{% if view.status_filter.is_empty() %}active{% endif %}">All</a>
+        <a href="/admin/messages?status=new" class="{% if view.status_filter == "new" %}active{% endif %}">New</a>
+        <a href="/admin/messages?status=read" class="{% if view.status_filter == "read" %}active{% endif %}">Read</a>
+        <a href="/admin/messages?status=archived" class="{% if view.status_filter == "archived" %}active{% endif %}">Archived</a>
+        <a href="/admin/messages?status=spam" class="{% if view.status_filter == "spam" %}active{% endif %}">Spam</a>
+      </div>
+
+      <div class="stack">
+        {% if view.messages.is_empty() %}
+        <div class="empty-state"><strong>No messages.</strong> The inbox is empty.</div>
+        {% else %}
+        {% for message in view.messages %}
+        <article class="card">
+          <div class="flex-between" style="align-items:flex-start;">
+            <div>
+              <div class="flex" style="gap:.55rem;">
+                <span class="avatar">{{ message.name }}</span>
+                <span>
+                  <strong>{{ message.name }}</strong>
+                  <span class="text-faint text-sm"> · {{ message.email }}</span>
+                  <div class="text-sm" style="color:var(--accent);margin-top:.15rem;">
+                    {% if !message.subject.is_empty() %}{{ message.subject }}{% else %}(no subject){% endif %}
+                  </div>
+                </span>
+              </div>
+            </div>
+            <div class="flex" style="gap:.4rem;">
+              <span class="badge badge-{{ message.status_class }}">{{ message.status }}</span>
+              <span class="text-faint text-sm">{{ message.created_at }}</span>
+            </div>
+          </div>
+
+          <p style="margin-top:.9rem;color:var(--text-muted);white-space:pre-wrap;">{{ message.body }}</p>
+
+          <div class="flex" style="margin-top:1rem;">
+            <a class="btn btn-sm" href="mailto:{{ message.email }}?subject=Re: {{ message.subject }}">Reply by e-mail</a>
+            <form method="post" action="/admin/messages/{{ message.id }}/status">
+              <input type="hidden" name="csrf_token" value="{{ view.base.csrf_token }}">
+              <input type="hidden" name="status" value="archived">
+              <button class="btn btn-sm btn-ghost" type="submit">Archive</button>
+            </form>
+            <form method="post" action="/admin/messages/{{ message.id }}/status">
+              <input type="hidden" name="csrf_token" value="{{ view.base.csrf_token }}">
+              <input type="hidden" name="status" value="spam">
+              <button class="btn btn-sm btn-ghost" type="submit">Mark as spam</button>
+            </form>
+            <form method="post" action="/admin/messages/{{ message.id }}/delete" data-confirm="Delete this message permanently?">
+              <input type="hidden" name="csrf_token" value="{{ view.base.csrf_token }}">
+              <input type="hidden" name="status" value="trash">
+              <button class="btn btn-sm btn-ghost" type="submit">Delete</button>
+            </form>
+            {% if !message.ip.is_empty() %}
+            <span class="text-faint text-sm" style="margin-left:auto;">IP {{ message.ip }}</span>
+            {% endif %}
+          </div>
+        </article>
+        {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+<script src="/assets/js/main.js" defer></script>
+</body>
+</html>

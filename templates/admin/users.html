@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en" data-theme="{{ view.base.default_theme }}">
+<head>
+{% include "admin/partials/head.html" %}
+</head>
+<body>
+<div class="admin-body">
+  {% include "admin/partials/sidebar.html" %}
+
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <div>
+        <h1>Users</h1>
+        <p>Accounts with access to this panel</p>
+      </div>
+      <div class="flex">
+        <a class="btn btn-sm btn-primary" href="/admin/users/new">New user</a>
+      </div>
+    </header>
+
+    <div class="admin-content">
+      <div class="table-wrap">
+        <table class="data">
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>E-mail</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th>2FA</th>
+              <th>Last login</th>
+              <th style="text-align:right;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for user in view.users %}
+            <tr>
+              <td>
+                <a href="/admin/users/{{ user.id }}/edit" style="font-weight:560;">{{ user.display_name }}</a>
+                <div class="text-faint text-sm mono">{{ user.username }}</div>
+              </td>
+              <td class="text-sm">{{ user.email }}</td>
+              <td><span class="badge badge-{{ user.role_class }}">{{ user.role }}</span></td>
+              <td>
+                {% if user.is_active %}
+                <span class="badge badge-success">active</span>
+                {% else %}
+                <span class="badge badge-danger">disabled</span>
+                {% endif %}
+              </td>
+              <td>{% if user.totp_enabled %}<span class="badge badge-info">on</span>{% else %}<span class="text-faint text-sm">off</span>{% endif %}</td>
+              <td class="text-sm text-muted">{{ user.last_login_at }}</td>
+              <td>
+                <div class="row-actions">
+                  <a class="btn btn-sm" href="/admin/users/{{ user.id }}/edit">Edit</a>
+                  <form method="post" action="/admin/users/{{ user.id }}/sessions">
+                    <input type="hidden" name="csrf_token" value="{{ view.base.csrf_token }}">
+                    <button class="btn btn-sm btn-ghost" type="submit" title="Revoke sessions">↻</button>
+                  </form>
+                  <form method="post" action="/admin/users/{{ user.id }}/delete" data-confirm="Delete the account “{{ user.username }}”?">
+                    <input type="hidden" name="csrf_token" value="{{ view.base.csrf_token }}">
+                    <button class="btn btn-sm btn-ghost" type="submit" title="Delete">✕</button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <section class="card">
+        <h2 style="font-size:var(--step-1);margin-bottom:1rem;">Active sessions</h2>
+        {% if view.sessions.is_empty() %}
+        <div class="empty-state" style="border:none;"><strong>No active sessions.</strong></div>
+        {% else %}
+        <div class="table-wrap" style="border:none;">
+          <table class="data" style="min-width:0;">
+            <thead>
+              <tr><th>User</th><th>IP</th><th>Started</th><th>Expires</th></tr>
+            </thead>
+            <tbody>
+              {% for session in view.sessions %}
+              <tr>
+                <td>
+                  {{ session.username }}
+                  {% if session.is_current %}<span class="pill" style="font-size:.6rem;margin-left:.35rem;">this device</span>{% endif %}
+                </td>
+                <td class="mono text-sm">{{ session.ip }}</td>
+                <td class="text-sm text-muted">{{ session.created_at }}</td>
+                <td class="text-sm text-muted">{{ session.expires_at }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% endif %}
+      </section>
+    </div>
+  </div>
+</div>
+<script src="/assets/js/main.js" defer></script>
+</body>
+</html>

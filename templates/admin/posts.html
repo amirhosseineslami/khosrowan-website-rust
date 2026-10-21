@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en" data-theme="{{ view.base.default_theme }}">
+<head>
+{% include "admin/partials/head.html" %}
+</head>
+<body>
+<div class="admin-body">
+  {% include "admin/partials/sidebar.html" %}
+
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <div>
+        <h1>Posts</h1>
+        <p>{{ view.total }} post(s) · {{ view.pagination.total }} total</p>
+      </div>
+      <div class="flex">
+        <a class="btn btn-sm btn-primary" href="/admin/posts/new">New post</a>
+      </div>
+    </header>
+
+    <div class="admin-content">
+      <div class="admin-tabs">
+        <a href="/admin/posts" class="{% if view.status_filter.is_empty() %}active{% endif %}">All</a>
+        <a href="/admin/posts?status=published" class="{% if view.status_filter == "published" %}active{% endif %}">Published</a>
+        <a href="/admin/posts?status=draft" class="{% if view.status_filter == "draft" %}active{% endif %}">Drafts</a>
+        <a href="/admin/posts?status=scheduled" class="{% if view.status_filter == "scheduled" %}active{% endif %}">Scheduled</a>
+        <a href="/admin/posts?status=archived" class="{% if view.status_filter == "archived" %}active{% endif %}">Archived</a>
+      </div>
+
+      <form class="card" method="get" action="/admin/posts" style="padding:.9rem 1.1rem;">
+        <div class="flex">
+          <input type="search" name="q" value="{{ view.query }}" placeholder="Search posts by title or slug…" style="max-width:320px;">
+          {% if !view.status_filter.is_empty() %}
+          <input type="hidden" name="status" value="{{ view.status_filter }}">
+          {% endif %}
+          <button class="btn btn-sm" type="submit">Search</button>
+          {% if !view.query.is_empty() %}
+          <a class="btn btn-sm btn-ghost" href="/admin/posts">Clear</a>
+          {% endif %}
+        </div>
+      </form>
+
+      <div class="table-wrap">
+        {% if view.posts.is_empty() %}
+        <div class="empty-state" style="border:none;">
+          <strong>No posts found.</strong>
+          Create your first article to get started.
+        </div>
+        {% else %}
+        <table class="data">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Status</th>
+              <th>Category</th>
+              <th>Views</th>
+              <th>Comments</th>
+              <th>Updated</th>
+              <th style="text-align:right;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for post in view.posts %}
+            <tr>
+              <td>
+                <a href="/admin/posts/{{ post.id }}/edit" style="font-weight:560;">{{ post.title }}</a>
+                {% if post.is_featured %}
+                <span class="pill" style="margin-left:.4rem;font-size:.62rem;">Featured</span>
+                {% endif %}
+                <div class="text-faint text-sm mono">/{{ post.slug }}</div>
+              </td>
+              <td>
+                <span class="badge badge-{{ post.status_class }}">{{ post.status_label }}</span>
+                {% if !post.scheduled_for.is_empty() && post.scheduled_for != "—" %}
+                <div class="text-faint text-sm" style="margin-top:.2rem;">{{ post.scheduled_for }}</div>
+                {% endif %}
+              </td>
+              <td class="text-sm">{{ post.category }}</td>
+              <td class="mono text-sm">{{ post.views }}</td>
+              <td class="mono text-sm">{{ post.comments }}</td>
+              <td class="text-sm text-muted">{{ post.updated_at }}</td>
+              <td>
+                <div class="row-actions">
+                  {% if post.status == "published" %}
+                  <a class="btn btn-sm btn-ghost" href="/blog/{{ post.slug }}" target="_blank" rel="noopener">View</a>
+                  {% endif %}
+                  <a class="btn btn-sm" href="/admin/posts/{{ post.id }}/edit">Edit</a>
+                  <form method="post" action="/admin/posts/{{ post.id }}/delete" data-confirm="Delete “{{ post.title }}” permanently?">
+                    <input type="hidden" name="csrf_token" value="{{ view.base.csrf_token }}">
+                    <button class="btn btn-sm btn-ghost" type="submit" title="Delete">✕</button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% endif %}
+      </div>
+
+      {% include "partials/pagination.html" %}
+    </div>
+  </div>
+</div>
+<script src="/assets/js/main.js" defer></script>
+</body>
+</html>

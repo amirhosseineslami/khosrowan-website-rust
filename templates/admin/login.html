@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en" data-theme="{{ view.base.default_theme }}">
+<head>
+{% include "partials/head.html" %}
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <span class="brand-mark">{{ view.base.site.logo_text }}</span>
+      <span class="brand-text">
+        {{ view.base.site.title }}
+        <small>Administration</small>
+      </span>
+    </div>
+
+    <h1 class="auth-title">Sign in</h1>
+    <p class="auth-sub">
+      {% if view.totp_required %}
+        Enter the six-digit code from your authenticator app to finish signing in.
+      {% else %}
+        Welcome back. Enter your credentials to manage the site.
+      {% endif %}
+    </p>
+
+    {% if !view.error.is_empty() %}
+    <div class="alert alert-error" style="margin-bottom:1.1rem;">
+      <span>{{ view.error }}</span>
+    </div>
+    {% endif %}
+
+    <form class="form" method="post" action="/admin/login">
+      <input type="hidden" name="next" value="{{ view.next }}">
+
+      {% if view.totp_required %}
+      <input type="hidden" name="stage" value="totp">
+      <input type="hidden" name="username" value="{{ view.username }}">
+      <div class="field">
+        <label for="code">Verification code</label>
+        <input id="code" type="text" name="code" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" placeholder="123456" required autofocus>
+      </div>
+      {% else %}
+      <div class="field">
+        <label for="username">Username or e-mail</label>
+        <input id="username" type="text" name="username" value="{{ view.username }}" autocomplete="username" required autofocus>
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input id="password" type="password" name="password" autocomplete="current-password" required>
+      </div>
+      <label class="checkbox">
+        <input type="checkbox" name="remember" value="on">
+        Keep me signed in for 30 days
+      </label>
+      {% endif %}
+
+      <button class="btn btn-primary btn-block" type="submit">
+        {% if view.totp_required %}Verify{% else %}Sign in{% endif %}
+      </button>
+    </form>
+
+    <div class="auth-footer">
+      <a href="/admin/forgot-password">Forgot password?</a>
+      <a href="/">← Back to site</a>
+    </div>
+  </div>
+</div>
+
+<script src="/assets/js/main.js" defer></script>
+</body>
+</html>

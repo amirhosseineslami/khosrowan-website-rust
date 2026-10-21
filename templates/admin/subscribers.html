@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en" data-theme="{{ view.base.default_theme }}">
+<head>
+{% include "admin/partials/head.html" %}
+</head>
+<body>
+<div class="admin-body">
+  {% include "admin/partials/sidebar.html" %}
+
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <div>
+        <h1>Subscribers</h1>
+        <p>Newsletter audience</p>
+      </div>
+      <div class="flex">
+        <a class="btn btn-sm" href="/admin/subscribers/export.csv">Export CSV</a>
+        <a class="btn btn-sm btn-primary" href="/admin/newsletter">Write a campaign</a>
+      </div>
+    </header>
+
+    <div class="admin-content">
+      {% if !view.counts.is_empty() %}
+      <div class="card" style="padding:.9rem 1.1rem;">
+        <div class="flex">
+          {% for count in view.counts %}
+          <span class="pill pill-plain">{{ count.label }}: {{ count.value }}</span>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      <div class="table-wrap">
+        {% if view.subscribers.is_empty() %}
+        <div class="empty-state" style="border:none;"><strong>No subscribers yet.</strong></div>
+        {% else %}
+        <table class="data">
+          <thead>
+            <tr>
+              <th>E-mail</th>
+              <th>Name</th>
+              <th>Status</th>
+              <th>Source</th>
+              <th>Subscribed</th>
+              <th style="text-align:right;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for subscriber in view.subscribers %}
+            <tr>
+              <td>
+                <a href="mailto:{{ subscriber.email }}" style="font-weight:520;">{{ subscriber.email }}</a>
+              </td>
+              <td class="text-sm">{{ subscriber.name }}</td>
+              <td><span class="badge badge-{{ subscriber.status_class }}">{{ subscriber.status }}</span></td>
+              <td class="text-sm text-muted">{{ subscriber.source }}</td>
+              <td class="text-sm text-muted">{{ subscriber.created_at }}</td>
+              <td>
+                <div class="row-actions">
+                  <form method="post" action="/admin/subscribers/{{ subscriber.id }}/delete" data-confirm="Remove {{ subscriber.email }} from the list?">
+                    <input type="hidden" name="csrf_token" value="{{ view.base.csrf_token }}">
+                    <button class="btn btn-sm btn-ghost" type="submit" title="Remove">✕</button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+<script src="/assets/js/main.js" defer></script>
+</body>
+</html>

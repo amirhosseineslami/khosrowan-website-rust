@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en" data-theme="{{ view.base.default_theme }}">
+<head>
+{% include "admin/partials/head.html" %}
+</head>
+<body>
+<div class="admin-body">
+  {% include "admin/partials/sidebar.html" %}
+
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <div>
+        <h1>{% if view.is_new %}New page{% else %}Edit page{% endif %}</h1>
+        <p>{% if view.is_new %}Add a standalone page to the site.{% else %}Last updated {{ view.page.as_ref().unwrap().updated_at }}{% endif %}</p>
+      </div>
+      <div class="flex">
+        <a class="btn btn-sm btn-ghost" href="/admin/pages">Cancel</a>
+      </div>
+    </header>
+
+    <div class="admin-content">
+      {% if !view.error.is_empty() %}
+      <div class="alert alert-error"><span>{{ view.error }}</span></div>
+      {% endif %}
+
+      <form method="post" action="{% if view.is_new %}/admin/pages/new{% else %}/admin/pages/{{ view.page.as_ref().unwrap().id }}/edit{% endif %}">
+        <input type="hidden" name="csrf_token" value="{{ view.csrf_token }}">
+
+        <div class="admin-grid-2" style="align-items:start;">
+          <section class="card">
+            <div class="form">
+              <div class="field">
+                <label for="title">Title</label>
+                <input id="title" type="text" name="title" required data-slug-source
+                       value="{% if !view.is_new %}{{ view.page.as_ref().unwrap().title }}{% endif %}"
+                       placeholder="Uses">
+              </div>
+              <div class="field">
+                <label for="slug">Slug</label>
+                <input id="slug" type="text" name="slug" data-slug-target
+                       value="{% if !view.is_new %}{{ view.page.as_ref().unwrap().slug }}{% endif %}">
+              </div>
+              <div class="field">
+                <label for="content">Content (Markdown)</label>
+                <textarea id="content" name="content" class="mono" style="min-height:420px;">{% if !view.is_new %}{{ view.page.as_ref().unwrap().content_md }}{% endif %}</textarea>
+              </div>
+            </div>
+          </section>
+
+          <div class="stack">
+            <section class="card">
+              <h2 style="font-size:var(--step-1);margin-bottom:1rem;">Settings</h2>
+              <div class="form">
+                <div class="field">
+                  <label for="status">Status</label>
+                  <select id="status" name="status">
+                    <option value="published" {% if !view.is_new && view.page.as_ref().unwrap().status == "published" %}selected{% endif %}>Published</option>
+                    <option value="draft" {% if !view.is_new && view.page.as_ref().unwrap().status == "draft" %}selected{% endif %}>Draft</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="nav_order">Menu order</label>
+                  <input id="nav_order" type="number" name="nav_order"
+                         value="{% if !view.is_new %}{{ view.page.as_ref().unwrap().nav_order }}{% else %}0{% endif %}">
+                </div>
+                <label class="checkbox">
+                  <input type="checkbox" name="show_in_nav" value="on" {% if !view.is_new && view.page.as_ref().unwrap().show_in_nav %}checked{% endif %}>
+                  Show in the main menu
+                </label>
+                <label class="checkbox">
+                  <input type="checkbox" name="is_full_width" value="on" {% if !view.is_new && view.page.as_ref().unwrap().is_full_width %}checked{% endif %}>
+                  Narrow reading column
+                </label>
+              </div>
+            </section>
+
+            <section class="card">
+              <h2 style="font-size:var(--step-1);margin-bottom:1rem;">SEO</h2>
+              <div class="form">
+                <div class="field">
+                  <label for="meta_title">Meta title</label>
+                  <input id="meta_title" type="text" name="meta_title"
+                         value="{% if !view.is_new %}{{ view.page.as_ref().unwrap().meta_title }}{% endif %}">
+                </div>
+                <div class="field">
+                  <label for="meta_description">Meta description</label>
+                  <textarea id="meta_description" name="meta_description" style="min-height:80px;">{% if !view.is_new %}{{ view.page.as_ref().unwrap().meta_description }}{% endif %}</textarea>
+                </div>
+              </div>
+            </section>
+
+            <section class="card">
+              <div class="form-actions">
+                <button class="btn btn-primary" type="submit">{% if view.is_new %}Create page{% else %}Save changes{% endif %}</button>
+                <a class="btn btn-ghost" href="/admin/pages">Cancel</a>
+              </div>
+            </section>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<script src="/assets/js/main.js" defer></script>
+</body>
+</html>

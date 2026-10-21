@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en" data-theme="{{ view.base.default_theme }}">
+<head>
+{% include "admin/partials/head.html" %}
+</head>
+<body>
+<div class="admin-body">
+  {% include "admin/partials/sidebar.html" %}
+
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <div>
+        <h1>{% if view.is_new %}New user{% else %}Edit user{% endif %}</h1>
+        <p>{% if view.is_new %}Give a colleague access to the panel.{% else %}{{ view.user.as_ref().unwrap().username }}{% endif %}</p>
+      </div>
+      <div class="flex">
+        <a class="btn btn-sm btn-ghost" href="/admin/users">Cancel</a>
+      </div>
+    </header>
+
+    <div class="admin-content">
+      {% if !view.error.is_empty() %}
+      <div class="alert alert-error"><span>{{ view.error }}</span></div>
+      {% endif %}
+
+      <form method="post" action="{% if view.is_new %}/admin/users/new{% else %}/admin/users/{{ view.user.as_ref().unwrap().id }}/edit{% endif %}">
+        <input type="hidden" name="csrf_token" value="{{ view.csrf_token }}">
+
+        <div class="admin-grid-2" style="align-items:start;">
+          <section class="card">
+            <div class="form">
+              <div class="field">
+                <label for="username">Username</label>
+                <input id="username" type="text" name="username" required
+                       value="{% if !view.is_new %}{{ view.user.as_ref().unwrap().username }}{% endif %}">
+              </div>
+              <div class="field">
+                <label for="email">E-mail</label>
+                <input id="email" type="email" name="email" required
+                       value="{% if !view.is_new %}{{ view.user.as_ref().unwrap().email }}{% endif %}">
+              </div>
+              <div class="field">
+                <label for="display_name">Display name</label>
+                <input id="display_name" type="text" name="display_name"
+                       value="{% if !view.is_new %}{{ view.user.as_ref().unwrap().display_name }}{% endif %}">
+              </div>
+              <div class="field">
+                <label for="bio">Bio</label>
+                <textarea id="bio" name="bio" style="min-height:110px;">{% if !view.is_new %}{{ view.user.as_ref().unwrap().bio }}{% endif %}</textarea>
+              </div>
+              <div class="field">
+                <label for="avatar">Avatar URL</label>
+                <input id="avatar" type="text" name="avatar"
+                       value="{% if !view.is_new %}{{ view.user.as_ref().unwrap().avatar }}{% endif %}"
+                       placeholder="/media/me.jpg">
+              </div>
+            </div>
+          </section>
+
+          <div class="stack">
+            <section class="card">
+              <h2 style="font-size:var(--step-1);margin-bottom:1rem;">Access</h2>
+              <div class="form">
+                <div class="field">
+                  <label for="role">Role</label>
+                  <select id="role" name="role">
+                    <option value="editor" {% if !view.is_new && view.user.as_ref().unwrap().role == "editor" %}selected{% endif %}>Editor</option>
+                    <option value="owner" {% if !view.is_new && view.user.as_ref().unwrap().role == "owner" %}selected{% endif %}>Owner</option>
+                  </select>
+                  <span class="hint">Owners can manage users, settings and backups.</span>
+                </div>
+
+                <div class="field">
+                  <label for="password">{% if view.is_new %}Password{% else %}New password{% endif %}</label>
+                  <input id="password" type="password" name="password" autocomplete="new-password"
+                         {% if view.is_new %}required{% endif %}>
+                  <span class="hint">
+                    {% if view.is_new %}At least 10 characters.{% else %}Leave blank to keep the current password.{% endif %}
+                  </span>
+                </div>
+
+                <label class="checkbox">
+                  <input type="checkbox" name="is_active" value="on" {% if view.is_new || view.user.as_ref().unwrap().is_active %}checked{% endif %}>
+                  Account is active
+                </label>
+
+                <label class="checkbox">
+                  <input type="checkbox" name="enable_totp" value="on" {% if !view.is_new && view.user.as_ref().unwrap().totp_enabled %}checked{% endif %}>
+                  Require a two-factor code at sign-in
+                </label>
+              </div>
+            </section>
+
+            {% if !view.is_new %}
+            <section class="card">
+              <h2 style="font-size:var(--step-1);margin-bottom:1rem;">Account</h2>
+              <div class="stack" style="--space-s:.35rem;font-size:.85rem;">
+                <div class="flex-between"><span class="text-muted">Created</span><span>{{ view.user.as_ref().unwrap().created_at }}</span></div>
+                <div class="flex-between"><span class="text-muted">Last login</span><span>{{ view.user.as_ref().unwrap().last_login_at }}</span></div>
+                <div class="flex-between"><span class="text-muted">2FA</span><span>{% if view.user.as_ref().unwrap().totp_enabled %}enabled{% else %}disabled{% endif %}</span></div>
+              </div>
+            </section>
+            {% endif %}
+
+            <section class="card">
+              <div class="form-actions">
+                <button class="btn btn-primary" type="submit">{% if view.is_new %}Create user{% else %}Save changes{% endif %}</button>
+                <a class="btn btn-ghost" href="/admin/users">Cancel</a>
+              </div>
+            </section>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<script src="/assets/js/main.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en" data-theme="{{ view.base.default_theme }}">
+<head>
+{% include "admin/partials/head.html" %}
+</head>
+<body>
+<div class="admin-body">
+  {% include "admin/partials/sidebar.html" %}
+
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <div>
+        <h1>Dashboard</h1>
+        <p>Welcome back, {{ view.base.user.as_ref().unwrap().display_name }}.</p>
+      </div>
+      <div class="flex">
+        <a class="btn btn-sm" href="/" target="_blank" rel="noopener">View site</a>
+        <a class="btn btn-sm btn-primary" href="/admin/posts/new">New post</a>
+      </div>
+    </header>
+
+    <div class="admin-content">
+      <div class="admin-grid-3">
+        <div class="kpi">
+          <div class="kpi-label">Published posts</div>
+          <div class="kpi-value">{{ view.stats.posts_published }}</div>
+          <div class="kpi-hint">{{ view.stats.posts_draft }} draft(s), {{ view.stats.posts_scheduled }} scheduled</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Page views</div>
+          <div class="kpi-value">{{ view.stats.views_total }}</div>
+          <div class="kpi-hint">{{ view.stats.views_week }} in the last 7 days</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Pending comments</div>
+          <div class="kpi-value">{{ view.stats.comments_pending }}</div>
+          <div class="kpi-hint">{{ view.stats.comments_total }} in total</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Unread messages</div>
+          <div class="kpi-value">{{ view.stats.messages_new }}</div>
+          <div class="kpi-hint">{{ view.stats.messages_total }} in the inbox</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Subscribers</div>
+          <div class="kpi-value">{{ view.stats.subscribers }}</div>
+          <div class="kpi-hint">Active newsletter readers</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Projects</div>
+          <div class="kpi-value">{{ view.stats.projects_total }}</div>
+          <div class="kpi-hint">{{ view.stats.pages_total }} pages · {{ view.stats.media_count }} files</div>
+        </div>
+      </div>
+
+      <div class="admin-grid-2">
+        <section class="card">
+          <div class="flex-between" style="margin-bottom:1rem;">
+            <h2 style="font-size:var(--step-1);">Traffic · last 14 days</h2>
+            <span class="pill pill-plain">{{ view.stats.views_week }} this week</span>
+          </div>
+          {% if view.traffic.is_empty() %}
+          <div class="empty-state"><strong>No traffic recorded yet.</strong></div>
+          {% else %}
+          <div class="chart">
+            {% for point in view.traffic %}
+            <div class="chart-bar" style="height:{{ point.value }}%">
+              <span>{{ point.label }} · {{ point.value }}</span>
+            </div>
+            {% endfor %}
+          </div>
+          <div class="chart-axis">
+            {% for point in view.traffic %}
+            <span>{{ point.label }}</span>
+            {% endfor %}
+          </div>
+          {% endif %}
+        </section>
+
+        <section class="card">
+          <h2 style="font-size:var(--step-1);margin-bottom:1rem;">Most visited pages</h2>
+          {% if view.top_paths.is_empty() %}
+          <div class="empty-state"><strong>Nothing yet.</strong></div>
+          {% else %}
+          <div class="bar-list">
+            {% for point in view.top_paths %}
+            <div class="bar-list-item">
+              <span class="text-sm">{{ point.label }}</span>
+              <span class="mono text-faint">{{ point.value }}</span>
+              <div class="bar-list-track">
+                <div class="bar-list-fill" style="width:{{ point.value }}%"></div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          {% endif %}
+        </section>
+      </div>
+
+      <div class="admin-grid-2">
+        <section class="card">
+          <div class="flex-between" style="margin-bottom:1rem;">
+            <h2 style="font-size:var(--step-1);">Recent posts</h2>
+            <a class="link-arrow text-sm" href="/admin/posts">All</a>
+          </div>
+          {% if view.recent_posts.is_empty() %}
+          <div class="empty-state"><strong>No posts yet.</strong></div>
+          {% else %}
+          <div class="table-wrap" style="border:none;">
+            <table class="data" style="min-width:0;">
+              <tbody>
+                {% for post in view.recent_posts %}
+                <tr>
+                  <td>
+                    <a href="/admin/posts/{{ post.id }}/edit" style="font-weight:560;">{{ post.title }}</a>
+                    <div class="text-faint text-sm">Updated {{ post.updated_at }}</div>
+                  </td>
+                  <td style="text-align:right;">
+                    <span class="badge badge-{{ post.status_class }}">{{ post.status_label }}</span>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% endif %}
+        </section>
+
+        <section class="card">
+          <div class="flex-between" style="margin-bottom:1rem;">
+            <h2 style="font-size:var(--step-1);">Top articles</h2>
+            <a class="link-arrow text-sm" href="/admin/posts">All</a>
+          </div>
+          {% if view.top_posts.is_empty() %}
+          <div class="empty-state"><strong>Nothing published yet.</strong></div>
+          {% else %}
+          <div class="table-wrap" style="border:none;">
+            <table class="data" style="min-width:0;">
+              <tbody>
+                {% for post in view.top_posts %}
+                <tr>
+                  <td>
+                    <a href="/blog/{{ post.slug }}" target="_blank" rel="noopener">{{ post.title }}</a>
+                  </td>
+                  <td style="text-align:right;" class="mono text-faint">{{ post.views }} views</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% endif %}
+        </section>
+      </div>
+
+      <div class="admin-grid-2">
+        <section class="card">
+          <div class="flex-between" style="margin-bottom:1rem;">
+            <h2 style="font-size:var(--step-1);">Comments awaiting moderation</h2>
+            <a class="link-arrow text-sm" href="/admin/comments">Moderate</a>
+          </div>
+          {% if view.pending_comments.is_empty() %}
+          <div class="empty-state"><strong>Inbox zero.</strong> No comments waiting.</div>
+          {% else %}
+          <div class="stack">
+            {% for comment in view.pending_comments %}
+            <div style="padding-bottom:.8rem;border-bottom:1px solid var(--border);">
+              <div class="flex" style="gap:.5rem;">
+                <strong style="font-size:.92rem;">{{ comment.author_name }}</strong>
+                <span class="text-faint text-sm">on {{ comment.post_title }}</span>
+              </div>
+              <p class="text-muted text-sm" style="margin-top:.3rem;">{{ comment.body }}</p>
+              <form method="post" action="/admin/comments/{{ comment.id }}/status" style="margin-top:.5rem;">
+                <input type="hidden" name="csrf_token" value="{{ view.base.csrf_token }}">
+                <input type="hidden" name="status" value="approved">
+                <button class="btn btn-sm" type="submit">Approve</button>
+              </form>
+            </div>
+            {% endfor %}
+          </div>
+          {% endif %}
+        </section>
+
+        <section class="card">
+          <div class="flex-between" style="margin-bottom:1rem;">
+            <h2 style="font-size:var(--step-1);">New messages</h2>
+            <a class="link-arrow text-sm" href="/admin/messages">Inbox</a>
+          </div>
+          {% if view.new_messages.is_empty() %}
+          <div class="empty-state"><strong>No messages.</strong></div>
+          {% else %}
+          <div class="stack">
+            {% for message in view.new_messages %}
+            <div style="padding-bottom:.8rem;border-bottom:1px solid var(--border);">
+              <div class="flex" style="gap:.5rem;">
+                <strong style="font-size:.92rem;">{{ message.name }}</strong>
+                <span class="text-faint text-sm">{{ message.created_at }}</span>
+              </div>
+              <div class="text-sm" style="color:var(--accent);margin-top:.15rem;">{{ message.subject }}</div>
+              <p class="text-muted text-sm" style="margin-top:.3rem;">{{ message.body }}</p>
+            </div>
+            {% endfor %}
+          </div>
+          {% endif %}
+        </section>
+      </div>
+
+      {% if !view.browser_stats.is_empty() %}
+      <section class="card">
+        <h2 style="font-size:var(--step-1);margin-bottom:1rem;">Clients</h2>
+        <div class="bar-list">
+          {% for point in view.browser_stats %}
+          <div class="bar-list-item">
+            <span class="text-sm">{{ point.label }}</span>
+            <span class="mono text-faint">{{ point.value }}</span>
+            <div class="bar-list-track">
+              <div class="bar-list-fill" style="width:{{ point.value }}%"></div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </section>
+      {% endif %}
+    </div>
+  </div>
+</div>
+<script src="/assets/js/main.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en" data-theme="{{ view.base.default_theme }}">
+<head>
+{% include "partials/head.html" %}
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+{% include "partials/header.html" %}
+
+<main id="main">
+  <section class="page-hero">
+    <div class="container">
+      <span class="eyebrow">Writing</span>
+      <h1 class="page-title">{{ view.heading }}</h1>
+      <p class="section-subtitle" style="font-size:var(--step-1);">{{ view.subheading }}</p>
+
+      <form class="filter-bar" method="get" action="/blog" style="margin-top:1.4rem;">
+        <input type="search" name="q" value="{{ view.query }}" placeholder="Search articles…" style="max-width:260px;" aria-label="Search articles">
+        {% if !view.active_category.is_empty() %}
+        <input type="hidden" name="category" value="{{ view.active_category }}">
+        {% endif %}
+        {% if !view.active_tag.is_empty() %}
+        <input type="hidden" name="tag" value="{{ view.active_tag }}">
+        {% endif %}
+        <button class="btn btn-sm" type="submit">Search</button>
+        {% if !view.query.is_empty() || !view.active_category.is_empty() || !view.active_tag.is_empty() %}
+        <a class="btn btn-sm btn-ghost" href="/blog">Clear</a>
+        {% endif %}
+      </form>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="container">
+      <div class="grid" style="grid-template-columns:minmax(0,1fr) 260px;gap:var(--space-xl);align-items:start;">
+        <div>
+          {% if view.posts.is_empty() %}
+          <div class="empty-state">
+            <strong>No articles found.</strong>
+            Try a different search term, or <a class="link-arrow" href="/blog">browse everything</a>.
+          </div>
+          {% else %}
+          <div class="post-grid">
+            {% for post in view.posts %}
+            {% include "partials/post_card.html" %}
+            {% endfor %}
+          </div>
+          {% include "partials/pagination.html" %}
+          {% endif %}
+        </div>
+
+        <aside class="stack" style="--space-l:1.6rem;">
+          <div class="card reveal">
+            <h3 class="footer-title">Categories</h3>
+            <div class="stack" style="--space-s:.55rem;">
+              <a class="flex-between text-sm" href="/blog">
+                <span class="text-muted">All articles</span>
+                <span class="mono text-faint">{{ view.total }}</span>
+              </a>
+              {% for category in view.categories %}
+              <a class="flex-between text-sm" href="/blog?category={{ category.slug }}">
+                <span class="text-muted">{{ category.name }}</span>
+                <span class="mono text-faint">{{ category.count }}</span>
+              </a>
+              {% endfor %}
+            </div>
+          </div>
+
+          {% if !view.tags.is_empty() %}
+          <div class="card reveal">
+            <h3 class="footer-title">Tags</h3>
+            <div class="tag-cloud">
+              {% for tag in view.tags %}
+              <a class="tag" href="/blog?tag={{ tag.slug }}">#{{ tag.name }}</a>
+              {% endfor %}
+            </div>
+          </div>
+          {% endif %}
+
+          <div class="card reveal">
+            <h3 class="footer-title">Stay in the loop</h3>
+            <p class="text-muted text-sm">One email every couple of weeks. No spam.</p>
+            <form class="newsletter-form" method="post" action="/newsletter/subscribe" style="margin-top:.9rem;">
+              <div class="hp">
+                <label>Website<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+              </div>
+              <input type="email" name="email" placeholder="you@example.com" required aria-label="E-mail address">
+              <button class="btn btn-sm btn-primary" type="submit">Join</button>
+            </form>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+</main>
+
+{% include "partials/footer.html" %}

@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en" data-theme="{{ view.base.default_theme }}">
+<head>
+{% include "admin/partials/head.html" %}
+</head>
+<body>
+<div class="admin-body">
+  {% include "admin/partials/sidebar.html" %}
+
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <div>
+        <h1>Activity log</h1>
+        <p>Every administrative action, recorded</p>
+      </div>
+    </header>
+
+    <div class="admin-content">
+      <div class="table-wrap">
+        {% if view.entries.is_empty() %}
+        <div class="empty-state" style="border:none;"><strong>No activity recorded yet.</strong></div>
+        {% else %}
+        <table class="data">
+          <thead>
+            <tr>
+              <th>When</th>
+              <th>User</th>
+              <th>Action</th>
+              <th>Entity</th>
+              <th>Details</th>
+              <th>IP</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for entry in view.entries %}
+            <tr>
+              <td class="text-sm text-muted mono">{{ entry.created_at }}</td>
+              <td class="text-sm">{{ entry.username }}</td>
+              <td><span class="pill pill-plain mono">{{ entry.action }}</span></td>
+              <td class="text-sm">
+                {% if !entry.entity_type.is_empty() %}
+                {{ entry.entity_type }}{% if !entry.entity_id.is_empty() %} #{{ entry.entity_id }}{% endif %}
+                {% else %}
+                <span class="text-faint">—</span>
+                {% endif %}
+              </td>
+              <td class="text-sm text-muted">{{ entry.details }}</td>
+              <td class="text-sm mono text-faint">{{ entry.ip }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% endif %}
+      </div>
+
+      {% include "partials/pagination.html" %}
+    </div>
+  </div>
+</div>
+<script src="/assets/js/main.js" defer></script>
+</body>
+</html>

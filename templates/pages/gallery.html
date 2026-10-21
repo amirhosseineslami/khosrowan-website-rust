@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en" data-theme="{{ view.base.default_theme }}">
+<head>
+{% include "partials/head.html" %}
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+{% include "partials/header.html" %}
+
+<main id="main">
+  <section class="page-hero">
+    <div class="container">
+      <span class="eyebrow">Gallery</span>
+      <h1 class="page-title">A few photographs</h1>
+      <p class="section-subtitle" style="font-size:var(--step-1);">
+        Places, workspaces and the occasional event.
+      </p>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="container">
+      {% if !view.categories.is_empty() %}
+      <div class="filter-bar reveal" style="margin-bottom:var(--space-l);">
+        <a class="filter-chip{% if view.active_category.is_empty() %} active{% endif %}" href="/gallery">All</a>
+        {% for category in view.categories %}
+        <a class="filter-chip{% if view.active_category == category.as_str() %} active{% endif %}" href="/gallery?category={{ category }}">{{ category }}</a>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      {% if view.items.is_empty() %}
+      <div class="empty-state"><strong>Nothing here yet.</strong></div>
+      {% else %}
+      <div class="gallery-grid">
+        {% for item in view.items %}
+        <figure class="gallery-item reveal">
+          <img src="{{ item.image }}" alt="{{ item.title }}" loading="lazy">
+          {% if !item.caption.is_empty() %}
+          <figcaption class="gallery-caption">{{ item.title }}{% if !item.category.is_empty() %} · {{ item.category }}{% endif %}</figcaption>
+          {% endif %}
+        </figure>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+  </section>
+</main>
+
+{% include "partials/footer.html" %}

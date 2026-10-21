@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en" data-theme="{{ view.base.default_theme }}">
+<head>
+{% include "admin/partials/head.html" %}
+</head>
+<body>
+<div class="admin-body">
+  {% include "admin/partials/sidebar.html" %}
+
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <div>
+        <h1>Newsletter</h1>
+        <p>{{ view.subscriber_count }} active subscriber(s)</p>
+      </div>
+    </header>
+
+    <div class="admin-content">
+      {% if !view.error.is_empty() %}
+      <div class="alert alert-error"><span>{{ view.error }}</span></div>
+      {% endif %}
+
+      <section class="card">
+        <h2 style="font-size:var(--step-1);margin-bottom:1rem;">Write a campaign</h2>
+        <form method="post" action="/admin/newsletter/send" class="form">
+          <input type="hidden" name="csrf_token" value="{{ view.csrf_token }}">
+          <div class="field">
+            <label for="subject">Subject line</label>
+            <input id="subject" type="text" name="subject" required placeholder="What did you learn this week?">
+          </div>
+          <div class="field">
+            <label for="body">Body (Markdown)</label>
+            <textarea id="body" name="body" class="mono" style="min-height:320px;" placeholder="Hi there,&#10;&#10;Here is what I have been thinking about…"></textarea>
+            <span class="hint">Write <code>&#123;&#123; name &#125;&#125;</code> to insert the subscriber&#8217;s name.</span>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-primary" type="submit">Send now</button>
+            <button class="btn" type="submit" name="save_only" value="on">Save as draft</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="card">
+        <h2 style="font-size:var(--step-1);margin-bottom:1rem;">Past campaigns</h2>
+        <div class="table-wrap" style="border:none;">
+          {% if view.campaigns.is_empty() %}
+          <div class="empty-state" style="border:none;"><strong>No campaigns yet.</strong></div>
+          {% else %}
+          <table class="data" style="min-width:0;">
+            <thead>
+              <tr><th>Subject</th><th>Status</th><th>Recipients</th><th>Sent</th></tr>
+            </thead>
+            <tbody>
+              {% for campaign in view.campaigns %}
+              <tr>
+                <td>{{ campaign.subject }}</td>
+                <td><span class="badge badge-{{ campaign.status_class }}">{{ campaign.status }}</span></td>
+                <td class="mono text-sm">{{ campaign.recipient_count }}</td>
+                <td class="text-sm text-muted">{{ campaign.sent_at }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {% endif %}
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+<script src="/assets/js/main.js" defer></script>
+</body>
+</html>

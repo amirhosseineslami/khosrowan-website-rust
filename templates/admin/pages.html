@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en" data-theme="{{ view.base.default_theme }}">
+<head>
+{% include "admin/partials/head.html" %}
+</head>
+<body>
+<div class="admin-body">
+  {% include "admin/partials/sidebar.html" %}
+
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <div>
+        <h1>Pages</h1>
+        <p>Standalone pages managed from the CMS</p>
+      </div>
+      <div class="flex">
+        <a class="btn btn-sm btn-primary" href="/admin/pages/new">New page</a>
+      </div>
+    </header>
+
+    <div class="admin-content">
+      <div class="table-wrap">
+        {% if view.pages.is_empty() %}
+        <div class="empty-state" style="border:none;"><strong>No pages yet.</strong></div>
+        {% else %}
+        <table class="data">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Status</th>
+              <th>In menu</th>
+              <th>Order</th>
+              <th>Updated</th>
+              <th style="text-align:right;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for page in view.pages %}
+            <tr>
+              <td>
+                <a href="/admin/pages/{{ page.id }}/edit" style="font-weight:560;">{{ page.title }}</a>
+                <div class="text-faint text-sm mono">/{{ page.slug }}</div>
+              </td>
+              <td><span class="badge badge-{{ page.status_class }}">{{ page.status }}</span></td>
+              <td>{% if page.show_in_nav %}<span class="badge badge-success">visible</span>{% else %}<span class="text-faint text-sm">hidden</span>{% endif %}</td>
+              <td class="mono text-sm">{{ page.nav_order }}</td>
+              <td class="text-sm text-muted">{{ page.updated_at }}</td>
+              <td>
+                <div class="row-actions">
+                  <a class="btn btn-sm btn-ghost" href="/{{ page.slug }}" target="_blank" rel="noopener">View</a>
+                  <a class="btn btn-sm" href="/admin/pages/{{ page.id }}/edit">Edit</a>
+                  <form method="post" action="/admin/pages/{{ page.id }}/delete" data-confirm="Delete “{{ page.title }}”?">
+                    <input type="hidden" name="csrf_token" value="{{ view.base.csrf_token }}">
+                    <button class="btn btn-sm btn-ghost" type="submit" title="Delete">✕</button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+<script src="/assets/js/main.js" defer></script>
+</body>
+</html>

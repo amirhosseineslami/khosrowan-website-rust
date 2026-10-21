@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en" data-theme="{{ view.base.default_theme }}">
+<head>
+{% include "admin/partials/head.html" %}
+</head>
+<body>
+<div class="admin-body">
+  {% include "admin/partials/sidebar.html" %}
+
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <div>
+        <h1>Comments</h1>
+        <p>Moderate the discussion</p>
+      </div>
+    </header>
+
+    <div class="admin-content">
+      <div class="admin-tabs">
+        <a href="/admin/comments" class="{% if view.status_filter.is_empty() %}active{% endif %}">All</a>
+        <a href="/admin/comments?status=pending" class="{% if view.status_filter == "pending" %}active{% endif %}">Pending</a>
+        <a href="/admin/comments?status=approved" class="{% if view.status_filter == "approved" %}active{% endif %}">Approved</a>
+        <a href="/admin/comments?status=spam" class="{% if view.status_filter == "spam" %}active{% endif %}">Spam</a>
+        <a href="/admin/comments?status=trash" class="{% if view.status_filter == "trash" %}active{% endif %}">Trash</a>
+      </div>
+
+      {% if !view.counts.is_empty() %}
+      <div class="card" style="padding:.9rem 1.1rem;">
+        <div class="flex">
+          {% for count in view.counts %}
+          <span class="pill pill-plain">{{ count.label }}: {{ count.value }}</span>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      <div class="stack">
+        {% if view.comments.is_empty() %}
+        <div class="empty-state"><strong>Nothing to moderate.</strong></div>
+        {% else %}
+        {% for comment in view.comments %}
+        <article class="card">
+          <div class="flex-between" style="align-items:flex-start;">
+            <div>
+              <div class="flex" style="gap:.55rem;">
+                <span class="avatar">{{ comment.author_name }}</span>
+                <span>
+                  <strong>{{ comment.author_name }}</strong>
+                  <span class="text-faint text-sm"> · {{ comment.author_email }}</span>
+                  <div class="text-faint text-sm">on
+                    {% if !comment.post_slug.is_empty() %}
+                    <a href="/blog/{{ comment.post_slug }}" target="_blank" rel="noopener">{{ comment.post_title }}</a>
+                    {% else %}
+                    {{ comment.post_title }}
+                    {% endif %}
+                  </div>
+                </span>
+              </div>
+            </div>
+            <div class="flex" style="gap:.4rem;">
+              <span class="badge badge-{{ comment.status_class }}">{{ comment.status }}</span>
+              <span class="text-faint text-sm">{{ comment.created_at }}</span>
+            </div>
+          </div>
+
+          <p style="margin-top:.9rem;color:var(--text-muted);">{{ comment.body }}</p>
+
+          <div class="flex" style="margin-top:1rem;">
+            {% if comment.status != "approved" %}
+            <form method="post" action="/admin/comments/{{ comment.id }}/status">
+              <input type="hidden" name="csrf_token" value="{{ view.base.csrf_token }}">
+              <input type="hidden" name="status" value="approved">
+              <button class="btn btn-sm btn-primary" type="submit">Approve</button>
+            </form>
+            {% else %}
+            <form method="post" action="/admin/comments/{{ comment.id }}/status">
+              <input type="hidden" name="csrf_token" value="{{ view.base.csrf_token }}">
+              <input type="hidden" name="status" value="pending">
+              <button class="btn btn-sm btn-ghost" type="submit">Unapprove</button>
+            </form>
+            {% endif %}
+            {% if comment.status != "spam" %}
+            <form method="post" action="/admin/comments/{{ comment.id }}/status">
+              <input type="hidden" name="csrf_token" value="{{ view.base.csrf_token }}">
+              <input type="hidden" name="status" value="spam">
+              <button class="btn btn-sm btn-ghost" type="submit">Mark as spam</button>
+            </form>
+            {% endif %}
+            <form method="post" action="/admin/comments/{{ comment.id }}/delete" data-confirm="Delete this comment permanently?">
+              <input type="hidden" name="csrf_token" value="{{ view.base.csrf_token }}">
+              <input type="hidden" name="status" value="trash">
+              <button class="btn btn-sm btn-ghost" type="submit">Delete</button>
+            </form>
+            {% if !comment.ip.is_empty() %}
+            <span class="text-faint text-sm" style="margin-left:auto;">IP {{ comment.ip }}</span>
+            {% endif %}
+          </div>
+        </article>
+        {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+<script src="/assets/js/main.js" defer></script>
+</body>
+</html>

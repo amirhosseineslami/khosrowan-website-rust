@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en" data-theme="{{ view.base.default_theme }}">
+<head>
+{% include "admin/partials/head.html" %}
+</head>
+<body>
+<div class="admin-body">
+  {% include "admin/partials/sidebar.html" %}
+
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <div>
+        <h1>Media library</h1>
+        <p>{{ view.total_size }} stored</p>
+      </div>
+    </header>
+
+    <div class="admin-content">
+      <section class="card">
+        <h2 style="font-size:var(--step-1);margin-bottom:1rem;">Upload a file</h2>
+        <form method="post" action="/admin/media/upload" enctype="multipart/form-data" class="form">
+          <input type="hidden" name="csrf_token" value="{{ view.base.csrf_token }}">
+          <div class="field">
+            <label for="file">Choose a file</label>
+            <input id="file" type="file" name="file" required>
+            <span class="hint">Images, PDFs and archives are accepted.</span>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-primary" type="submit">Upload</button>
+          </div>
+        </form>
+      </section>
+
+      <div class="media-grid">
+        {% if view.items.is_empty() %}
+        <div class="empty-state" style="grid-column:1/-1;"><strong>No files yet.</strong></div>
+        {% else %}
+        {% for item in view.items %}
+        <article class="media-card">
+          <div class="media-thumb">
+            {% if item.mime.starts_with("image/") %}
+            <img src="{{ item.url }}" alt="{{ item.alt_text }}" loading="lazy">
+            {% else %}
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>
+            {% endif %}
+          </div>
+          <div class="media-meta">
+            <div class="media-name" title="{{ item.filename }}">{{ item.filename }}</div>
+            <div class="media-sub">{{ item.size }}{% if !item.dimensions.is_empty() %} · {{ item.dimensions }}{% endif %}</div>
+            <form method="post" action="/admin/media/{{ item.id }}/alt" style="margin-top:.5rem;">
+              <input type="hidden" name="csrf_token" value="{{ view.base.csrf_token }}">
+              <input type="text" name="alt_text" value="{{ item.alt_text }}" placeholder="Alt text…" style="padding:.3rem .5rem;font-size:.8rem;">
+              <button class="btn btn-sm btn-ghost" type="submit" title="Save alt text" style="margin-top:.35rem;">Save</button>
+            </form>
+            <div class="flex" style="margin-top:.5rem;gap:.35rem;">
+              <a class="btn btn-sm btn-ghost" href="{{ item.url }}" target="_blank" rel="noopener">Open</a>
+              <form method="post" action="/admin/media/{{ item.id }}/delete" data-confirm="Delete “{{ item.filename }}”?">
+                <input type="hidden" name="csrf_token" value="{{ view.base.csrf_token }}">
+                <button class="btn btn-sm btn-ghost" type="submit">Delete</button>
+              </form>
+            </div>
+          </div>
+        </article>
+        {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+<script src="/assets/js/main.js" defer></script>
+</body>
+</html>

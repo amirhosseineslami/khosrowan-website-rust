@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en" data-theme="{{ view.base.default_theme }}">
+<head>
+{% include "partials/head.html" %}
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+{% include "partials/header.html" %}
+
+<main id="main">
+  <section class="page-hero">
+    <div class="container">
+      <span class="eyebrow">Contact</span>
+      <h1 class="page-title">Get in touch</h1>
+      <p class="section-subtitle" style="font-size:var(--step-1);">
+        Tell me about the problem. I usually reply within two business days.
+      </p>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="container">
+      <div class="grid" style="grid-template-columns:minmax(0,1.3fr) minmax(0,0.7fr);gap:var(--space-xl);align-items:start;">
+        <div class="card reveal">
+          <h2 class="card-title">Send a message</h2>
+          <p class="card-body" style="margin-bottom:1.4rem;">
+            The more context you can give, the more useful my reply will be.
+          </p>
+
+          {% if !view.errors.is_empty() %}
+          <div class="alert alert-error" style="margin-bottom:1.2rem;">
+            <span>
+              <ul>
+                {% for error in view.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+              </ul>
+            </span>
+          </div>
+          {% endif %}
+
+          <form class="form" method="post" action="/contact">
+            <div class="hp">
+              <label>Website<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+            </div>
+
+            <div class="form-row">
+              <div class="field">
+                <label for="name">Your name</label>
+                <input id="name" type="text" name="name" value="{{ view.form_name }}" required maxlength="120" placeholder="Ada Lovelace">
+              </div>
+              <div class="field">
+                <label for="email">E-mail</label>
+                <input id="email" type="email" name="email" value="{{ view.form_email }}" required placeholder="ada@example.com">
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="subject">Subject <span class="text-faint">(optional)</span></label>
+              <input id="subject" type="text" name="subject" value="{{ view.form_subject }}" maxlength="160" placeholder="A brief summary of what you need">
+            </div>
+
+            <div class="field">
+              <label for="message">Message</label>
+              <textarea id="message" name="message" required placeholder="What are you working on, and where are you stuck?" style="min-height:180px;">{{ view.form_message }}</textarea>
+              <span class="hint">Please do not include passwords, keys or other secrets.</span>
+            </div>
+
+            <div class="form-actions">
+              <button class="btn btn-primary" type="submit">Send message</button>
+              <span class="text-faint text-sm">I never share your details.</span>
+            </div>
+          </form>
+        </div>
+
+        <aside class="stack reveal">
+          <div class="card">
+            <h3 class="card-title" style="font-size:var(--step-0);">Direct</h3>
+            <div class="stack" style="--space-s:.7rem;margin-top:.9rem;">
+              {% if !view.base.site.email.is_empty() %}
+              <div>
+                <div class="toc-title" style="margin-bottom:.15rem;">E-mail</div>
+                <a href="mailto:{{ view.base.site.email }}" style="color:var(--accent);">{{ view.base.site.email }}</a>
+              </div>
+              {% endif %}
+              {% if !view.base.site.phone.is_empty() %}
+              <div>
+                <div class="toc-title" style="margin-bottom:.15rem;">Phone</div>
+                <a href="tel:{{ view.base.site.phone }}">{{ view.base.site.phone }}</a>
+              </div>
+              {% endif %}
+              {% if !view.base.site.location.is_empty() %}
+              <div>
+                <div class="toc-title" style="margin-bottom:.15rem;">Location</div>
+                <span>{{ view.base.site.location }}</span>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+
+          {% if !view.socials.is_empty() %}
+          <div class="card">
+            <h3 class="card-title" style="font-size:var(--step-0);">Elsewhere</h3>
+            <div class="social-row" style="margin-top:.9rem;">
+              {% for social in view.socials %}
+              <a class="social-link" href="{{ social.url }}" title="{{ social.label }}" aria-label="{{ social.label }}"
+                 {% if social.url.starts_with("http") %}target="_blank" rel="noopener noreferrer"{% endif %}>
+                <span style="font-size:.72rem;font-weight:600;">{{ social.platform }}</span>
+              </a>
+              {% endfor %}
+            </div>
+          </div>
+          {% endif %}
+
+          <div class="card">
+            <h3 class="card-title" style="font-size:var(--step-0);">What happens next</h3>
+            <ol class="check-list" style="margin-top:.9rem;list-style:none;padding:0;">
+              <li>I read your message and check whether I am the right person.</li>
+              <li>You get a reply within two business days.</li>
+              <li>If it looks like a fit, we set up a short call.</li>
+            </ol>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+</main>
+
+{% include "partials/footer.html" %}

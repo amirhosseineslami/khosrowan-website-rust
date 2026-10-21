@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en" data-theme="{{ view.base.default_theme }}">
+<head>
+{% include "admin/partials/head.html" %}
+</head>
+<body>
+<div class="admin-body">
+  {% include "admin/partials/sidebar.html" %}
+
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <div>
+        <h1>Settings</h1>
+        <p>Everything about the site, in one place</p>
+      </div>
+    </header>
+
+    <div class="admin-content">
+      <form method="post" action="/admin/settings">
+        <input type="hidden" name="csrf_token" value="{{ view.csrf_token }}">
+
+        {% for group in view.groups %}
+        <section class="card" style="margin-bottom:var(--space-l);">
+          <h2 style="font-size:var(--step-1);margin-bottom:1.1rem;">{{ group.label }}</h2>
+
+          <div class="form">
+            {% for field in group.fields %}
+            <div class="field">
+              {% if field.value_type == "bool" %}
+              <label class="checkbox">
+                <input type="checkbox" name="{{ field.key }}" value="on" {% if field.value == "true" %}checked{% endif %}>
+                {{ field.label }}
+              </label>
+              {% else if field.value_type == "textarea" %}
+              <label for="{{ field.key }}">{{ field.label }}</label>
+              <textarea id="{{ field.key }}" name="{{ field.key }}" rows="4">{{ field.value }}</textarea>
+              {% else if field.value_type == "color" %}
+              <label for="{{ field.key }}">{{ field.label }}</label>
+              <div class="flex" style="gap:.5rem;">
+                <input id="{{ field.key }}" type="text" name="{{ field.key }}" value="{{ field.value }}" style="max-width:140px;">
+                <span class="pill pill-plain">{{ field.value }}</span>
+              </div>
+              {% else if field.value_type == "number" %}
+              <label for="{{ field.key }}">{{ field.label }}</label>
+              <input id="{{ field.key }}" type="number" name="{{ field.key }}" value="{{ field.value }}" style="max-width:140px;">
+              {% else %}
+              <label for="{{ field.key }}">{{ field.label }}</label>
+              <input id="{{ field.key }}" type="text" name="{{ field.key }}" value="{{ field.value }}">
+              {% endif %}
+              {% if !field.help_text.is_empty() %}
+              <span class="hint">{{ field.help_text }}</span>
+              {% endif %}
+            </div>
+            {% endfor %}
+          </div>
+        </section>
+        {% endfor %}
+
+        <section class="card">
+          <div class="form-actions">
+            <button class="btn btn-primary" type="submit">Save settings</button>
+            <span class="text-faint text-sm">Changes take effect immediately.</span>
+          </div>
+        </section>
+      </form>
+    </div>
+  </div>
+</div>
+<script src="/assets/js/main.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en" data-theme="{{ view.base.default_theme }}">
+<head>
+{% include "partials/head.html" %}
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+{% include "partials/header.html" %}
+
+<main id="main">
+  <section class="page-hero">
+    <div class="container">
+      <span class="eyebrow">Speaking</span>
+      <h1 class="page-title">Talks &amp; keynotes</h1>
+      <p class="section-subtitle" style="font-size:var(--step-1);">
+        Conferences, meetups and internal sessions — usually about the lessons that only
+        show up in production.
+      </p>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="container">
+      <div class="stack">
+        {% for talk in view.talks %}
+        <article class="card card-hover reveal">
+          <div class="flex-between" style="align-items:flex-start;">
+            <div>
+              <div class="eyebrow" style="font-size:.68rem;">{{ talk.event }}</div>
+              <h2 class="card-title" style="margin-top:.4rem;">{{ talk.title }}</h2>
+              <div class="text-muted text-sm" style="margin-top:.3rem;">
+                {{ talk.date }}{% if !talk.location.is_empty() %} · {{ talk.location }}{% endif %}
+              </div>
+              {% if !talk.summary.is_empty() %}
+              <p class="card-body" style="margin-top:.7rem;max-width:64ch;">{{ talk.summary }}</p>
+              {% endif %}
+            </div>
+            <div class="flex">
+              {% if talk.has_video %}
+              <a class="btn btn-sm" href="{{ talk.video_url }}" target="_blank" rel="noopener noreferrer">Watch</a>
+              {% endif %}
+              {% if talk.has_slides %}
+              <a class="btn btn-sm btn-ghost" href="{{ talk.slides_url }}" target="_blank" rel="noopener noreferrer">Slides</a>
+              {% endif %}
+            </div>
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+
+      {% if !view.publications.is_empty() %}
+      <section class="section">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">Writing</span>
+            <h2>Publications</h2>
+          </div>
+        </div>
+        <div class="grid grid-2">
+          {% for publication in view.publications %}
+          <div class="card reveal">
+            <h3 class="card-title" style="font-size:var(--step-0);">
+              {% if !publication.url.is_empty() %}
+              <a href="{{ publication.url }}" target="_blank" rel="noopener noreferrer">{{ publication.title }}</a>
+              {% else %}
+              {{ publication.title }}
+              {% endif %}
+            </h3>
+            <div class="text-muted text-sm" style="margin-top:.25rem;">{{ publication.publisher }}{% if !publication.date.is_empty() %} · {{ publication.date }}{% endif %}</div>
+            {% if !publication.summary.is_empty() %}
+            <p class="card-body" style="margin-top:.6rem;">{{ publication.summary }}</p>
+            {% endif %}
+          </div>
+          {% endfor %}
+        </div>
+      </section>
+      {% endif %}
+    </div>
+  </section>
+</main>
+
+{% include "partials/footer.html" %}

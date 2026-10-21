@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en" data-theme="{{ view.base.default_theme }}">
+<head>
+{% include "admin/partials/head.html" %}
+</head>
+<body>
+<div class="admin-body">
+  {% include "admin/partials/sidebar.html" %}
+
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <div>
+        <h1>Redirects</h1>
+        <p>Send old URLs somewhere new</p>
+      </div>
+    </header>
+
+    <div class="admin-content">
+      <section class="card">
+        <h2 style="font-size:var(--step-1);margin-bottom:1rem;">Add a redirect</h2>
+        <form method="post" action="/admin/redirects" class="form">
+          <input type="hidden" name="csrf_token" value="{{ view.csrf_token }}">
+          <div class="form-row">
+            <div class="field">
+              <label for="from_path">From</label>
+              <input id="from_path" type="text" name="from_path" required placeholder="/old-blog">
+            </div>
+            <div class="field">
+              <label for="to_path">To</label>
+              <input id="to_path" type="text" name="to_path" required placeholder="/blog">
+            </div>
+            <div class="field">
+              <label for="status_code">Status</label>
+              <select id="status_code" name="status_code">
+                <option value="301">301 — permanent</option>
+                <option value="302">302 — temporary</option>
+                <option value="307">307 — temporary (keep method)</option>
+                <option value="308">308 — permanent (keep method)</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-primary" type="submit">Create redirect</button>
+          </div>
+        </form>
+      </section>
+
+      <div class="table-wrap">
+        {% if view.redirects.is_empty() %}
+        <div class="empty-state" style="border:none;"><strong>No redirects.</strong></div>
+        {% else %}
+        <table class="data">
+          <thead>
+            <tr>
+              <th>From</th>
+              <th>To</th>
+              <th>Status</th>
+              <th>Hits</th>
+              <th>Created</th>
+              <th style="text-align:right;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for redirect in view.redirects %}
+            <tr>
+              <td class="mono text-sm">{{ redirect.from_path }}</td>
+              <td class="mono text-sm">{{ redirect.to_path }}</td>
+              <td><span class="badge badge-info">{{ redirect.status_code }}</span></td>
+              <td class="mono text-sm">{{ redirect.hits }}</td>
+              <td class="text-sm text-muted">{{ redirect.created_at }}</td>
+              <td>
+                <div class="row-actions">
+                  <form method="post" action="/admin/redirects/{{ redirect.id }}/delete" data-confirm="Delete this redirect?">
+                    <input type="hidden" name="csrf_token" value="{{ view.base.csrf_token }}">
+                    <button class="btn btn-sm btn-ghost" type="submit" title="Delete">✕</button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+<script src="/assets/js/main.js" defer></script>
+</body>
+</html>

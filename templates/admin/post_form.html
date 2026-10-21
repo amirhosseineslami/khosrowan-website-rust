@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en" data-theme="{{ view.base.default_theme }}">
+<head>
+{% include "admin/partials/head.html" %}
+</head>
+<body>
+<div class="admin-body">
+  {% include "admin/partials/sidebar.html" %}
+
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <div>
+        <h1>{% if view.is_new %}New post{% else %}Edit post{% endif %}</h1>
+        <p>
+          {% if view.is_new %}
+          Write something worth reading.
+          {% else %}
+          Last updated {{ view.post.as_ref().unwrap().updated_at }} · {{ view.post.as_ref().unwrap().view_count }} views
+          {% endif %}
+        </p>
+      </div>
+      <div class="flex">
+        {% if !view.is_new %}
+        <a class="btn btn-sm btn-ghost" href="/blog/{{ view.post.as_ref().unwrap().slug }}" target="_blank" rel="noopener">Preview</a>
+        {% endif %}
+        <a class="btn btn-sm btn-ghost" href="/admin/posts">Cancel</a>
+      </div>
+    </header>
+
+    <div class="admin-content">
+      {% if !view.error.is_empty() %}
+      <div class="alert alert-error"><span>{{ view.error }}</span></div>
+      {% endif %}
+
+      <form method="post" action="{% if view.is_new %}/admin/posts/new{% else %}/admin/posts/{{ view.post.as_ref().unwrap().id }}/edit{% endif %}">
+        <input type="hidden" name="csrf_token" value="{{ view.csrf_token }}">
+
+        <div class="admin-grid-2" style="align-items:start;">
+          <div class="stack">
+            <section class="card">
+              <div class="form">
+                <div class="field">
+                  <label for="title">Title</label>
+                  <input id="title" type="text" name="title" required data-slug-source
+                         value="{% if !view.is_new %}{{ view.post.as_ref().unwrap().title }}{% endif %}"
+                         placeholder="A title that earns the click">
+                </div>
+
+                <div class="field">
+                  <label for="slug">Slug</label>
+                  <input id="slug" type="text" name="slug" data-slug-target
+                         value="{% if !view.is_new %}{{ view.post.as_ref().unwrap().slug }}{% endif %}"
+                         placeholder="auto-generated-from-title">
+                  <span class="hint">Leave blank to generate it from the title.</span>
+                </div>
+
+                <div class="field">
+                  <label for="excerpt">Excerpt</label>
+                  <textarea id="excerpt" name="excerpt" style="min-height:90px;"
+                            placeholder="A short summary used on cards and in search results.">{% if !view.is_new %}{{ view.post.as_ref().unwrap().excerpt }}{% endif %}</textarea>
+                </div>
+
+                <div class="field">
+                  <label for="content">Content (Markdown)</label>
+                  <div class="editor-toolbar">
+                    <button type="button" data-md="## ">H2</button>
+                    <button type="button" data-md="### ">H3</button>
+                    <button type="button" data-md="**bold**">B</button>
+                    <button type="button" data-md="_italic_">I</button>
+                    <button type="button" data-md="`code`">Code</button>
+                    <button type="button" data-md="> ">Quote</button>
+                    <button type="button" data-md="- ">List</button>
+                    <button type="button" data-md="[link](https://)">Link</button>
+                    <button type="button" data-md="![alt](https://)">Image</button>
+                    <button type="button" data-preview-toggle>Preview</button>
+                  </div>
+                  <textarea id="content" name="content" class="editor-area" data-editor
+                            placeholder="Write in Markdown…">{% if !view.is_new %}{{ view.post.as_ref().unwrap().content_md }}{% endif %}</textarea>
+                  <span class="hint" data-editor-stats>0 words · 1 min read</span>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <div class="stack">
+            <section class="card">
+              <h2 style="font-size:var(--step-1);margin-bottom:1rem;">Publishing</h2>
+              <div class="form">
+                <div class="field">
+                  <label for="status">Status</label>
+                  <select id="status" name="status">
+                    <option value="draft" {% if !view.is_new && view.post.as_ref().unwrap().status == "draft" %}selected{% endif %}>Draft</option>
+                    <option value="published" {% if !view.is_new && view.post.as_ref().unwrap().status == "published" %}selected{% endif %}>Published</option>
+                    <option value="scheduled" {% if !view.is_new && view.post.as_ref().unwrap().status == "scheduled" %}selected{% endif %}>Scheduled</option>
+                    <option value="archived" {% if !view.is_new && view.post.as_ref().unwrap().status == "archived" %}selected{% endif %}>Archived</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label for="category_id">Category</label>
+                  <select id="category_id" name="category_id">
+                    <option value="">— none —</option>
+                    {% for category in view.categories %}
+                    <option value="{{ category.id }}" {% if !view.is_new && view.post.as_ref().unwrap().category_id_str == category.id.to_string() %}selected{% endif %}>{{ category.name }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label for="tags">Tags</label>
+                  <input id="tags" type="text" name="tags"
+                         value="{% if !view.is_new %}{{ view.all_tags }}{% endif %}"
+                         placeholder="rust, performance, databases">
+                  <span class="hint">Comma separated. Existing tags are reused.</span>
+                </div>
+
+                <div class="field">
+                  <label for="published_at">Published at</label>
+                  <input id="published_at" type="datetime-local" name="published_at"
+                         value="{% if !view.is_new %}{{ view.post.as_ref().unwrap().published_at }}{% endif %}">
+                </div>
+
+                <div class="field">
+                  <label for="scheduled_for">Schedule for</label>
+                  <input id="scheduled_for" type="datetime-local" name="scheduled_for"
+                         value="{% if !view.is_new %}{{ view.post.as_ref().unwrap().scheduled_for }}{% endif %}">
+                  <span class="hint">When set with the “Scheduled” status, the post goes live automatically.</span>
+                </div>
+
+                <label class="checkbox">
+                  <input type="checkbox" name="is_featured" value="on" {% if !view.is_new && view.post.as_ref().unwrap().is_featured %}checked{% endif %}>
+                  Feature this post on the home page
+                </label>
+
+                <label class="checkbox">
+                  <input type="checkbox" name="allow_comments" value="on" {% if view.is_new || view.post.as_ref().unwrap().allow_comments %}checked{% endif %}>
+                  Allow comments
+                </label>
+              </div>
+            </section>
+
+            <section class="card">
+              <h2 style="font-size:var(--step-1);margin-bottom:1rem;">SEO &amp; media</h2>
+              <div class="form">
+                <div class="field">
+                  <label for="cover_image">Cover image</label>
+                  <input id="cover_image" type="text" name="cover_image"
+                         value="{% if !view.is_new %}{{ view.post.as_ref().unwrap().cover_image }}{% endif %}"
+                         placeholder="/media/cover.png">
+                </div>
+                <div class="field">
+                  <label for="meta_title">Meta title</label>
+                  <input id="meta_title" type="text" name="meta_title"
+                         value="{% if !view.is_new %}{{ view.post.as_ref().unwrap().meta_title }}{% endif %}"
+                         placeholder="Defaults to the post title">
+                </div>
+                <div class="field">
+                  <label for="meta_description">Meta description</label>
+                  <textarea id="meta_description" name="meta_description" style="min-height:80px;"
+                            placeholder="Defaults to the excerpt">{% if !view.is_new %}{{ view.post.as_ref().unwrap().meta_description }}{% endif %}</textarea>
+                </div>
+              </div>
+            </section>
+
+            <section class="card">
+              <div class="form-actions">
+                <button class="btn btn-primary" type="submit">{% if view.is_new %}Create post{% else %}Save changes{% endif %}</button>
+                <a class="btn btn-ghost" href="/admin/posts">Cancel</a>
+              </div>
+            </section>
+          </div>
+        </div>
+      </form>
+
+      <div class="admin-grid-2" style="align-items:start;">
+        <section class="card" data-preview-wrap hidden>
+          <div class="flex-between" style="margin-bottom:1rem;">
+            <h2 style="font-size:var(--step-1);">Live preview</h2>
+            <span class="pill pill-plain">Rendered Markdown</span>
+          </div>
+          <div class="prose" data-preview></div>
+        </section>
+
+        {% if !view.is_new %}
+        <section class="card">
+          <h2 style="font-size:var(--step-1);margin-bottom:1rem;">Quick actions</h2>
+          <div class="stack" style="--space-s:.6rem;">
+            <form method="post" action="/admin/posts/{{ view.post.as_ref().unwrap().id }}/status">
+              <input type="hidden" name="csrf_token" value="{{ view.csrf_token }}">
+              <input type="hidden" name="status" value="published">
+              <button class="btn btn-sm btn-block" type="submit">Publish now</button>
+            </form>
+            <form method="post" action="/admin/posts/{{ view.post.as_ref().unwrap().id }}/status">
+              <input type="hidden" name="csrf_token" value="{{ view.csrf_token }}">
+              <input type="hidden" name="status" value="draft">
+              <button class="btn btn-sm btn-block btn-ghost" type="submit">Move to drafts</button>
+            </form>
+            <form method="post" action="/admin/posts/{{ view.post.as_ref().unwrap().id }}/delete" data-confirm="Delete this post permanently?">
+              <input type="hidden" name="csrf_token" value="{{ view.csrf_token }}">
+              <button class="btn btn-sm btn-block btn-ghost" type="submit">Delete permanently</button>
+            </form>
+          </div>
+
+          <div class="stack" style="--space-s:.35rem;margin-top:1.2rem;font-size:.85rem;">
+            <div class="flex-between"><span class="text-muted">Created</span><span>{{ view.post.as_ref().unwrap().created_at }}</span></div>
+            <div class="flex-between"><span class="text-muted">Words</span><span>{{ view.post.as_ref().unwrap().word_count }}</span></div>
+            <div class="flex-between"><span class="text-muted">Reading time</span><span>{{ view.post.as_ref().unwrap().reading_time }} min</span></div>
+            <div class="flex-between"><span class="text-muted">Views</span><span>{{ view.post.as_ref().unwrap().view_count }}</span></div>
+          </div>
+        </section>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+<script src="/assets/js/main.js" defer></script>
+</body>
+</html>

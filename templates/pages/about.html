@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en" data-theme="{{ view.base.default_theme }}">
+<head>
+{% include "partials/head.html" %}
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+{% include "partials/header.html" %}
+
+<main id="main">
+  <section class="page-hero">
+    <div class="container">
+      <span class="eyebrow">About</span>
+      <h1 class="page-title">The person behind the commits</h1>
+      <p class="section-subtitle" style="font-size:var(--step-1);">
+        Engineer, writer, and relentless simplifier of complicated systems.
+      </p>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="container">
+      <div class="grid" style="grid-template-columns:minmax(0,1fr);gap:var(--space-xl);">
+        <div class="grid" style="grid-template-columns:minmax(0,320px) minmax(0,1fr);gap:var(--space-xl);align-items:start;">
+          <div class="reveal" style="position:sticky;top:96px;">
+            <div class="card" style="padding:0;overflow:hidden;">
+              <img src="{{ view.photo_url }}" alt="Portrait of {{ view.base.site.title }}" style="width:100%;display:block;">
+              <div style="padding:1.3rem;">
+                <h3 style="font-size:var(--step-1);">{{ view.base.site.title }}</h3>
+                <p class="text-muted text-sm" style="margin-top:.25rem;">{{ view.base.site.subtitle }}</p>
+                <div class="stack" style="margin-top:1.1rem;--space-s:.7rem;">
+                  <div class="flex-between text-sm">
+                    <span class="text-muted">Location</span><span>{{ view.base.site.location }}</span>
+                  </div>
+                  <div class="flex-between text-sm">
+                    <span class="text-muted">E-mail</span><span>{{ view.base.site.email }}</span>
+                  </div>
+                  {% if !view.base.site.cv_file.is_empty() %}
+                  <a class="btn btn-sm btn-block" href="{{ view.base.site.cv_file }}" download>Download résumé</a>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="reveal">
+            {% if !view.content_html.is_empty() %}
+            <div class="prose">{{ view.content_html|safe }}</div>
+            {% else %}
+            <div class="prose">
+              <p>
+                I am a software engineer who cares about the parts of software that only show
+                up months later: the shape of a module, the failure mode of a deployment, the
+                sentence in a runbook that saves somebody an hour at 3am.
+              </p>
+              <h2>How I work</h2>
+              <p>
+                I like small teams, written decisions and boring technology. Most of my
+                engagements start with the same question — <em>what is actually going to break
+                here?</em> — and end with a system that a new engineer can reason about without
+                me in the room.
+              </p>
+              <h2>What I do</h2>
+              <p>
+                Backend architecture, Rust and Go services, data-intensive platforms, and the
+                developer experience work that makes the rest of it bearable. I also write
+                about all of it here.
+              </p>
+            </div>
+            {% endif %}
+
+            <div class="grid grid-2" style="margin-top:var(--space-xl);">
+              {% for fact in view.facts %}
+              <div class="card">
+                <div class="eyebrow" style="font-size:.68rem;">{{ fact.label }}</div>
+                <p style="margin-top:.5rem;font-weight:540;">{{ fact.value }}</p>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="container">
+      <div class="stat-grid reveal">
+        {% for stat in view.stats %}
+        <div class="stat">
+          <div class="stat-value">{{ stat.value }}</div>
+          <div class="stat-label">{{ stat.label }}</div>
+          <div class="stat-hint">{{ stat.hint }}</div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  {% if !view.skills.is_empty() %}
+  <section class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <div>
+          <span class="eyebrow">Toolkit</span>
+          <h2>What I work with</h2>
+        </div>
+        <a class="link-arrow" href="/skills">Details</a>
+      </div>
+      <div class="grid grid-3 skill-grid">
+        {% for group in view.skills %}
+        <div class="card reveal">
+          <h3 class="skill-group-title" style="color:var(--accent);">{{ group.label }}</h3>
+          {% for skill in group.items %}
+          <div class="skill">
+            <div class="skill-head">
+              <span>{{ skill.name }}</span>
+              <span class="skill-level">{% if !skill.years.is_empty() %}{{ skill.years }}{% endif %}</span>
+            </div>
+            <div class="skill-bar"><div class="skill-fill" data-skill-fill="{{ skill.level }}"></div></div>
+          </div>
+          {% endfor %}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+  {% endif %}
+
+  {% if !view.timeline.is_empty() %}
+  <section class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <div>
+          <span class="eyebrow">Experience</span>
+          <h2>The path so far</h2>
+        </div>
+        <a class="link-arrow" href="/experience">Full history</a>
+      </div>
+      <div class="timeline reveal">
+        {% for item in view.timeline %}
+        <div class="timeline-item">
+          <div class="timeline-period">{{ item.period }}</div>
+          <div class="timeline-title">{{ item.title }}</div>
+          <div class="timeline-org">{{ item.company }}{% if !item.location.is_empty() %} · {{ item.location }}{% endif %}</div>
+          <p class="timeline-desc">{{ item.description }}</p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+  {% endif %}
+
+  {% if !view.testimonials.is_empty() %}
+  <section class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <div>
+          <span class="eyebrow">Kind words</span>
+          <h2>What colleagues say</h2>
+        </div>
+      </div>
+      <div class="grid grid-2">
+        {% for testimonial in view.testimonials %}
+        <figure class="card quote-card reveal" style="margin:0;">
+          <div class="stars" aria-label="{{ testimonial.rating }} out of 5">
+            {% for _ in 1..testimonial.rating %}★{% endfor %}
+          </div>
+          <blockquote class="quote-text" style="margin-top:.6rem;">{{ testimonial.body }}</blockquote>
+          <figcaption class="flex" style="margin-top:1.1rem;">
+            <span class="avatar avatar-lg">{{ testimonial.initials }}</span>
+            <span>
+              <strong>{{ testimonial.name }}</strong><br>
+              <span class="text-muted text-sm">{{ testimonial.role }}{% if !testimonial.company.is_empty() %}, {{ testimonial.company }}{% endif %}</span>
+            </span>
+          </figcaption>
+        </figure>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+  {% endif %}
+</main>
+
+{% include "partials/footer.html" %}

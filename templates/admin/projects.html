@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en" data-theme="{{ view.base.default_theme }}">
+<head>
+{% include "admin/partials/head.html" %}
+</head>
+<body>
+<div class="admin-body">
+  {% include "admin/partials/sidebar.html" %}
+
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <div>
+        <h1>Projects</h1>
+        <p>Case studies, open-source work and side projects</p>
+      </div>
+      <div class="flex">
+        <a class="btn btn-sm btn-primary" href="/admin/projects/new">New project</a>
+      </div>
+    </header>
+
+    <div class="admin-content">
+      <div class="table-wrap">
+        {% if view.projects.is_empty() %}
+        <div class="empty-state" style="border:none;"><strong>No projects yet.</strong></div>
+        {% else %}
+        <table class="data">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Stack</th>
+              <th>Status</th>
+              <th>Order</th>
+              <th>Updated</th>
+              <th style="text-align:right;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for project in view.projects %}
+            <tr>
+              <td>
+                <a href="/admin/projects/{{ project.id }}/edit" style="font-weight:560;">{{ project.title }}</a>
+                {% if project.is_featured %}
+                <span class="pill" style="margin-left:.4rem;font-size:.62rem;">Featured</span>
+                {% endif %}
+                <div class="text-faint text-sm mono">/{{ project.slug }}</div>
+              </td>
+              <td>
+                <div class="tag-row">
+                  {% for tech in project.tech %}
+                  <span class="tag">{{ tech }}</span>
+                  {% endfor %}
+                </div>
+              </td>
+              <td><span class="badge badge-{{ project.status_class }}">{{ project.status }}</span></td>
+              <td class="mono text-sm">{{ project.sort_order }}</td>
+              <td class="text-sm text-muted">{{ project.updated_at }}</td>
+              <td>
+                <div class="row-actions">
+                  <a class="btn btn-sm btn-ghost" href="/projects/{{ project.slug }}" target="_blank" rel="noopener">View</a>
+                  <a class="btn btn-sm" href="/admin/projects/{{ project.id }}/edit">Edit</a>
+                  <form method="post" action="/admin/projects/{{ project.id }}/delete" data-confirm="Delete “{{ project.title }}”?">
+                    <input type="hidden" name="csrf_token" value="{{ view.base.csrf_token }}">
+                    <button class="btn btn-sm btn-ghost" type="submit" title="Delete">✕</button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+<script src="/assets/js/main.js" defer></script>
+</body>
+</html>

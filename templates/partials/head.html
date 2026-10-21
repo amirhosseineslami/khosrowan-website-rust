@@ -1,0 +1,76 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<title>{{ view.base.page_title }}</title>
+
+<meta name="description" content="{{ view.base.meta_description }}">
+<meta name="author" content="{{ view.base.site.title }}">
+<link rel="canonical" href="{{ view.base.canonical_url }}">
+
+<meta property="og:type" content="{{ view.base.og_type }}">
+<meta property="og:title" content="{{ view.base.page_title }}">
+<meta property="og:description" content="{{ view.base.meta_description }}">
+<meta property="og:url" content="{{ view.base.canonical_url }}">
+<meta property="og:site_name" content="{{ view.base.site.title }}">
+{% if !view.base.og_image.is_empty() %}
+<meta property="og:image" content="{{ view.base.og_image }}">
+{% endif %}
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ view.base.page_title }}">
+<meta name="twitter:description" content="{{ view.base.meta_description }}">
+{% if !view.base.og_image.is_empty() %}
+<meta name="twitter:image" content="{{ view.base.og_image }}">
+{% endif %}
+{% if !view.base.twitter_site.is_empty() %}
+<meta name="twitter:site" content="{{ view.base.twitter_site }}">
+{% endif %}
+
+<link rel="icon" type="image/svg+xml" href="{{ view.base.site.favicon }}">
+<link rel="alternate" type="application/rss+xml" title="{{ view.base.site.title }}" href="{{ view.base.rss_url }}">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="stylesheet" href="/assets/css/main.css">
+
+{% if !view.base.google_verification.is_empty() %}
+<meta name="google-site-verification" content="{{ view.base.google_verification }}">
+{% endif %}
+{% if !view.base.bing_verification.is_empty() %}
+<meta name="msvalidate.01" content="{{ view.base.bing_verification }}">
+{% endif %}
+
+<style>
+  :root {
+    --accent: {{ view.base.accent }};
+    --accent-2: {{ view.base.accent2 }};
+  }
+</style>
+
+{% if view.base.analytics_provider == "plausible" && !view.base.plausible_domain.is_empty() %}
+<script defer data-domain="{{ view.base.plausible_domain }}" src="https://plausible.io/js/plausible.js"></script>
+{% endif %}
+{% if view.base.analytics_provider == "ga" && !view.base.ga_id.is_empty() %}
+<script async src="https://www.googletagmanager.com/gtag/js?id={{ view.base.ga_id }}"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', '{{ view.base.ga_id }}');
+</script>
+{% endif %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "{{ view.base.site.title }}",
+  "jobTitle": "{{ view.base.site.subtitle }}",
+  "description": "{{ view.base.meta_description }}",
+  "url": "{{ view.base.canonical_url }}",
+  "email": "mailto:{{ view.base.site.email }}",
+  "sameAs": [
+    {% for social in view.base.socials %}{% if social.url.starts_with("http") %}"{{ social.url }}"{% if !loop.last %},{% endif %}{% endif %}{% endfor %}
+  ]
+}
+</script>
+
+{% if !view.base.analytics_head.is_empty() %}
+{{ view.base.analytics_head|safe }}
+{% endif %}

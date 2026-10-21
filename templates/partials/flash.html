@@ -1,0 +1,14 @@
+{% if !view.base.flash.message.is_empty() %}
+<div class="container" style="padding-top:1rem;">
+  <div class="alert {% if view.base.flash.kind == "success" %}alert-success{% else %}alert-error{% endif %}" data-flash>
+    <span style="flex:none;">
+      {% if view.base.flash.kind == "success" %}
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m20 6-11 11-5-5"/></svg>
+      {% else %}
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></svg>
+      {% endif %}
+    </span>
+    <span>{{ view.base.flash.message }}</span>
+  </div>
+</div>
+{% endif %}

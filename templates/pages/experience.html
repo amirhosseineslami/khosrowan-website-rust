@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en" data-theme="{{ view.base.default_theme }}">
+<head>
+{% include "partials/head.html" %}
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+{% include "partials/header.html" %}
+
+<main id="main">
+  <section class="page-hero">
+    <div class="container">
+      <span class="eyebrow">Experience</span>
+      <h1 class="page-title">Experience &amp; education</h1>
+      <p class="section-subtitle" style="font-size:var(--step-1);">
+        Where I have worked, what I built, and what I learned on the way.
+      </p>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="container">
+      <div class="stat-grid reveal" style="margin-bottom:var(--space-xl);">
+        {% for stat in view.stats %}
+        <div class="stat">
+          <div class="stat-value">{{ stat.value }}</div>
+          <div class="stat-label">{{ stat.label }}</div>
+          <div class="stat-hint">{{ stat.hint }}</div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <div class="grid grid-2" style="align-items:start;">
+        <div class="reveal">
+          <h2 style="margin-bottom:var(--space-l);">Work</h2>
+          <div class="timeline">
+            {% for item in view.work %}
+            <div class="timeline-item">
+              <div class="timeline-period">{{ item.period }}{% if item.is_current %} <span class="pill" style="font-size:.66rem;padding:.1rem .45rem;">Current</span>{% endif %}</div>
+              <div class="timeline-title">{{ item.title }}</div>
+              <div class="timeline-org">{{ item.company }}{% if !item.location.is_empty() %} · {{ item.location }}{% endif %}</div>
+              <p class="timeline-desc">{{ item.description }}</p>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="reveal">
+          <h2 style="margin-bottom:var(--space-l);">Education</h2>
+          <div class="timeline">
+            {% for item in view.education %}
+            <div class="timeline-item">
+              <div class="timeline-period">{{ item.period }}</div>
+              <div class="timeline-title">{{ item.title }}</div>
+              <div class="timeline-org">{{ item.company }}{% if !item.location.is_empty() %} · {{ item.location }}{% endif %}</div>
+              <p class="timeline-desc">{{ item.description }}</p>
+            </div>
+            {% endfor %}
+          </div>
+
+          {% if !view.skills.is_empty() %}
+          <h2 style="margin:var(--space-xl) 0 var(--space-l);">Technologies</h2>
+          <div class="skill-grid">
+            {% for group in view.skills %}
+            <div class="card" style="margin-bottom:var(--space-m);">
+              <h3 class="skill-group-title" style="color:var(--accent);">{{ group.label }}</h3>
+              {% for skill in group.items %}
+              <div class="skill">
+                <div class="skill-head">
+                  <span>{{ skill.name }}</span>
+                  <span class="skill-level">{% if !skill.years.is_empty() %}{{ skill.years }}{% endif %}</span>
+                </div>
+                <div class="skill-bar"><div class="skill-fill" data-skill-fill="{{ skill.level }}"></div></div>
+              </div>
+              {% endfor %}
+            </div>
+            {% endfor %}
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+{% include "partials/footer.html" %}

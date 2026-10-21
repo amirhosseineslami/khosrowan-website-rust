@@ -1,0 +1,10 @@
+/target
+/.env
+/data
+/media
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+.DS_Store
+*.log

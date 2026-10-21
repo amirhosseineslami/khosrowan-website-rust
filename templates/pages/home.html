@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="en" data-theme="{{ view.base.default_theme }}">
+<head>
+{% include "partials/head.html" %}
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+{% include "partials/header.html" %}
+
+<main id="main">
+  <section class="hero">
+    <div class="container">
+      <div class="hero-grid">
+        <div>
+          {% if view.base.site.available %}
+          <span class="availability">
+            <span class="dot" aria-hidden="true"></span>
+            Available for select engagements
+          </span>
+          {% endif %}
+
+          <h1 class="hero-title">
+            Hi, I'm <span class="gradient-text">{{ view.hero_title }}</span>.
+          </h1>
+
+          <p class="hero-lede">
+            {{ view.hero_highlight }} —
+            <span class="rotator" data-rotator data-words="{% for word in view.hero_words %}{{ word }}{% if !loop.last %}|{% endif %}{% endfor %}"><span class="word" data-rotator-text>{{ view.hero_words.first().cloned().unwrap_or_default() }}</span></span>
+          </p>
+
+          <p class="text-muted" style="max-width:52ch;margin-top:1rem;">
+            {{ view.hero_subtitle }}
+          </p>
+
+          <div class="flex" style="margin-top:1.8rem;">
+            <a class="btn btn-primary btn-lg" href="/contact">
+              Start a conversation
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+            <a class="btn btn-lg" href="/projects">See my work</a>
+            {% if !view.base.site.cv_file.is_empty() %}
+            <a class="btn btn-lg btn-ghost" href="{{ view.base.site.cv_file }}" download>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7.5 10.5 12 15l4.5-4.5M4 20h16"/></svg>
+              Résumé
+            </a>
+            {% endif %}
+          </div>
+
+          <div class="hero-meta">
+            <div class="hero-meta-item">
+              <span class="hero-meta-label">Based in</span>
+              <span class="hero-meta-value">{{ view.base.site.location }}</span>
+            </div>
+            <div class="hero-meta-item">
+              <span class="hero-meta-label">Focus</span>
+              <span class="hero-meta-value">Backend &amp; systems</span>
+            </div>
+            <div class="hero-meta-item">
+              <span class="hero-meta-label">Writing</span>
+              <span class="hero-meta-value">{{ view.blog_count }} articles</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-avatar reveal">
+          <img src="/assets/img/profile.svg" alt="Portrait of {{ view.base.site.title }}" width="520" height="520">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="container">
+      <div class="stat-grid reveal">
+        {% for stat in view.stats %}
+        <div class="stat">
+          <div class="stat-value">{{ stat.value }}</div>
+          <div class="stat-label">{{ stat.label }}</div>
+          <div class="stat-hint">{{ stat.hint }}</div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  {% if !view.featured_projects.is_empty() %}
+  <section class="section" id="work">
+    <div class="container">
+      <div class="section-head reveal">
+        <div>
+          <span class="eyebrow">Selected work</span>
+          <h2>Projects I'm proud of</h2>
+          <p class="section-subtitle">
+            A few things I have designed, built and operated — from embedded firmware to
+            multi-region platforms.
+          </p>
+        </div>
+        <a class="link-arrow" href="/projects">All projects</a>
+      </div>
+
+      <div class="post-grid">
+        {% for project in view.featured_projects %}
+        <article class="project-card reveal">
+          <div class="project-cover">
+            <span class="project-index">{{ project.index }}</span>
+            <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent);opacity:.65;">
+              <rect x="3" y="3" width="18" height="18" rx="3"/>
+              <path d="M3 9h18M9 21V9"/>
+            </svg>
+          </div>
+          <div class="project-body">
+            <h3 class="project-title"><a href="{{ project.url }}">{{ project.title }}</a></h3>
+            <p class="project-summary">{{ project.summary }}</p>
+            {% if !project.tech.is_empty() %}
+            <div class="tag-row">
+              {% for tech in project.tech %}
+              <span class="tag">{{ tech }}</span>
+              {% endfor %}
+            </div>
+            {% endif %}
+            <div class="project-links">
+              <a class="btn btn-sm" href="{{ project.url }}">Case study</a>
+              {% if project.has_repo %}
+              <a class="btn btn-sm btn-ghost" href="{{ project.repo_url }}" target="_blank" rel="noopener noreferrer">Source</a>
+              {% endif %}
+            </div>
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+  {% endif %}
+
+  {% if !view.latest_posts.is_empty() || !view.featured_posts.is_empty() %}
+  <section class="section" id="writing">
+    <div class="container">
+      <div class="section-head reveal">
+        <div>
+          <span class="eyebrow">From the blog</span>
+          <h2>Recent writing</h2>
+          <p class="section-subtitle">
+            Long-form notes on engineering, systems design and the craft of shipping software that lasts.
+          </p>
+        </div>
+        <a class="link-arrow" href="/blog">All articles</a>
+      </div>
+
+      <div class="post-grid">
+        {% for post in view.featured_posts %}
+        {% include "partials/post_card.html" %}
+        {% endfor %}
+        {% for post in view.latest_posts %}
+        {% include "partials/post_card.html" %}
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+  {% endif %}
+
+  {% if !view.skills.is_empty() %}
+  <section class="section" id="skills">
+    <div class="container">
+      <div class="section-head reveal">
+        <div>
+          <span class="eyebrow">Toolkit</span>
+          <h2>Skills &amp; technologies</h2>
+          <p class="section-subtitle">
+            The tools I reach for, and roughly how deep that experience goes.
+          </p>
+        </div>
+        <a class="link-arrow" href="/skills">Full breakdown</a>
+      </div>
+
+      <div class="grid grid-3 skill-grid">
+        {% for group in view.skills %}
+        <div class="card reveal">
+          <h3 class="skill-group-title" style="color:var(--accent);">{{ group.label }}</h3>
+          {% for skill in group.items %}
+          <div class="skill">
+            <div class="skill-head">
+              <span>{{ skill.name }}</span>
+              <span class="skill-level">{% if !skill.years.is_empty() %}{{ skill.years }}{% endif %}</span>
+            </div>
+            <div class="skill-bar">
+              <div class="skill-fill" data-skill-fill="{{ skill.level }}"></div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+  {% endif %}
+
+  {% if !view.services.is_empty() %}
+  <section class="section" id="services">
+    <div class="container">
+      <div class="section-head reveal">
+        <div>
+          <span class="eyebrow">How I can help</span>
+          <h2>Services</h2>
+          <p class="section-subtitle">
+            Focused engagements for teams that want a second opinion — or a pair of hands.
+          </p>
+        </div>
+        <a class="link-arrow" href="/services">Details</a>
+      </div>
+
+      <div class="grid grid-2">
+        {% for service in view.services %}
+        <div class="card card-hover reveal">
+          <div class="icon-circle">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/><circle cx="12" cy="12" r="3.2"/></svg>
+          </div>
+          <h3 class="card-title">{{ service.title }}</h3>
+          <p class="card-body">{{ service.description }}</p>
+          {% if !service.price_from.is_empty() %}
+          <p class="service-price" style="margin-top:0.9rem;">{{ service.price_from }}</p>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+  {% endif %}
+
+  {% if !view.timeline.is_empty() %}
+  <section class="section" id="experience">
+    <div class="container">
+      <div class="section-head reveal">
+        <div>
+          <span class="eyebrow">Experience</span>
+          <h2>Where I have worked</h2>
+        </div>
+        <a class="link-arrow" href="/experience">Full history</a>
+      </div>
+
+      <div class="grid grid-2">
+        <div class="timeline reveal">
+          {% for item in view.timeline %}
+          <div class="timeline-item">
+            <div class="timeline-period">{{ item.period }}</div>
+            <div class="timeline-title">{{ item.title }}</div>
+            <div class="timeline-org">{{ item.company }}{% if !item.location.is_empty() %} · {{ item.location }}{% endif %}</div>
+            <p class="timeline-desc">{{ item.description }}</p>
+          </div>
+          {% endfor %}
+        </div>
+
+        {% if !view.testimonials.is_empty() %}
+        <div class="stack reveal">
+          {% for testimonial in view.testimonials %}
+          <figure class="card quote-card" style="margin:0;">
+            <blockquote class="quote-text" style="margin:0;">{{ testimonial.body }}</blockquote>
+            <figcaption class="flex" style="margin-top:1.1rem;">
+              <span class="avatar avatar-lg">{{ testimonial.initials }}</span>
+              <span>
+                <strong>{{ testimonial.name }}</strong><br>
+                <span class="text-muted text-sm">{{ testimonial.role }}{% if !testimonial.company.is_empty() %}, {{ testimonial.company }}{% endif %}</span>
+              </span>
+            </figcaption>
+          </figure>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+  {% endif %}
+
+  <section class="section-tight">
+    <div class="container">
+      <div class="newsletter reveal">
+        <div>
+          <span class="eyebrow">Newsletter</span>
+          <h2 style="margin-top:.5rem;">Get the next article in your inbox</h2>
+          <p class="text-muted" style="margin-top:.6rem;max-width:44ch;">
+            One thoughtful email every couple of weeks — deep dives on Rust, systems and
+            engineering craft. No spam, ever.
+          </p>
+        </div>
+        <form class="newsletter-form" method="post" action="/newsletter/subscribe">
+          <div class="hp">
+            <label>Website<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+          </div>
+          <input type="email" name="email" placeholder="you@example.com" required aria-label="E-mail address">
+          <button class="btn btn-primary" type="submit">Subscribe</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="card text-center reveal" style="padding:clamp(2rem,6vw,3.6rem);">
+        <h2 style="font-size:var(--step-3);">Let's build something worth keeping.</h2>
+        <p class="text-muted" style="max-width:46ch;margin:1rem auto 1.8rem;">
+          I take on a small number of consulting and advisory engagements each year.
+          If you have a hard problem, I'd like to hear about it.
+        </p>
+        <div class="flex" style="justify-content:center;">
+          <a class="btn btn-primary btn-lg" href="/contact">Get in touch</a>
+          <a class="btn btn-lg" href="/blog">Read the blog</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+{% include "partials/footer.html" %}

@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en" data-theme="{{ view.base.default_theme }}">
+<head>
+{% include "partials/head.html" %}
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+{% include "partials/header.html" %}
+
+<main id="main">
+  <section class="page-hero">
+    <div class="container">
+      <span class="eyebrow">Testimonials</span>
+      <h1 class="page-title">What people say</h1>
+      <p class="section-subtitle" style="font-size:var(--step-1);">
+        Unedited feedback from the people I have worked with.
+      </p>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="container">
+      {% if view.testimonials.is_empty() %}
+      <div class="empty-state"><strong>No testimonials yet.</strong></div>
+      {% else %}
+      <div class="grid grid-2">
+        {% for testimonial in view.testimonials %}
+        <figure class="card quote-card reveal" style="margin:0;">
+          <div class="stars" aria-label="{{ testimonial.rating }} out of 5">{% for _ in 1..testimonial.rating %}★{% endfor %}</div>
+          <blockquote class="quote-text" style="margin-top:.6rem;">{{ testimonial.body }}</blockquote>
+          <figcaption class="flex" style="margin-top:1.1rem;">
+            <span class="avatar avatar-lg">{{ testimonial.initials }}</span>
+            <span>
+              <strong>{{ testimonial.name }}</strong><br>
+              <span class="text-muted text-sm">{{ testimonial.role }}{% if !testimonial.company.is_empty() %}, {{ testimonial.company }}{% endif %}</span>
+            </span>
+          </figcaption>
+        </figure>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+  </section>
+</main>
+
+{% include "partials/footer.html" %}

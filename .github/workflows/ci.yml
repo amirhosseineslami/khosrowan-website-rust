@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  CARGO_TERM_COLOR: always
+  RUSTFLAGS: "-D warnings"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+
+      - name: Cache cargo
+        uses: Swatinem/rust-cache@v2
+
+      - name: Check formatting
+        run: cargo fmt --all -- --check
+
+      - name: Clippy
+        run: cargo clippy --all-targets --all-features -- -D warnings
+
+      - name: Build
+        run: cargo build --release
+
+      - name: Test
+        run: cargo test --release
+
+  docker:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the image
+        run: docker build -t personal-site:${{ github.sha }} .
+      - name: Smoke test
+        run: |
+          docker run -d --name site -p 3000:3000 \
+            -e APP_SECRET="ci-secret-that-is-long-enough-for-the-check" \
+            personal-site:${{ github.sha }}
+          sleep 5
+          curl -fsS http://127.0.0.1:3000/robots.txt
+          curl -fsS http://127.0.0.1:3000/ | grep -q "<!doctype html>"
+          docker rm -f site

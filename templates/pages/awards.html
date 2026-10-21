@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en" data-theme="{{ view.base.default_theme }}">
+<head>
+{% include "partials/head.html" %}
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+{% include "partials/header.html" %}
+
+<main id="main">
+  <section class="page-hero">
+    <div class="container">
+      <span class="eyebrow">Recognition</span>
+      <h1 class="page-title">Awards &amp; recognition</h1>
+      <p class="section-subtitle" style="font-size:var(--step-1);">
+        Prizes, honours and the occasional pat on the back.
+      </p>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="container">
+      <div class="grid grid-2" style="align-items:start;">
+        <div class="reveal">
+          <h2 style="margin-bottom:var(--space-l);">Awards</h2>
+          <div class="stack">
+            {% for award in view.awards %}
+            <div class="card">
+              <div class="flex-between" style="align-items:flex-start;">
+                <div>
+                  <h3 class="card-title" style="font-size:var(--step-0);">{{ award.title }}</h3>
+                  <div class="text-muted text-sm" style="margin-top:.2rem;">
+                    {{ award.issuer }}{% if !award.awarded_on.is_empty() %} · {{ award.awarded_on }}{% endif %}
+                  </div>
+                </div>
+                {% if award.has_link %}
+                <a class="btn btn-sm btn-ghost" href="{{ award.link }}" target="_blank" rel="noopener noreferrer">Link</a>
+                {% endif %}
+              </div>
+              {% if !award.description.is_empty() %}
+              <p class="card-body" style="margin-top:.7rem;">{{ award.description }}</p>
+              {% endif %}
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="reveal">
+          <h2 style="margin-bottom:var(--space-l);">Speaking</h2>
+          <div class="stack">
+            {% for talk in view.talks %}
+            <div class="card">
+              <h3 class="card-title" style="font-size:var(--step-0);">{{ talk.title }}</h3>
+              <div class="text-muted text-sm" style="margin-top:.2rem;">
+                {{ talk.event }}{% if !talk.date.is_empty() %} · {{ talk.date }}{% endif %}{% if !talk.location.is_empty() %} · {{ talk.location }}{% endif %}
+              </div>
+              {% if !talk.summary.is_empty() %}
+              <p class="card-body" style="margin-top:.6rem;">{{ talk.summary }}</p>
+              {% endif %}
+              <div class="flex" style="margin-top:.9rem;">
+                {% if talk.has_video %}
+                <a class="btn btn-sm" href="{{ talk.video_url }}" target="_blank" rel="noopener noreferrer">Watch</a>
+                {% endif %}
+                {% if talk.has_slides %}
+                <a class="btn btn-sm btn-ghost" href="{{ talk.slides_url }}" target="_blank" rel="noopener noreferrer">Slides</a>
+                {% endif %}
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+
+          {% if !view.publications.is_empty() %}
+          <h2 style="margin:var(--space-xl) 0 var(--space-l);">Publications</h2>
+          <div class="stack">
+            {% for publication in view.publications %}
+            <div class="card">
+              <h3 class="card-title" style="font-size:var(--step-0);">
+                {% if !publication.url.is_empty() %}
+                <a href="{{ publication.url }}" target="_blank" rel="noopener noreferrer">{{ publication.title }}</a>
+                {% else %}
+                {{ publication.title }}
+                {% endif %}
+              </h3>
+              <div class="text-muted text-sm" style="margin-top:.2rem;">{{ publication.publisher }}{% if !publication.date.is_empty() %} · {{ publication.date }}{% endif %}</div>
+              {% if !publication.summary.is_empty() %}
+              <p class="card-body" style="margin-top:.6rem;">{{ publication.summary }}</p>
+              {% endif %}
+            </div>
+            {% endfor %}
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+{% include "partials/footer.html" %}

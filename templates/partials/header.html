@@ -1,0 +1,42 @@
+<header class="site-header" data-header>
+  <div class="container">
+    <nav class="nav" aria-label="Main navigation">
+      <a class="brand" href="/">
+        <span class="brand-mark">{{ view.base.site.logo_text }}</span>
+        <span class="brand-text">
+          {{ view.base.site.title }}
+          <small>{{ view.base.site.subtitle }}</small>
+        </span>
+      </a>
+
+      <ul class="nav-links" data-nav-links>
+        {% for item in view.base.nav %}
+        <li><a href="{{ item.url }}"{% if item.active %} class="active" aria-current="page"{% endif %}>{{ item.label }}</a></li>
+        {% endfor %}
+      </ul>
+
+      <div class="nav-actions">
+        {% if view.base.enable_dark_mode %}
+        <button class="icon-btn" type="button" data-theme-toggle aria-label="Toggle colour theme">
+          <span data-icon="moon">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          </span>
+          <span data-icon="sun" style="display:none">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+          </span>
+        </button>
+        {% endif %}
+
+        {% if view.base.user.is_some() %}
+        <a class="btn btn-sm btn-ghost" href="/admin">Dashboard</a>
+        {% else %}
+        <a class="btn btn-sm btn-ghost" href="/admin/login">Sign in</a>
+        {% endif %}
+
+        <button class="icon-btn nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-label="Toggle navigation">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        </button>
+      </div>
+    </nav>
+  </div>
+</header>

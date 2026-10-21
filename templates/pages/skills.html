@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en" data-theme="{{ view.base.default_theme }}">
+<head>
+{% include "partials/head.html" %}
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+{% include "partials/header.html" %}
+
+<main id="main">
+  <section class="page-hero">
+    <div class="container">
+      <span class="eyebrow">Toolkit</span>
+      <h1 class="page-title">Skills</h1>
+      <p class="section-subtitle" style="font-size:var(--step-1);">
+        {{ view.total }} technologies I have used in production — grouped by what they are
+        actually for.
+      </p>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="container">
+      <div class="grid grid-3 skill-grid">
+        {% for group in view.skills %}
+        <div class="card reveal">
+          <h3 class="skill-group-title" style="color:var(--accent);">{{ group.label }}</h3>
+          {% for skill in group.items %}
+          <div class="skill">
+            <div class="skill-head">
+              <span>{{ skill.name }}</span>
+              <span class="skill-level">{% if !skill.years.is_empty() %}{{ skill.years }}{% endif %}</span>
+            </div>
+            <div class="skill-bar"><div class="skill-fill" data-skill-fill="{{ skill.level }}"></div></div>
+          </div>
+          {% endfor %}
+        </div>
+        {% endfor %}
+      </div>
+
+      <div class="card reveal" style="margin-top:var(--space-xl);">
+        <h3 class="card-title">How to read these numbers</h3>
+        <p class="card-body">
+          The bars reflect how comfortable I am shipping production code with each tool, not
+          how many years I have used it. Years of experience are shown next to each name —
+          sometimes a tool I know well is a newer one, and sometimes the reverse.
+        </p>
+      </div>
+    </div>
+  </section>
+</main>
+
+{% include "partials/footer.html" %}

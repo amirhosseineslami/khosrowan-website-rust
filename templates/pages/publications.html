@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en" data-theme="{{ view.base.default_theme }}">
+<head>
+{% include "partials/head.html" %}
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+{% include "partials/header.html" %}
+
+<main id="main">
+  <section class="page-hero">
+    <div class="container">
+      <span class="eyebrow">Research</span>
+      <h1 class="page-title">Publications</h1>
+      <p class="section-subtitle" style="font-size:var(--step-1);">
+        Peer-reviewed work and long-form technical writing.
+      </p>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="container container-narrow">
+      <div class="stack">
+        {% for publication in view.publications %}
+        <article class="card reveal">
+          <div class="flex-between" style="align-items:flex-start;">
+            <div>
+              <h2 class="card-title">
+                {% if !publication.url.is_empty() %}
+                <a href="{{ publication.url }}" target="_blank" rel="noopener noreferrer">{{ publication.title }}</a>
+                {% else %}
+                {{ publication.title }}
+                {% endif %}
+              </h2>
+              <div class="text-muted text-sm" style="margin-top:.25rem;">
+                {{ publication.publisher }}{% if !publication.date.is_empty() %} · {{ publication.date }}{% endif %}
+              </div>
+            </div>
+          </div>
+          {% if !publication.summary.is_empty() %}
+          <p class="card-body" style="margin-top:.8rem;">{{ publication.summary }}</p>
+          {% endif %}
+        </article>
+        {% endfor %}
+      </div>
+
+      {% if !view.talks.is_empty() %}
+      <section class="section">
+        <h2 style="margin-bottom:var(--space-l);">Recent talks</h2>
+        <div class="stack">
+          {% for talk in view.talks %}
+          <div class="card">
+            <h3 class="card-title" style="font-size:var(--step-0);">{{ talk.title }}</h3>
+            <div class="text-muted text-sm" style="margin-top:.25rem;">{{ talk.event }} · {{ talk.date }}</div>
+          </div>
+          {% endfor %}
+        </div>
+      </section>
+      {% endif %}
+    </div>
+  </section>
+</main>
+
+{% include "partials/footer.html" %}

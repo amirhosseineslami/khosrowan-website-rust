@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en" data-theme="{{ view.base.default_theme }}">
+<head>
+{% include "admin/partials/head.html" %}
+</head>
+<body>
+<div class="admin-body">
+  {% include "admin/partials/sidebar.html" %}
+
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <div>
+        <h1>Backup &amp; restore</h1>
+        <p>Export your content, or restore it from a previous export</p>
+      </div>
+    </header>
+
+    <div class="admin-content">
+      <div class="admin-grid-3">
+        <div class="kpi">
+          <div class="kpi-label">Posts</div>
+          <div class="kpi-value">{{ view.stats.posts_total }}</div>
+          <div class="kpi-hint">{{ view.stats.posts_published }} published</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Projects</div>
+          <div class="kpi-value">{{ view.stats.projects_total }}</div>
+          <div class="kpi-hint">{{ view.stats.pages_total }} pages</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Media</div>
+          <div class="kpi-value">{{ view.stats.media_count }}</div>
+          <div class="kpi-hint">files in the library</div>
+        </div>
+      </div>
+
+      <section class="card">
+        <h2 style="font-size:var(--step-1);margin-bottom:.6rem;">Export everything</h2>
+        <p class="text-muted text-sm" style="margin-bottom:1.2rem;">
+          Download every content table as a single JSON document. Keep it somewhere safe —
+          it is the fastest way to move to another host.
+        </p>
+        <div class="flex">
+          <a class="btn btn-primary" href="/admin/backup/export">Download JSON export</a>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2 style="font-size:var(--step-1);margin-bottom:.6rem;">Import an export</h2>
+        <p class="text-muted text-sm" style="margin-bottom:1.2rem;">
+          Paste a previously exported JSON document. Existing rows with the same primary key
+          are replaced; everything else is inserted.
+        </p>
+        <form method="post" action="/admin/backup/import" class="form">
+          <input type="hidden" name="csrf_token" value="{{ view.csrf_token }}">
+          <div class="field">
+            <label for="payload">JSON document</label>
+            <textarea id="payload" name="payload" class="mono" style="min-height:220px;" placeholder="{ &quot;posts&quot;: [ … ] }" required></textarea>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-primary" type="submit">Import</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="card" style="border-color:rgba(239,68,68,.35);">
+        <h2 style="font-size:var(--step-1);margin-bottom:.6rem;color:#f87171;">Danger zone</h2>
+        <p class="text-muted text-sm" style="margin-bottom:1.2rem;">
+          This permanently deletes every post, page, comment, message and view record.
+          Users, settings and media are left untouched. Export first.
+        </p>
+        <form method="post" action="/admin/backup/reset" class="form" data-confirm="This permanently deletes all content. Continue?">
+          <input type="hidden" name="csrf_token" value="{{ view.csrf_token }}">
+          <div class="field" style="max-width:340px;">
+            <label for="confirmation">Type DELETE to confirm</label>
+            <input id="confirmation" type="text" name="confirmation" placeholder="DELETE" required autocomplete="off">
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-ghost" type="submit" style="border-color:rgba(239,68,68,.4);color:#f87171;">Delete all content</button>
+          </div>
+        </form>
+      </section>
+    </div>
+  </div>
+</div>
+<script src="/assets/js/main.js" defer></script>
+</body>
+</html>

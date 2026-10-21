@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en" data-theme="{{ view.base.default_theme }}">
+<head>
+{% include "partials/head.html" %}
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="progress-bar" data-progress></div>
+{% include "partials/header.html" %}
+
+<main id="main">
+  <article data-article>
+    <section class="section-tight" style="padding-top:var(--space-xl);">
+      <div class="container container-narrow">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <a href="/">Home</a><span aria-hidden="true">/</span>
+          <a href="/blog">Blog</a>
+          {% if !view.post.category_name.is_empty() %}
+          <span aria-hidden="true">/</span>
+          <a href="/blog?category={{ view.post.category_slug }}">{{ view.post.category_name }}</a>
+          {% endif %}
+        </nav>
+
+        <header class="article-header" style="margin-top:1.2rem;">
+          {% if !view.post.category_name.is_empty() %}
+          <span class="pill">{{ view.post.category_name }}</span>
+          {% endif %}
+          <h1 style="font-size:var(--step-4);margin-top:.8rem;">{{ view.post.title }}</h1>
+          <p class="text-lg text-muted" style="margin-top:.8rem;">{{ view.post.excerpt }}</p>
+
+          <div class="article-meta" style="margin-top:1.3rem;">
+            <span class="avatar avatar-lg">{{ view.post.author_initials }}</span>
+            <span>
+              <strong style="color:var(--text);">{{ view.post.author }}</strong><br>
+              <time datetime="{{ view.post.published_iso }}">{{ view.post.published_at }}</time>
+            </span>
+            <span aria-hidden="true">·</span>
+            <span>{{ view.post.reading_time }} min read</span>
+            <span aria-hidden="true">·</span>
+            <span>{{ view.post.word_count }} words</span>
+            <span aria-hidden="true">·</span>
+            <span>{{ view.post.view_count }} views</span>
+          </div>
+        </header>
+
+        {% if view.post.has_cover %}
+        <div class="article-cover">
+          <img src="{{ view.post.cover_image }}" alt="{{ view.post.title }}">
+        </div>
+        {% endif %}
+
+        <div class="article-layout">
+          <div>
+            <div class="prose">{{ view.post.content_html|safe }}</div>
+
+            <footer class="article-footer">
+              {% if !view.post.tags.is_empty() %}
+              <div class="tag-row" style="margin-bottom:1.2rem;">
+                {% for tag in view.post.tags %}
+                <a class="tag" href="/blog?tag={{ tag.slug }}">#{{ tag.name }}</a>
+                {% endfor %}
+              </div>
+              {% endif %}
+
+              <div class="flex-between">
+                <div>
+                  <div class="footer-title" style="margin-bottom:.4rem;">Share this article</div>
+                  <div class="share-row">
+                    <a class="share-btn" href="https://twitter.com/intent/tweet?text={{ view.post.title }}&url={{ view.post.share_url }}" target="_blank" rel="noopener noreferrer">Twitter / X</a>
+                    <a class="share-btn" href="https://www.linkedin.com/sharing/share-offsite/?url={{ view.post.share_url }}" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                    <a class="share-btn" href="https://news.ycombinator.com/submitlink?u={{ view.post.share_url }}&t={{ view.post.title }}" target="_blank" rel="noopener noreferrer">Hacker News</a>
+                    <button class="share-btn" type="button" data-copy="[data-share-url]">Copy link</button>
+                  </div>
+                  <span data-share-url hidden>{{ view.post.share_url }}</span>
+                </div>
+              </div>
+
+              {% if view.post.prev.is_some() || view.post.next.is_some() %}
+              <div class="post-nav">
+                {% if view.post.prev.is_some() %}
+                <a href="{{ view.post.prev.as_ref().unwrap().url }}">
+                  <span class="post-nav-label">← Previous</span>
+                  <div class="post-nav-title">{{ view.post.prev.as_ref().unwrap().title }}</div>
+                </a>
+                {% endif %}
+                {% if view.post.next.is_some() %}
+                <a href="{{ view.post.next.as_ref().unwrap().url }}" style="text-align:right;">
+                  <span class="post-nav-label">Next →</span>
+                  <div class="post-nav-title">{{ view.post.next.as_ref().unwrap().title }}</div>
+                </a>
+                {% endif %}
+              </div>
+              {% endif %}
+            </footer>
+
+            <section class="card" style="margin-top:var(--space-xl);display:flex;gap:1.1rem;align-items:flex-start;">
+              <span class="avatar avatar-lg">{{ view.post.author_initials }}</span>
+              <div>
+                <h3 style="font-size:var(--step-1);">{{ view.post.author }}</h3>
+                {% if !view.post.author_bio.is_empty() %}
+                <p class="text-muted" style="margin-top:.4rem;">{{ view.post.author_bio }}</p>
+                {% endif %}
+                <div class="flex" style="margin-top:.8rem;">
+                  <a class="btn btn-sm" href="/about">More about me</a>
+                  <a class="btn btn-sm btn-ghost" href="/blog">All articles</a>
+                </div>
+              </div>
+            </section>
+
+            {% if !view.post.related.is_empty() %}
+            <section style="margin-top:var(--space-xl);">
+              <div class="section-head" style="margin-bottom:var(--space-m);">
+                <h2 style="font-size:var(--step-2);">Related reading</h2>
+              </div>
+              <div class="post-grid">
+                {% for post in view.post.related %}
+                {% include "partials/post_card.html" %}
+                {% endfor %}
+              </div>
+            </section>
+            {% endif %}
+
+            {% if view.comments_enabled %}
+            <section id="comments" style="margin-top:var(--space-xl);">
+              <h2 style="font-size:var(--step-2);margin-bottom:.4rem;">Discussion</h2>
+              <p class="text-muted text-sm" style="margin-bottom:1.2rem;">
+                Comments are moderated — they appear once approved.
+              </p>
+
+              {% if !view.post.comments.is_empty() %}
+              <div class="card" style="padding-top:.4rem;padding-bottom:.4rem;">
+                {% for comment in view.post.comments %}
+                <div class="comment">
+                  <span class="avatar">{{ comment.author_initials }}</span>
+                  <div class="comment-body">
+                    <div class="comment-head">
+                      <span class="comment-author">{{ comment.author_name }}</span>
+                      <span class="comment-meta"><time datetime="{{ comment.created_iso }}">{{ comment.time_ago }}</time></span>
+                    </div>
+                    <p style="margin:0;color:var(--text-muted);">{{ comment.body }}</p>
+                    {% if !comment.replies.is_empty() %}
+                    <div class="comment-replies">
+                      {% for reply in comment.replies %}
+                      <div class="comment">
+                        <span class="avatar">{{ reply.author_initials }}</span>
+                        <div class="comment-body">
+                          <div class="comment-head">
+                            <span class="comment-author">{{ reply.author_name }}</span>
+                            <span class="comment-meta"><time datetime="{{ reply.created_iso }}">{{ reply.time_ago }}</time></span>
+                          </div>
+                          <p style="margin:0;color:var(--text-muted);">{{ reply.body }}</p>
+                        </div>
+                      </div>
+                      {% endfor %}
+                    </div>
+                    {% endif %}
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+              {% endif %}
+
+              <form class="card form" method="post" action="/blog/{{ view.post.slug }}/comment" style="margin-top:var(--space-m);">
+                <h3 style="font-size:var(--step-1);">Leave a comment</h3>
+                <div class="hp">
+                  <label>Website<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+                </div>
+                <div class="form-row">
+                  <div class="field">
+                    <label for="c-name">Name</label>
+                    <input id="c-name" type="text" name="author_name" required maxlength="120" placeholder="Ada Lovelace">
+                  </div>
+                  <div class="field">
+                    <label for="c-email">E-mail <span class="text-faint">(not published)</span></label>
+                    <input id="c-email" type="email" name="author_email" required placeholder="ada@example.com">
+                  </div>
+                </div>
+                <div class="field">
+                  <label for="c-website">Website <span class="text-faint">(optional)</span></label>
+                  <input id="c-website" type="text" name="author_website" placeholder="example.com">
+                </div>
+                <div class="field">
+                  <label for="c-body">Comment</label>
+                  <textarea id="c-body" name="body" required placeholder="What did you think?" style="min-height:120px;"></textarea>
+                </div>
+                <div class="form-actions">
+                  <button class="btn btn-primary" type="submit">Post comment</button>
+                  <span class="text-faint text-sm">Markdown is supported.</span>
+                </div>
+              </form>
+            </section>
+            {% endif %}
+          </div>
+
+          {% if !view.post.toc.is_empty() %}
+          <aside class="toc">
+            <div class="toc-title">On this page</div>
+            {% for item in view.post.toc %}
+            <a class="level-{{ item.level }}" href="#{{ item.anchor }}">{{ item.text }}</a>
+            {% endfor %}
+          </aside>
+          {% endif %}
+        </div>
+      </div>
+    </section>
+  </article>
+</main>
+
+{% include "partials/footer.html" %}

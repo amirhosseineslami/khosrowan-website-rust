@@ -1,0 +1,21 @@
+{% if view.pagination.total_pages > 1 %}
+<nav class="pagination" aria-label="Pagination">
+  {% if !view.pagination.prev_href.is_empty() %}
+  <a href="{{ view.pagination.prev_href }}" aria-label="Previous page">←</a>
+  {% endif %}
+
+  {% for link in view.pagination.links %}
+    {% if link.is_gap %}
+    <span class="gap">{{ link.label }}</span>
+    {% else if link.is_current %}
+    <span class="current">{{ link.label }}</span>
+    {% else %}
+    <a href="{{ link.href }}">{{ link.label }}</a>
+    {% endif %}
+  {% endfor %}
+
+  {% if !view.pagination.next_href.is_empty() %}
+  <a href="{{ view.pagination.next_href }}" aria-label="Next page">→</a>
+  {% endif %}
+</nav>
+{% endif %}

@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en" data-theme="{{ view.base.default_theme }}">
+<head>
+{% include "partials/head.html" %}
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+{% include "partials/header.html" %}
+
+<main id="main">
+  <section class="section-tight" style="padding-top:var(--space-xl);">
+    <div class="container">
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <a href="/">Home</a><span aria-hidden="true">/</span>
+        <a href="/projects">Projects</a><span aria-hidden="true">/</span>
+        <span>{{ view.project.title }}</span>
+      </nav>
+
+      <div class="grid" style="grid-template-columns:minmax(0,1fr);gap:var(--space-l);margin-top:var(--space-m);">
+        <header>
+          <div class="flex" style="align-items:baseline;gap:1rem;">
+            <span class="mono text-faint">{{ view.project.index }}</span>
+            <h1 style="font-size:var(--step-4);">{{ view.project.title }}</h1>
+          </div>
+          <p class="text-lg text-muted" style="max-width:60ch;margin-top:.8rem;">{{ view.project.summary }}</p>
+
+          {% if !view.project.tech.is_empty() %}
+          <div class="tag-row" style="margin-top:1.1rem;">
+            {% for tech in view.project.tech %}
+            <span class="tag">{{ tech }}</span>
+            {% endfor %}
+          </div>
+          {% endif %}
+
+          <div class="flex" style="margin-top:1.6rem;">
+            {% if !view.project.live_url.is_empty() %}
+            <a class="btn btn-primary" href="{{ view.project.live_url }}" target="_blank" rel="noopener noreferrer">Visit project</a>
+            {% endif %}
+            {% if !view.project.repo_url.is_empty() %}
+            <a class="btn" href="{{ view.project.repo_url }}" target="_blank" rel="noopener noreferrer">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.37.5 0 5.87 0 12.5c0 5.3 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.73.08-.73 1.21.08 1.84 1.24 1.84 1.24 1.07 1.83 2.8 1.3 3.48.99.11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.34-5.47-5.96 0-1.32.47-2.39 1.24-3.23-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6.01 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.66.24 2.88.12 3.18.77.84 1.23 1.91 1.23 3.23 0 4.63-2.8 5.65-5.48 5.95.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58A12.02 12.02 0 0 0 24 12.5C24 5.87 18.63.5 12 .5z"/></svg>
+              Source code
+            </a>
+            {% endif %}
+          </div>
+        </header>
+
+        {% if view.project.has_cover %}
+        <div class="article-cover" style="margin-bottom:0;">
+          <img src="{{ view.project.cover_image }}" alt="{{ view.project.title }}">
+        </div>
+        {% endif %}
+
+        <div class="article-layout">
+          <article class="prose">
+            {{ view.project.description_html|safe }}
+          </article>
+
+          <aside class="toc">
+            <div class="toc-title">Details</div>
+            <div class="stack" style="--space-s:.7rem;">
+              {% if !view.project.client.is_empty() %}
+              <div>
+                <div class="toc-title" style="margin-bottom:.2rem;">Client</div>
+                <div class="text-sm">{{ view.project.client }}</div>
+              </div>
+              {% endif %}
+              <div>
+                <div class="toc-title" style="margin-bottom:.2rem;">Started</div>
+                <div class="text-sm">{{ view.project.created_at }}</div>
+              </div>
+              <div>
+                <div class="toc-title" style="margin-bottom:.2rem;">Updated</div>
+                <div class="text-sm">{{ view.project.updated_at }}</div>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+
+      {% if !view.project.related.is_empty() %}
+      <section class="section">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">More work</span>
+            <h2>Related projects</h2>
+          </div>
+          <a class="link-arrow" href="/projects">All projects</a>
+        </div>
+        <div class="post-grid">
+          {% for project in view.project.related %}
+          <article class="project-card reveal">
+            <div class="project-cover">
+              <span class="project-index">{{ project.index }}</span>
+            </div>
+            <div class="project-body">
+              <h3 class="project-title"><a href="{{ project.url }}">{{ project.title }}</a></h3>
+              <p class="project-summary">{{ project.summary }}</p>
+              <div class="project-links">
+                <a class="btn btn-sm" href="{{ project.url }}">Read more</a>
+              </div>
+            </div>
+          </article>
+          {% endfor %}
+        </div>
+      </section>
+      {% endif %}
+    </div>
+  </section>
+</main>
+
+{% include "partials/footer.html" %}

@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en" data-theme="{{ view.base.default_theme }}">
+<head>
+{% include "partials/head.html" %}
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+{% include "partials/header.html" %}
+
+<main id="main">
+  <section class="page-hero">
+    <div class="container">
+      <span class="eyebrow">Search</span>
+      <h1 class="page-title">
+        {% if view.query.is_empty() %}Search{% else %}Results for “{{ view.query }}”{% endif %}
+      </h1>
+      <p class="section-subtitle" style="font-size:var(--step-1);">
+        {% if view.query.is_empty() %}
+        Search across articles, projects and pages.
+        {% else %}
+        {{ view.total }} result(s) across the whole site.
+        {% endif %}
+      </p>
+
+      <form class="filter-bar" method="get" action="/search" style="margin-top:1.4rem;">
+        <input type="search" name="q" value="{{ view.query }}" placeholder="Search…" style="max-width:320px;" aria-label="Search the site" autofocus>
+        <button class="btn btn-sm" type="submit">Search</button>
+        {% if !view.query.is_empty() %}
+        <a class="btn btn-sm btn-ghost" href="/search">Clear</a>
+        {% endif %}
+      </form>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="container">
+      {% if view.query.is_empty() %}
+      <div class="empty-state">
+        <strong>Start typing to search.</strong>
+        Try “rust”, “schema”, or “performance”.
+      </div>
+      {% else %}
+        {% if !view.posts.is_empty() %}
+        <h2 style="margin-bottom:var(--space-m);font-size:var(--step-2);">Articles</h2>
+        <div class="post-grid">
+          {% for post in view.posts %}
+          {% include "partials/post_card.html" %}
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if !view.projects.is_empty() %}
+        <h2 style="margin:var(--space-xl) 0 var(--space-m);font-size:var(--step-2);">Projects</h2>
+        <div class="post-grid">
+          {% for project in view.projects %}
+          <article class="project-card reveal">
+            <div class="project-cover"></div>
+            <div class="project-body">
+              <h3 class="project-title"><a href="{{ project.url }}">{{ project.title }}</a></h3>
+              <p class="project-summary">{{ project.summary }}</p>
+            </div>
+          </article>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if !view.pages.is_empty() %}
+        <h2 style="margin:var(--space-xl) 0 var(--space-m);font-size:var(--step-2);">Pages</h2>
+        <div class="stack">
+          {% for page in view.pages %}
+          <a class="card card-hover" href="{{ page.url }}">
+            <h3 class="card-title" style="font-size:var(--step-0);">{{ page.title }}</h3>
+            <p class="card-body" style="margin-top:.4rem;">{{ page.excerpt }}</p>
+          </a>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if view.total == 0 %}
+        <div class="empty-state">
+          <strong>No matches.</strong>
+          Nothing on the site matches “{{ view.query }}”. Try a shorter phrase.
+        </div>
+        {% endif %}
+      {% endif %}
+    </div>
+  </section>
+</main>
+
+{% include "partials/footer.html" %}
