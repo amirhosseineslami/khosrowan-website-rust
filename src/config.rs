@@ -79,7 +79,10 @@ impl Config {
         let env = |k: &str| std::env::var(k).ok().filter(|v| !v.trim().is_empty());
 
         let host = env("HOST").unwrap_or_else(|| "0.0.0.0".to_string());
-        let port: u16 = env("PORT").and_then(|v| v.parse().ok()).unwrap_or(3000);
+        let port: u16 = env("SERVER_PORT")
+            .or_else(|| env("PORT"))
+            .and_then(|v| v.parse().ok())
+            .unwrap_or(3000);
         let ip: IpAddr = host
             .parse()
             .unwrap_or(IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)));
