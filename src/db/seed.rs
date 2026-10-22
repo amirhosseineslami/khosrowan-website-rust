@@ -11,16 +11,41 @@ use crate::config::Config;
 /// Default site settings, grouped for the admin settings screen.
 pub const DEFAULT_SETTINGS: &[(&str, &str, &str, &str)] = &[
     // key, value, type, group
-    ("site.title", "Amir Rahimi", "text", "general"),
-    ("site.subtitle", "Software Engineer & Systems Architect", "text", "general"),
-    ("site.description", "I design and build resilient backends, distributed systems and developer tooling. Writing about Rust, performance and the craft of shipping software that lasts.", "textarea", "general"),
-    ("site.tagline", "Building reliable systems, one commit at a time.", "text", "general"),
-    ("site.email", "hello@example.com", "text", "general"),
-    ("site.phone", "+49 151 23456789", "text", "general"),
-    ("site.location", "Berlin, Germany · Remote worldwide", "text", "general"),
+    ("site.title", "Amirhossein Eslami", "text", "general"),
+    (
+        "site.subtitle",
+        "Electrical & Control Engineering · AI & Robotics",
+        "text",
+        "general",
+    ),
+    (
+        "site.description",
+        "Electrical engineering (control) student at Iran University of Science and Technology, focused on robotics, AI/ML, control systems, computer vision and intelligent engineering solutions. Researching decentralized and safe formation control for mobile robots.",
+        "textarea",
+        "general",
+    ),
+    (
+        "site.tagline",
+        "The future belongs to systems that can sense, learn, adapt, and collaborate.",
+        "text",
+        "general",
+    ),
+    ("site.email", "amirhossein.eslami.ac@gmail.com", "text", "general"),
+    ("site.phone", "", "text", "general"),
+    (
+        "site.location",
+        "Tehran, Iran · Iran University of Science and Technology",
+        "text",
+        "general",
+    ),
     ("site.available", "true", "bool", "general"),
-    ("site.availability_note", "Currently available for select consulting & advisory engagements.", "text", "general"),
-    ("site.logo_text", "AR", "text", "general"),
+    (
+        "site.availability_note",
+        "Open to research collaborations, internships and mentorship.",
+        "text",
+        "general",
+    ),
+    ("site.logo_text", "AE", "text", "general"),
     ("site.favicon", "/assets/img/favicon.svg", "text", "general"),
     ("site.default_og_image", "/assets/img/og-default.svg", "text", "general"),
     ("site.cv_file", "/assets/files/cv.pdf", "text", "general"),
@@ -32,9 +57,19 @@ pub const DEFAULT_SETTINGS: &[(&str, &str, &str, &str)] = &[
     ("site.enable_comments", "true", "bool", "content"),
     ("site.enable_newsletter", "true", "bool", "content"),
     ("site.allow_registration", "false", "bool", "content"),
-    ("seo.meta_description", "Personal website and blog of Amir Rahimi — software engineer specialising in Rust, distributed systems and developer experience.", "textarea", "seo"),
+    (
+        "seo.meta_description",
+        "Personal website of Amirhossein Eslami — electrical & control engineering student at IUST working on robotics, AI/ML, computer vision and intelligent control.",
+        "textarea",
+        "seo",
+    ),
     ("seo.og_type", "website", "text", "seo"),
-    ("seo.twitter_site", "@amirrahimi", "text", "seo"),
+    (
+        "seo.twitter_site",
+        "@amirhosseineslami",
+        "text",
+        "seo",
+    ),
     ("seo.google_site_verification", "", "text", "seo"),
     ("seo.bing_verification", "", "text", "seo"),
     ("analytics.provider", "none", "text", "analytics"),
@@ -43,10 +78,30 @@ pub const DEFAULT_SETTINGS: &[(&str, &str, &str, &str)] = &[
     ("analytics.custom_head", "", "textarea", "analytics"),
     ("analytics.custom_footer", "", "textarea", "analytics"),
     ("contact.form_enabled", "true", "bool", "contact"),
-    ("contact.success_message", "Thanks! Your message has been delivered — I'll get back to you within two business days.", "textarea", "contact"),
-    ("contact.notify_email", "hello@example.com", "text", "contact"),
-    ("newsletter.heading", "Subscribe for deep dives on Rust and system design.", "text", "newsletter"),
-    ("newsletter.subheading", "One thoughtful email every couple of weeks. No spam, ever.", "text", "newsletter"),
+    (
+        "contact.success_message",
+        "Thanks! Your message has been delivered — I'll get back to you soon.",
+        "textarea",
+        "contact",
+    ),
+    (
+        "contact.notify_email",
+        "amirhossein.eslami.ac@gmail.com",
+        "text",
+        "contact",
+    ),
+    (
+        "newsletter.heading",
+        "Subscribe for deep dives on AI, robotics and control engineering.",
+        "text",
+        "newsletter",
+    ),
+    (
+        "newsletter.subheading",
+        "One thoughtful email every couple of weeks. No spam, ever.",
+        "text",
+        "newsletter",
+    ),
 ];
 
 pub async fn run(pool: &SqlitePool, config: &Config) -> Result<()> {
@@ -64,12 +119,12 @@ pub async fn run(pool: &SqlitePool, config: &Config) -> Result<()> {
 
     let user_id: i64 = sqlx::query_scalar(
         "INSERT INTO users (username, email, password_hash, role, display_name, bio, created_at, updated_at)
-         VALUES (?, ?, ?, 'owner', 'Amir Rahimi', ?, ?, ?) RETURNING id",
+         VALUES (?, ?, ?, 'owner', 'Amirhossein Eslami', ?, ?, ?) RETURNING id",
     )
     .bind(&config.admin_username)
     .bind(&config.admin_email)
     .bind(&password_hash)
-    .bind("Backend engineer with 10+ years of experience building high-throughput platforms. Currently focused on Rust, real-time systems and developer tooling.")
+    .bind("An Electrical Engineering (Control) student at Iran University of Science and Technology (IUST), interested in robotics, AI/ML, control systems, computer vision, data science, and intelligent engineering solutions.")
     .bind(now)
     .bind(now)
     .fetch_one(pool)
@@ -102,15 +157,24 @@ async fn seed_settings(pool: &SqlitePool) -> Result<()> {
 async fn seed_taxonomy(pool: &SqlitePool) -> Result<()> {
     let categories = [
         (
-            "Engineering",
-            "engineering",
-            "Deep dives into software engineering practice.",
+            "Machine Learning",
+            "machine-learning",
+            "Models, algorithms and the mathematics behind learning from data.",
         ),
-        ("Rust", "rust", "All about the Rust programming language."),
         (
-            "Architecture",
-            "architecture",
-            "Designing systems that survive reality.",
+            "Robotics",
+            "robotics",
+            "Robots, embedded systems and the software that makes them move.",
+        ),
+        (
+            "Computer Vision",
+            "computer-vision",
+            "Teaching machines to see: detection, segmentation and beyond.",
+        ),
+        (
+            "Control Systems",
+            "control-systems",
+            "Feedback, dynamics and making physical systems behave.",
         ),
         ("Notes", "notes", "Short, opinionated notes."),
         ("Tutorial", "tutorial", "Step-by-step walkthroughs."),
@@ -125,23 +189,26 @@ async fn seed_taxonomy(pool: &SqlitePool) -> Result<()> {
     }
 
     let tags = [
-        ("Rust", "rust", "rust", "#f74c00"),
-        ("Axum", "axum", "axum", "#8b5cf6"),
-        ("PostgreSQL", "postgresql", "postgresql", "#336791"),
         (
-            "Distributed Systems",
-            "distributed-systems",
-            "distributed-systems",
-            "#10b981",
+            "Reinforcement Learning",
+            "reinforcement-learning",
+            "#f59e0b",
         ),
-        ("Performance", "performance", "performance", "#f59e0b"),
-        ("DevOps", "devops", "devops", "#0ea5e9"),
-        ("Career", "career", "career", "#ec4899"),
-        ("Open Source", "open-source", "open-source", "#22d3ee"),
-        ("Architecture", "architecture", "architecture", "#6366f1"),
-        ("Databases", "databases", "databases", "#14b8a6"),
+        (
+            "Multi-Agent Systems",
+            "multi-agent-systems",
+            "#8b5cf6",
+        ),
+        ("Deep Learning", "deep-learning", "#6366f1"),
+        ("Computer Vision", "computer-vision", "#22d3ee"),
+        ("Python", "python", "#10b981"),
+        ("Arduino", "arduino", "#0ea5e9"),
+        ("Data Science", "data-science", "#14b8a6"),
+        ("Research", "research", "#ec4899"),
+        ("Open Source", "open-source", "#22d3ee"),
+        ("YOLO", "yolo", "#ef4444"),
     ];
-    for (name, slug, _kind, hex) in tags {
+    for (name, slug, hex) in tags {
         sqlx::query("INSERT OR IGNORE INTO tags (name, slug, color) VALUES (?, ?, ?)")
             .bind(name)
             .bind(slug)
@@ -157,319 +224,182 @@ async fn seed_posts(pool: &SqlitePool, author_id: i64) -> Result<()> {
 
     let posts: Vec<(&str, &str, &str, &str, &str, &str, i64)> = vec![
         (
-            "building-a-production-web-stack-in-rust",
-            "Building a Production Web Stack in Rust",
-            "A tour of the architecture behind a high-traffic Rust service: routing, middleware, graceful shutdown and the boring parts that keep a system alive at 3am.",
-            "engineering",
-            "rust",
-            r#"## Why Rust for the web?
+            "building-a-worm-like-crawling-robot-with-rl",
+            "Building a Worm-like Crawling Robot with Reinforcement Learning",
+            "How I taught an Arduino-powered servo worm to crawl using reinforcement learning — and what the project taught me about reward shaping, sim-to-real gaps and patience.",
+            "robotics",
+            "reinforcement-learning",
+            r#"## A robot that learns to crawl
 
-Rust gives you two things that matter enormously when a service runs in production: **predictable performance** and **fearless concurrency**. There is no garbage collector pause, and the compiler rejects entire classes of bugs at compile time.
+The premise was simple: build a worm-like robot from servos and an Arduino, then use reinforcement learning to discover a crawling gait instead of hand-coding one.
 
-In this post I want to walk through the exact stack I use for services that handle millions of requests per day.
+### The hardware
 
-### The stack
+- An Arduino board driving five servo motors arranged in a line, mimicking a segmented worm.
+- Each segment flexes independently, and the whole body works together to inch forward.
 
-| Layer | Choice | Why |
-| --- | --- | --- |
-| HTTP | `axum` | Composable extractors, tower middleware |
-| Async | `tokio` | The de-facto standard runtime |
-| Storage | `sqlx` | Compile-time checked SQL |
-| Templating | `askama` | Type-safe templates, zero runtime cost |
+### The learning setup
 
-### Middleware is the real architecture
+The state is a compact representation of the servo angles. The action is the set of target angles for the next timestep. The reward pushes the robot to maximise forward displacement while staying within safe joint limits:
 
-Most people reach for a framework and then bolt middleware on top. With `tower` you get a *stack*, and that stack is your architecture:
-
-```rust
-let app = Router::new()
-    .route("/posts", get(list_posts))
-    .layer(middleware::from_fn(with_user))
-    .layer(middleware::from_fn(rate_limit))
-    .layer(CompressionLayer::new())
-    .layer(TraceLayer::new_for_http());
+```python
+reward = forward_displacement - angular_penalty
 ```
 
-Layers apply bottom-up, so `CompressionLayer` sits closest to the socket and `TraceLayer` sees the raw request. Getting this order right is the difference between a service that is easy to reason about and one that is not.
+### What actually took the time
 
-### Graceful shutdown
+1. **Reward shaping.** A naive "just move forward" reward produces frantic, inefficient motion. Adding a smoothness penalty changed the gait from twitchy to sinusoidal.
+2. **Guardrails.** Without joint-limit penalties the agent learned to slam the servos, which strips gears. Physics punishes greed.
+3. **Patience.** Early runs looked broken. It took many episodes before a coherent gait emerged.
 
-A service that drops in-flight requests on deploy is a service that loses money. Signal handling is straightforward:
+## Takeaways
 
-```rust
-async fn shutdown_signal() {
-    let ctrl_c = async { tokio::signal::ctrl_c().await.ok(); };
-    let terminate = async {
-        tokio::signal::unix::signal(SignalKind::terminate())
-            .unwrap()
-            .recv()
-            .await;
-    };
-    tokio::select! {
-        _ = ctrl_c => {},
-        _ = terminate => {},
-    }
-    tracing::info!("shutdown signal received");
-}
-```
-
-> The best incident is the one where the deploy went smoothly and nobody noticed.
-
-### What I'd do differently
-
-* Start with boring technology. The cleverest system is the one that still works when you're paged at 3am.
-* Measure before you optimise. `tracing` plus a flamegraph beats intuition every single time.
-* Keep the domain layer free of framework types. If your business logic mentions `axum::extract::Query`, it is not business logic.
-
-The payoff is a service that is fast, predictable and — most importantly — *boring* to operate."#,
+Building a physical learning system is fundamentally different from a simulated one. Every episode costs real time, real power and real wear — so you think harder about sample efficiency and safety. That constraint made the project far more valuable than any clean simulation ever would have."#,
             30,
         ),
         (
-            "the-type-system-is-a-teaching-tool",
-            "The Type System Is a Teaching Tool",
-            "Encoding invariants in your domain so the compiler teaches your team what the code means — and refuses to let them get it wrong.",
-            "rust",
-            "architecture",
-            r#"## Types as documentation
+            "detecting-cars-in-aerial-images-with-yolov8",
+            "Detecting Cars in Aerial Parking Imagery with YOLOv8",
+            "Training a YOLOv8 model to count vehicles in aerial parking-lot images — from data labelling to a working detection pipeline.",
+            "computer-vision",
+            "yolo",
+            r#"## The problem
 
-A well-typed API answers most questions a caller could ask. If `new_user` takes a `ValidatedEmail` instead of a `String`, the fact that validation already happened is self-documenting.
+Aerial images of parking lots present a deceptively hard vision problem: cars are small, dense, frequently occluded and viewed from unusual angles.
 
-```rust
-pub struct ValidatedEmail(String);
+## The approach
 
-impl TryFrom<&str> for ValidatedEmail {
-    type Error = InvalidEmail;
+I fine-tuned a YOLOv8 detector on aerial imagery, then used the detections to estimate how many vehicles are present in a given lot.
 
-    fn try_from(value: &str) -> Result<Self, Self::Error> {
-        let parsed = EmailAddress::parse(value)
-            .map_err(|_| InvalidEmail)?;
-        Ok(Self(parsed.to_string()))
-    }
-}
-```
+### Pipeline
 
-### Make illegal states unrepresentable
+1. **Dataset** — annotated aerial images of parking areas.
+2. **Training** — a YOLOv8 model fine-tuned on the backbone, with careful anchor and image-size choices to keep small cars detectable.
+3. **Inference** — run the model over new aerial frames.
+4. **Counting** — aggregate detections into a vehicle count and log it as a result.
 
-This is the phrase that gets repeated so often it has lost its meaning, so let me make it concrete.
+## Practical lessons
 
-Bad:
+- **Small objects need resolution.** Small cars vanish at default input sizes; increasing inference resolution was the single biggest accuracy win.
+- **Confidence thresholds matter.** Too low and shadows become "cars"; too high and you lose vehicles under trees.
+- **Augmentation.** Horizontal flips and rotation helped the model cope with arbitrary camera orientation.
 
-```rust
-enum Subscription {
-    Trial { ends_at: DateTime<Utc> },
-    Active { renews_at: DateTime<Utc> },
-    Cancelled { cancelled_at: DateTime<Utc>, refund: bool },
-}
-```
-
-Good:
-
-```rust
-enum Subscription {
-    Trial(TrialPeriod),
-    Active(ActivePeriod),
-    Cancelled(CancelledPeriod),
-}
-```
-
-Now each variant carries exactly the data that is valid for it, and the compiler will not let you read `trial.ends_at` from a cancelled subscription.
-
-### The teaching effect
-
-The real benefit is not safety, though safety is wonderful. The benefit is **onboarding**. A new engineer joining the team reads the type, and the type tells them the rules. Documentation rots; types do not."#,
-            21,
+The final system detects cars and logs a count per image — a clean, useful baseline for smart-parking analytics."#,
+            24,
         ),
         (
-            "query-planning-for-humans",
-            "Query Planning for Humans",
-            "Reading EXPLAIN ANALYZE output without panicking, and the handful of statistics that actually matter in production.",
-            "engineering",
-            "databases",
-            r#"## Start with the data you have
+            "handwritten-digit-recognition-with-a-simple-ann",
+            "Handwritten Digit Recognition with a Simple ANN",
+            "A course project that distils deep learning to its essence: pixels in, probabilities out — built from scratch with a feed-forward neural network.",
+            "machine-learning",
+            "deep-learning",
+            r#"## The assignment
 
-Before you rewrite the query, ask what the optimiser thinks it is doing:
+Recognise handwritten digits (0–9) using an artificial neural network. No frameworks at first — just the raw mathematics of forward and backward propagation.
 
-```sql
-EXPLAIN (ANALYZE, BUFFERS) SELECT ...;
-```
+## What I built
 
-The `Buffers` section is the most informative part, because it tells you about *disk* behaviour rather than CPU time.
+- A feed-forward network with an input layer of image pixels, one hidden layer with a non-linear activation, and a softmax output layer over ten classes.
+- Training via gradient descent using backpropagation, with a cross-entropy loss.
+- A small evaluation harness to report accuracy and confusion on the test set.
 
-### The four numbers that matter
+## What the project made click
 
-1. **actual rows vs estimated rows** — a large gap means stale statistics.
-2. **loops** — a nested loop with a high loop count is where your latency hides.
-3. **rows removed by filter** — a huge number here is a missing index.
-4. **shared read / hit** — tells you whether you are hitting disk or cache.
+For me the value was never the model — it was peeling back the framework and seeing the math:
 
-### Common fixes
+1. **Forward pass** — the matrix multiply, the activation, the softmax that turns logits into probabilities.
+2. **Backward pass** — the chain rule, applied layer by layer, updating every weight by its contribution to the error.
+3. **The loss landscape** — watching training loss fall over epochs made gradient descent concrete in a way no diagram ever did.
 
-* `ANALYZE` the table after a bulk load. This is shockingly often the whole fix.
-* Add a covering index so the query can be answered from the index alone.
-* Rewrite `NOT IN` as `NOT EXISTS` — the planner handles the latter far better.
-* Be careful with functions applied to indexed columns; the index is not used.
+## After the basics
 
-> An index is not free. Every write to the table must also update the index, which is why `CREATE INDEX` on twenty columns is not a performance strategy.
-
-Once you can read a plan, database performance stops being folklore and starts being engineering."#,
-            14,
+Once the from-scratch version worked, I reproduced the same result with a deep-learning library and got a production-quality pipeline in a fraction of the lines — a great way to see exactly what a framework is abstracting away."#,
+            18,
         ),
         (
-            "notes-on-remote-first-collaboration",
-            "Notes on Remote-First Collaboration",
-            "Six years of distributed teams distilled into practices that actually held up.",
+            "solving-equations-with-a-genetic-algorithm",
+            "Solving Equation Systems with a Genetic Algorithm",
+            "When brute force is too slow and calculus is awkward, evolution can find an answer — a solver for linear and non-linear equation systems built on natural selection.",
+            "machine-learning",
+            "research",
+            r#"## Why a genetic algorithm?
+
+Some systems of equations — especially non-linear ones — are awkward to solve analytically. A genetic algorithm searches the solution space the same way biology searches for fit organisms.
+
+## The recipe
+
+1. **Encoding** — each candidate solution is a chromosome holding the variable values.
+2. **Initial population** — random guesses.
+3. **Fitness** — how close the candidate comes to satisfying every equation (sum of squared residuals).
+4. **Selection** — fitter candidates are more likely to become parents.
+5. **Crossover & mutation** — combine and perturb to explore new regions.
+6. **Repeat** — until the population converges on a low-error solution.
+
+```python
+fitness = 1.0 / (1.0 + total_error)
+```
+
+## Getting it to converge
+
+- **Mutation rate** is a dial between exploration and exploitation. Too high and the population never settles; too low and it stalls in local optima.
+- **Elitism** — always carry the best individual into the next generation so you never lose your best answer.
+- **Equation parsing** — I used symbolic parsing so users can type non-linear equations naturally.
+
+The result is a small, interactive solver that handles both the 2-variable linear case and higher-dimensional non-linear systems."#,
+            12,
+        ),
+        (
+            "notes-on-multi-agent-reinforcement-learning",
+            "Notes on Multi-Agent Reinforcement Learning",
+            "Coordination, emergence and the curse of non-stationarity — my reading notes on getting multiple agents to learn together.",
             "notes",
-            "career",
-            r#"## The things that actually mattered
+            "multi-agent-systems",
+            r#"## Why multi-agent RL is hard
 
-### Write things down
+In single-agent RL the environment is static while the agent learns. With multiple agents, every agent's environment includes the *other agents*, who are also learning. This non-stationarity is the core difficulty.
 
-Every decision that only lives in someone's head is a decision that will be lost, argued about again, or quietly reversed. A short ADR costs fifteen minutes and saves a sprint.
+## The approaches
 
-### Over-communicate the context, not the status
+- **Independent learning** — each agent treats the others as part of the environment. Simple, but fragile: as others change, your "environment" changes under you.
+- **Centralised training, decentralised execution** — agents share information during training (e.g. a central critic) but act on local observations at run time. This is the sweet spot for many robotics tasks.
+- **Communication** — letting agents exchange messages, learning *what* to communicate alongside *what* to do.
 
-"Working on it" is noise. "Here is the trade-off I made between option A and option B, and why" is signal.
+## Relevant to my research
 
-### Protect focus
+Formation control for mobile robots is naturally a multi-agent problem. Each robot must keep formation while avoiding collisions and handling message loss. Ideas from MARL — centralised critics, reward shaping for coordination — map directly onto that setting.
 
-Meetings are expensive. Not just for the attendees — for everyone who has to rebuild their context afterwards. Two status meetings a week beat six.
+## Sources I keep coming back to
 
-### Make space for the quiet ones
-
-The fastest ideas in a distributed team often arrive asynchronously, from people who would never speak up in a meeting. Write-first cultures find those ideas.
-
-### Be deliberately kind
-
-Remote work removes most of the incidental social contact that resolves small misunderstandings in an office. You have to replace it deliberately, with explicit appreciation and directness."#,
-            10,
+The classic MARL papers on cooperative value functions and centralised training are short and worth re-reading whenever a coordination problem feels intractable."#,
+            6,
         ),
         (
-            "zero-downtime-schema-migrations",
-            "Zero-Downtime Schema Migrations",
-            "A repeatable playbook for evolving a live schema without taking the site down.",
-            "tutorial",
-            "postgresql",
-            r#"## The expand / migrate / contract pattern
+            "why-minimal-sensing-matters-in-formation-control",
+            "Why Minimal Sensing Matters in Formation Control",
+            "Robots with fewer sensors are cheaper, lighter and more reliable — but controlling them is harder. These are my notes on a research direction I care about.",
+            "control-systems",
+            "research",
+            r#"## The pitch
 
-Every safe schema change is a sequence of three phases:
+Much of robot control assumes rich sensing: full state feedback, GPS, reliable communication. But real deployments — swarms, cheap fleets, robots in GNSS-denied environments — often have neither.
 
-### 1. Expand
+## Minimal sensing
 
-Add the new structure alongside the old one. No behaviour changes yet.
+"Minimal sensing" means achieving a task with the least possible information. For formation control that might mean:
 
-```sql
-ALTER TABLE users ADD COLUMN display_name TEXT;
-```
+- No external localisation — only local, relative measurements (e.g. distance and bearing to neighbours).
+- No central coordinator — decisions are local and decentralized.
+- Bounded communication — or none at all, relying purely on local perception.
 
-### 2. Migrate
+## Why it matters
 
-Backfill in batches, then dual-write from the application.
+1. **Cost** — fewer and cheaper sensors make fleets affordable.
+2. **Resilience** — fewer dependencies mean fewer single points of failure.
+3. **Safety** — safe, decentralized behaviour is robust to losing one robot or one link.
 
-```sql
-UPDATE users SET display_name = username
-WHERE id IN (
-    SELECT id FROM users WHERE display_name IS NULL LIMIT 1000
-);
-```
+## The open question
 
-### 3. Contract
-
-Once nothing reads the old column, remove it.
-
-```sql
-ALTER TABLE users DROP COLUMN legacy_name;
-```
-
-## Rules I follow
-
-* Never mix a schema change and a data-rewrite in the same release.
-* Every migration must be backwards compatible with the *previous* application version, because during a rolling deploy both are running at once.
-* Test the migration against a copy of production-sized data, not a toy dataset.
-* Make every step idempotent so a failed deploy can be retried safely.
-
-```bash
-# Apply with a lock timeout so we never queue behind a long transaction.
-psql -v ON_ERROR_STOP=1 -c "SET lock_timeout = '3s';" -f 0042_add_display_name.sql"
-```
-
-That `lock_timeout` line has saved me from more incidents than any other single piece of advice I have received."#,
-            7,
-        ),
-        (
-            "writing-a-cli-that-people-love",
-            "Writing a CLI That People Actually Enjoy",
-            "Command line ergonomics, exit codes, colours and the small details that turn a tool into a habit.",
-            "engineering",
-            "open-source",
-            r#"## The five-second rule
-
-If a user cannot tell what a tool does within five seconds of running `--help`, the tool is not finished.
-
-```text
-$ cargo-shim --help
-A fast, opinionated workspace runner
-
-Usage: cargo-shim <COMMAND>
-
-Commands:
-  run       Run a task in the workspace
-  watch     Re-run a task when files change
-  bench     Run the benchmark suite
-  help      Print this message or the help of the given subcommand(s)
-
-Options:
-  -v, --verbose...  Increase logging verbosity
-  -q, --quiet       Decrease logging output
-```
-
-## Details worth the effort
-
-* **Colour, but only when it helps.** Respect `NO_COLOR` and non-TTY output.
-* **Good exit codes.** `0` success, `1` general failure, `2` usage error, `3` validation error.
-* **Machine-readable output.** Add `--json` to every command that produces data.
-* **Predictable output.** Sorted where order is not meaningful.
-
-```rust
-fn exit_code_for(err: &CliError) -> i32 {
-    match err {
-        CliError::Usage(_) => 2,
-        CliError::Validation(_) => 3,
-        CliError::Io(_) => 4,
-        _ => 1,
-    }
-}
-```
-
-## The test that matters
-
-Run the tool as a user would, in a fresh shell, on a clean machine. If it does not work there, it does not work."#,
-            4,
-        ),
-        (
-            "on-mentorship",
-            "On Mentorship",
-            "What actually changes when someone senior takes the time to unblock you.",
-            "notes",
-            "career",
-            r#"## Mentorship is not review
-
-Code review is a checkpoint. Mentorship is a trajectory. The difference shows up months later, when the person no longer needs you.
-
-## Three things a good mentor does
-
-1. **Asks better questions than you would have asked.** Not "why did you do this?" but "what did you expect to happen, and what did happen instead?"
-2. **Explains the *why*, not just the *what*.** Rules without reasoning become cargo cult.
-3. **Gives you the hard problem, then gets out of the way.**
-
-## Three things a bad mentor does
-
-1. Takes over the keyboard.
-2. Says "just do it this way" and refuses to explain why.
-3. Is unavailable exactly when you need them.
-
-## What I got wrong for years
-
-I thought being helpful meant having the answer. It usually means having the question that helps someone find the answer themselves. That is slower in the moment and much faster overall."#,
+How do we guarantee *safety* (no collisions, bounded errors) when each robot only sees a slice of the world? That tension between local information and global guarantees is, to me, the most interesting problem in the field — and the one I am currently working on."#,
             2,
         ),
     ];
@@ -517,18 +447,19 @@ I thought being helpful meant having the answer. It usually means having the que
     }
 
     // A draft so the admin panel has something to show.
-    let draft_body = r#"## Draft
+    let draft_body = r#"## Research notes: decentralized formation control
 
-This post is still being written.
+Current working notes on my formation-control research:
 
-- [x] Outline
-- [ ] First draft
-- [ ] Diagrams
-- [ ] Review"#;
+- [x] Problem formulation & literature review
+- [x] Minimal-sensing setup
+- [ ] Safety guarantees under bounded communication
+- [ ] Simulations and experiments
+- [ ] Write-up"#;
     sqlx::query(
         "INSERT INTO posts (slug, title, excerpt, content_md, content_html, status, author_id, created_at, updated_at)
-         VALUES ('post-quantum-cryptography-primer', 'A Post-Quantum Cryptography Primer',
-                 'What changes when the machines that break your encryption exist?',
+         VALUES ('decentralized-formation-control-for-mobile-robots', 'Decentralized Formation Control for Mobile Robots',
+                 'Working notes on safe, decentralized formation control with minimal sensing.',
                  ?, ?, 'draft', ?, ?, ?)",
     )
     .bind(draft_body)
@@ -542,16 +473,16 @@ This post is still being written.
     // A scheduled post.
     sqlx::query(
         "INSERT INTO posts (slug, title, excerpt, content_md, content_html, status, author_id, published_at, scheduled_for, created_at, updated_at)
-         VALUES ('engineering-in-the-age-of-agents', 'Engineering in the Age of Agents',
-                 'How the software we write changes when it can write more software.',
+         VALUES ('from-zero-to-policy-gradient-rl', 'From Zero to Policy Gradient RL',
+                 'A beginner-friendly walkthrough of policy-gradient methods in fifty lines of Python.',
                  ?, ?, 'scheduled', ?, ?, ?, ?, ?)",
     )
     .bind(r#"## Coming soon
 
-A short piece on how agentic tooling changes the shape of a team."#)
+A short, hands-on introduction to policy-gradient reinforcement learning — with code you can run, not just diagrams."#)
     .bind(markdown::to_html(r#"## Coming soon
 
-A short piece on how agentic tooling changes the shape of a team."#))
+A short, hands-on introduction to policy-gradient reinforcement learning — with code you can run, not just diagrams."#))
     .bind(author_id)
     .bind(chrono::Utc::now() - chrono::Duration::days(1))
     .bind(chrono::Utc::now() + chrono::Duration::days(3))
@@ -566,167 +497,234 @@ A short piece on how agentic tooling changes the shape of a team."#))
 async fn seed_projects(pool: &SqlitePool) -> Result<()> {
     let projects = [
         (
-            "helios",
-            "Helios",
-            "A distributed job scheduler with exactly-once semantics, built for teams that cannot afford a duplicate invoice.",
-            r#"## The problem
+            "iran-game",
+            "iran-game",
+            "An interactive game built with Next.js and TypeScript, with English/Persian localization and a modular game-engine structure.",
+            r#"## About
 
-Every team eventually builds a scheduler, and every one of them discovers the hard part: **exactly-once execution** in a system where the network lies.
-
-## What Helios does
-
-Helios is a Rust job scheduler with a durable, append-only event log. Every state transition is an event; every event is idempotent. A job runs exactly once even if workers crash, network partitions or a node is yanked out of the rack mid-execution.
-
-### Architecture
-
-- **Control plane** — API, scheduler, and event log writer.
-- **Data plane** — stateless workers that lease jobs with a heartbeat.
-- **Guarantees** — at-least-once delivery with idempotent handlers, or exactly-once with the transactional outbox pattern.
-
-```rust
-#[derive(Debug, Serialize, Deserialize)]
-pub enum Transition {
-    Scheduled { at: DateTime<Utc> },
-    Leased { worker: WorkerId, until: DateTime<Utc> },
-    Completed { output: JobOutput },
-    Failed { reason: String, retry_in: Duration },
-}
-```
-
-## Results
-
-* p99 scheduling latency under 40 ms across three regions
-* 1.2 million jobs per day at peak
-* Zero duplicate executions in 18 months of production"#,
-            "https://github.com/example/helios",
-            "https://helios.example.com",
-            "#ef4444",
-        ),
-        (
-            "quill",
-            "Quill",
-            "A fast, opinionated Markdown publishing toolkit with a WASM core so it runs anywhere.",
-            r#"## Why another Markdown tool
-
-Because every existing tool either does too little or makes you fight it.
+An early-stage, interactive game built with Next.js (App Router) and TypeScript. The codebase is organised as a small game engine rather than a single page: a game context manages state, dedicated components render the HUD and quest panel, and i18n keeps every string in both English and Persian.
 
 ## Highlights
 
-* **Portable core.** The parser and renderer are compiled to WebAssembly, so the same binary powers the CLI, the web playground and the VS Code extension.
-* **Fast.** Roughly 40× faster than the reference implementation on large documents.
-* **Opinionated.** Sensible defaults for tables, footnotes, task lists and front matter.
+- **Next.js App Router** — component-based pages with server rendering.
+- **Modular game engine** — a `features/game` module with context, components and services.
+- **Bilingual UI** — English and Persian message catalogs with a locale switcher.
+- **Quest system** — data-driven quest/mission definitions with a panel UI.
+- **Map layers** — tile-independent rendering for the game map.
 
-```bash
-quill build ./posts --output ./dist --theme noir
-```
+## Status
 
-## Adoption
-
-Used by three of my own sites and about 1,400 GitHub stars."#,
-            "https://github.com/example/quill",
-            "https://quill.example.com",
-            "#8b5cf6",
-        ),
-        (
-            "atlas-observability",
-            "Atlas",
-            "A lightweight observability collector that fits in a sidecar and speaks OpenTelemetry.",
-            r#"## Small, sharp, and cheap
-
-Atlas is an OpenTelemetry collector with a narrow goal: **be the smallest thing that can be deployed as a sidecar**.
-
-## What it does
-
-* Accepts OTLP over gRPC and HTTP.
-* Exports to Prometheus, Jaeger, Loki or any OTLP endpoint.
-* Ships a single statically-linked binary of 4 MB.
-
-```yaml
-receivers:
-  otlp:
-    protocols:
-      grpc: {}
-processors:
-  batch:
-    timeout: 2s
-exporters:
-  prometheus:
-    endpoint: 0.0.0.0:9464
-```
-
-## Design notes
-
-The whole collector fits in a single tokio task per pipeline stage. Backpressure is explicit: when an exporter stalls, the batch processor drops the oldest metrics rather than growing without bound. Losing old telemetry beats running out of memory."#,
-            "https://github.com/example/atlas",
+Active development. The structure is in place; gameplay content is being built on top of it."#,
+            "https://github.com/amirhosseineslami/iran-game",
             "",
             "#22d3ee",
+            r#"["Next.js","TypeScript","React"]"#,
         ),
         (
-            "kiln",
-            "Kiln",
-            "A tiny, type-safe job queue for Rust applications with SQLite or Postgres backing.",
-            r#"## Queues without the ceremony
+            "khosrowan-website-rust",
+            "personal-site (Rust CMS)",
+            "A complete personal website, blog and content-management system written entirely in Rust — one binary, no JavaScript framework, no external services.",
+            r#"## The idea
 
-Kiln is a job queue that fits in a single file of your codebase.
+A full-featured personal website platform compiled into a single Rust binary. Templates, CSS, JavaScript and database migrations are built in — copy the executable, run it, done.
 
-```rust
-let queue = Queue::builder("sqlite://jobs.db")
-    .max_attempts(5)
-    .backoff(Backoff::Exponential { base: Duration::from_secs(2) })
-    .build()
-    .await?;
+## Stack
 
-queue.enqueue(Job::SendWelcomeEmail { user_id: 42 }).await?;
-```
+- **axum** on **tokio** for the web layer.
+- **askama** for compile-time, type-safe templates.
+- **sqlx** against SQLite (WAL mode).
+- **comrak** for Markdown, **ammonia** for HTML sanitisation.
 
-## Features
+## What it includes
 
-* At-least-once delivery with exponential backoff and jitter
-* Dead-letter queue with a web UI
-* Poison message handling that never blocks the queue
-* Zero-dependency core"#,
-            "https://github.com/example/kiln",
+- Public site: home, about, projects, blog, experience, skills, services, testimonials, awards, speaking, publications, gallery, résumé, contact and search.
+- Full admin panel for posts, pages, projects, media, users, settings, redirects and more.
+- Security: Argon2id hashing, database-backed sessions, CSRF, strict CSP, rate limiting, HTML sanitisation.
+- Batteries: RSS, sitemap, Open Graph, JSON-LD, dark/light themes, search, newsletter and e-mail notifications.
+
+This very website runs on it."#,
+            "https://github.com/amirhosseineslami/khosrowan-website-rust",
             "",
-            "#f59e0b",
+            "#f74c00",
+            r#"["Rust","axum","SQLite"]"#,
         ),
         (
-            "driftwood",
-            "Driftwood",
-            "A terminal toolkit for reading logs like a story — time-based context, diffing, and colour that means something.",
-            r#"## Logs deserve better
+            "truthordarebot",
+            "truthordarebot",
+            "An anonymous chat-pairing bot for the Rubika messaging platform, written in Python.",
+            r#"## What it does
 
-Driftwood reads structured logs and renders them as a timeline, with colour that encodes severity consistently across every backend.
+Truthordarebot pairs strangers for anonymous private conversations on the Rubika messaging platform.
 
 ## Features
 
-* Time-windowed context around every error
-* Automatic diffing between two runs of the same test
-* A TUI that stays responsive on million-line inputs
-* Shipped as a single binary with no runtime dependencies"#,
-            "https://github.com/example/driftwood",
+- **Anonymous pairing** — a waiting queue connects users at random.
+- **Inline keyboards** — interactive menus for connect, disconnect and cancel-search.
+- **Persian-first** — the UI is localised for Farsi.
+- **MySQL persistence** — user profiles, coins, scores, levels and state survive restarts.
+- **Modular** — separate classes for the API client, parser, keypad and connection handling.
+
+## Notes
+
+Built against the Rubika Bot API using polling with offset-based updates. Configuration is driven by environment variables, and tables are created automatically on first run."#,
+            "https://github.com/amirhosseineslami/truthordarebot",
             "",
             "#10b981",
+            r#"["Python","MySQL","Bot API"]"#,
         ),
         (
-            "weathervane",
-            "Weathervane",
-            "A feature-flag service with a hard guarantee: evaluation is local, so a flag can never slow down your request path.",
-            r#"## Flags without latency
+            "CarDetection_yolov8",
+            "CarDetection_yolov8",
+            "Aerial parking-lot car detection with YOLOv8 that estimates vehicle counts and logs results.",
+            r#"## The goal
 
-Weathervane compiles flags into a compact binary blob that is refreshed every few seconds. Evaluation is a memory lookup — nanoseconds, no network.
+Detect cars in aerial images of parking areas and estimate how many vehicles are present.
 
-## Guarantees
+## Approach
 
-* Stale-while-revalidate: the last known good value is always served
-* Every evaluation is local; the network is never on the request path
-* Full audit trail of who changed what and when"#,
-            "https://github.com/example/weathervane",
+- Fine-tuned a YOLOv8 detector on aerial parking imagery.
+- Run inference over new aerial frames.
+- Aggregate detections into a vehicle count and log it as a result.
+
+## Lessons
+
+Small, dense, partially occluded cars are a classic hard case. Boosting inference resolution and careful confidence thresholds made the biggest difference.
+
+A clean, useful baseline for smart-parking analytics."#,
+            "https://github.com/amirhosseineslami/CarDetection_yolov8",
+            "",
+            "#ef4444",
+            r#"["Python","YOLOv8","Jupyter"]"#,
+        ),
+        (
+            "ANN-Handwritten-Digit-Recognition",
+            "ANN-Handwritten-Digit-Recognition",
+            "Handwritten digit recognition using a feed-forward artificial neural network, developed for an AI course.",
+            r#"## About
+
+A course project on handwritten digit recognition. The core is a feed-forward ANN — pixels in, class probabilities out — trained with backpropagation.
+
+I first built the forward and backward passes from scratch to see the mathematics clearly, then reproduced the result with a deep-learning framework to appreciate what it abstracts away."#,
+            "https://github.com/amirhosseineslami/ANN-Handwritten-Digit-Recognition",
+            "",
+            "#6366f1",
+            r#"["Python","NumPy"]"#,
+        ),
+        (
+            "Othello-AI-MiniMax",
+            "Othello-AI-MiniMax",
+            "Othello / Reversi in Python with an AI opponent powered by the MiniMax algorithm.",
+            r#"## About
+
+A full Othello (Reversi) game in Python featuring:
+
+- A **MiniMax** AI opponent with alpha-beta pruning.
+- A **pygame** graphical interface.
+- A standalone Windows executable build.
+
+A great exercise in game-tree search and evaluation-function design."#,
+            "https://github.com/amirhosseineslami/Othello-AI-MiniMax",
+            "",
+            "#8b5cf6",
+            r#"["Python","pygame"]"#,
+        ),
+        (
+            "RL_Crawling_Robot",
+            "RL_Crawling_Robot",
+            "A worm-like crawling robot trained with reinforcement learning using Arduino and servo motors.",
+            r#"## About
+
+A physical, worm-like robot made from Arduino-driven servos that learns to crawl using reinforcement learning.
+
+The project combines embedded programming with a learning-based controller — rewarding forward displacement while penalising harsh joint motion until a smooth gait emerges.
+
+A hands-on lesson in reward shaping, physical constraints and sample efficiency on real hardware."#,
+            "https://github.com/amirhosseineslami/RL_Crawling_Robot",
+            "",
+            "#f59e0b",
+            r#"["C++","Arduino"]"#,
+        ),
+        (
+            "genetic-algorithm-solver",
+            "genetic-algorithm-solver",
+            "A genetic algorithm solver for systems of linear and non-linear equations.",
+            r#"## About
+
+A Python equation solver that uses a genetic algorithm to find approximate solutions for systems of linear and non-linear equations.
+
+- Solves 2-variable linear systems and higher-dimensional non-linear systems.
+- Interactive, menu-driven interface with symbolic equation parsing.
+- Uses natural selection, crossover and mutation to converge on low-error solutions.
+
+Comes with English and Persian reports on the method."#,
+            "https://github.com/amirhosseineslami/genetic-algorithm-solver",
+            "",
+            "#14b8a6",
+            r#"["Python","sympy"]"#,
+        ),
+        (
+            "Agricultural-Web-Scraper",
+            "Agricultural-Web-Scraper",
+            "An asynchronous web scraper for e-commerce and agricultural sources, developed for Lotus Futurist.",
+            r#"## About
+
+A web scraping tool developed for Lotus Futurist to extract structured data from e-commerce and agricultural websites.
+
+- **Asynchronous** scraping with `asyncio` and Playwright.
+- **Multi-site** support (Digikala, Basalam, Agriplus, Torob and more), each with its own module.
+- **Persian number normalization** and data-cleaning utilities.
+- Price and unit extraction, with results organised into CSV/Excel outputs and archives."#,
+            "https://github.com/amirhosseineslami/Agricultural-Web-Scraper",
+            "",
+            "#0ea5e9",
+            r#"["Python","Playwright"]"#,
+        ),
+        (
+            "student-depression-detection",
+            "student-depression-detection",
+            "Detecting student depression risk using decision trees and data preprocessing in Python.",
+            r#"## About
+
+A data-science project that classifies student depression risk.
+
+- Decision-tree based classification.
+- Emphasis on cleaning and preprocessing real-world survey data before modelling.
+
+A practical exercise in applying classic ML to a socially meaningful problem."#,
+            "https://github.com/amirhosseineslami/student-depression-detection",
             "",
             "#ec4899",
+            r#"["Python","scikit-learn"]"#,
+        ),
+        (
+            "SVM-Kernel-Analysis",
+            "SVM-Kernel-Analysis",
+            "Comparing support-vector-machine kernels on standard classification datasets.",
+            r#"## About
+
+An analysis notebook comparing SVM kernels — linear, polynomial and RBF — on standard datasets, examining how kernel choice affects decision boundaries and accuracy."#,
+            "https://github.com/amirhosseineslami/SVM-Kernel-Analysis",
+            "",
+            "#22d3ee",
+            r#"["Python","scikit-learn"]"#,
+        ),
+        (
+            "Currency-Convertor-Via-MCP",
+            "Currency-Convertor-Via-MCP",
+            "A currency converter driven through the Model Context Protocol.",
+            r#"## About
+
+A currency-conversion tool exercised through the Model Context Protocol (MCP) — an experiment in exposing a simple utility as an MCP-capable service."#,
+            "https://github.com/amirhosseineslami/Currency-Convertor-Via-MCP",
+            "",
+            "#10b981",
+            r#"["Python","MCP"]"#,
         ),
     ];
 
-    for (idx, (slug, title, summary, body, repo, live, color)) in projects.iter().enumerate() {
+    for (idx, (slug, title, summary, body, repo, live, color, tech)) in
+        projects.iter().enumerate()
+    {
         let html = crate::markdown::to_html(body);
         sqlx::query(
             "INSERT INTO projects (slug, title, summary, description_md, description_html, status, repo_url, live_url,
@@ -742,7 +740,7 @@ Weathervane compiles flags into a compact binary blob that is refreshed every fe
         .bind(if live.is_empty() { None } else { Some(*live) })
         .bind(idx < 3)
         .bind(idx as i64)
-        .bind(r#"["Rust","Tokio","PostgreSQL"]"#)
+        .bind(*tech)
         .bind(chrono::Utc::now())
         .bind(chrono::Utc::now())
         .execute(pool)
@@ -755,22 +753,31 @@ Weathervane compiles flags into a compact binary blob that is refreshed every fe
 async fn seed_profile_sections(pool: &SqlitePool) -> Result<()> {
     // Skills
     let skills = [
-        ("Rust", "languages", 95, 8.0),
-        ("Go", "languages", 85, 7.0),
-        ("Python", "languages", 88, 9.0),
-        ("TypeScript", "languages", 80, 6.0),
-        ("SQL", "languages", 90, 10.0),
-        ("Axum / Actix", "backend", 92, 5.0),
-        ("Event-driven design", "backend", 88, 6.0),
-        ("gRPC & REST APIs", "backend", 90, 8.0),
-        ("PostgreSQL", "data", 87, 8.0),
-        ("Redis", "data", 80, 7.0),
-        ("ClickHouse", "data", 70, 3.0),
-        ("Kafka", "data", 72, 4.0),
-        ("Docker & Kubernetes", "ops", 84, 7.0),
-        ("Terraform", "ops", 76, 5.0),
-        ("CI/CD pipelines", "ops", 88, 8.0),
-        ("Observability", "ops", 79, 6.0),
+        ("C", "Languages", 85, 4.0),
+        ("C++", "Languages", 88, 5.0),
+        ("Python", "Languages", 92, 6.0),
+        ("MATLAB", "Languages", 80, 3.0),
+        ("Java", "Languages", 72, 3.0),
+        ("Kotlin", "Languages", 70, 2.0),
+        ("JavaScript / TypeScript", "Languages", 65, 2.0),
+        ("PyTorch", "Machine Learning", 82, 3.0),
+        ("TensorFlow", "Machine Learning", 78, 3.0),
+        ("Scikit-learn", "Machine Learning", 84, 4.0),
+        ("Pandas & NumPy", "Machine Learning", 86, 5.0),
+        ("Reinforcement Learning", "Machine Learning", 80, 3.0),
+        ("Deep Learning", "Machine Learning", 78, 3.0),
+        ("OpenCV", "Computer Vision", 85, 5.0),
+        ("YOLO & object detection", "Computer Vision", 78, 3.0),
+        ("Image processing", "Computer Vision", 82, 4.0),
+        ("Arduino", "Robotics & Embedded", 86, 5.0),
+        ("C++ firmware", "Robotics & Embedded", 80, 4.0),
+        ("ROS", "Robotics & Embedded", 68, 2.0),
+        ("Motor / servo control", "Robotics & Embedded", 78, 4.0),
+        ("Linux", "Tools", 88, 6.0),
+        ("Git & GitHub", "Tools", 90, 6.0),
+        ("Docker", "Tools", 65, 2.0),
+        ("Jupyter", "Tools", 85, 5.0),
+        ("VS Code", "Tools", 88, 6.0),
     ];
     for (i, (name, cat, level, years)) in skills.iter().enumerate() {
         sqlx::query(
@@ -788,63 +795,53 @@ async fn seed_profile_sections(pool: &SqlitePool) -> Result<()> {
     // Experience
     let experiences = [
         (
-            "Principal Engineer",
-            "Northwind Systems",
-            "Berlin, Germany · Remote",
+            "Research & Data Assistant",
+            "Lotus Futurists",
+            "Tehran, Iran · Remote",
+            "2024",
+            None,
+            true,
+            "Supporting data research: building asynchronous scraping pipelines, cleaning datasets and extracting structured data from e-commerce and agricultural sources.",
+            "work",
+        ),
+        (
+            "Computer Vision Research Intern",
+            "CVLab, Iran University of Science and Technology",
+            "Tehran, Iran",
+            "2023",
+            Some("2024"),
+            false,
+            "Worked on computer-vision research experiments, dataset preparation and model prototyping in an academic lab setting.",
+            "work",
+        ),
+        (
+            "Teaching Assistant",
+            "Artificial Intelligence · Industrial Control Lab · Programming",
+            "Iran University of Science and Technology",
+            "2023",
+            None,
+            true,
+            "Assisting courses in artificial intelligence, the industrial control laboratory and programming — running lab sessions, reviewing assignments and helping students debug.",
+            "work",
+        ),
+        (
+            "Founder & Host",
+            "EnglishConvey",
+            "Online",
             "2022",
             None,
             true,
-            "Leading the platform group: 12 engineers across ingestion, storage and the developer experience team. Cut p99 API latency by 61% while doubling throughput.",
+            "Founded and hosted an English-speaking initiative that helps peers practice conversation in a friendly, structured setting.",
             "work",
         ),
         (
-            "Senior Backend Engineer",
-            "Helix Analytics",
-            "Amsterdam, Netherlands",
-            "2019",
-            Some("2022"),
-            false,
-            "Designed the event ingestion pipeline that now processes 40 billion events per month. Mentored six engineers, two of whom are now staff engineers.",
-            "work",
-        ),
-        (
-            "Backend Engineer",
-            "Vireo Labs",
-            "Remote",
-            "2016",
-            Some("2019"),
-            false,
-            "Built the multi-tenant billing service and its reconciliation engine. Introduced contract testing that reduced production incidents by 70%.",
-            "work",
-        ),
-        (
-            "Software Engineer",
-            "Corvid Robotics",
+            "B.Sc. Electrical Engineering (Control)",
+            "Iran University of Science and Technology",
             "Tehran, Iran",
-            "2014",
-            Some("2016"),
-            false,
-            "Firmware and control software for industrial robotics. Wrote the real-time scheduler that coordinated 200+ actuators.",
-            "work",
-        ),
-        (
-            "M.Sc. Computer Science",
-            "Sharif University of Technology",
-            "Tehran, Iran",
-            "2012",
-            Some("2014"),
-            false,
-            "Thesis on fault-tolerant consensus protocols for geo-distributed databases. Graduated with distinction.",
-            "education",
-        ),
-        (
-            "B.Sc. Software Engineering",
-            "University of Tehran",
-            "Tehran, Iran",
-            "2008",
-            Some("2012"),
-            false,
-            "Focus on distributed systems and compilers. Founded the campus Rust user group.",
+            "2021",
+            None,
+            true,
+            "Focus on control systems, robotics, signal processing and AI/ML. Research interests include intelligent control, multi-agent systems and autonomous robotics.",
             "education",
         ),
     ];
@@ -869,32 +866,32 @@ async fn seed_profile_sections(pool: &SqlitePool) -> Result<()> {
     // Services
     let services = [
         (
-            "Backend Architecture Review",
-            "A rigorous review of your service architecture — from data model to deployment topology — with a written report and concrete, prioritised recommendations.",
-            "architecture",
-            "from €2,500",
-            r#"["Architecture decision record","Scalability & capacity plan","Risk register","90-minute follow-up call"]"#,
+            "Programming & Maths Tutoring",
+            "One-on-one tutoring in Python, C/C++, MATLAB and engineering mathematics — for students who want to go deeper than the syllabus.",
+            "code",
+            "on request",
+            r#"["Python / C++ / MATLAB","Engineering mathematics","Sessions for students at any level"]"#,
         ),
         (
-            "Rust Adoption & Training",
-            "Hands-on training that takes a team from zero to shipping production Rust, including a project they own from day one.",
-            "rust",
-            "from €1,800",
-            r#"["Two-day workshop","Cohort project","Code review playbook","Three-month mentoring retainer"]"#,
+            "Computer Vision & ML Help",
+            "Hands-on help with computer-vision and machine-learning projects: from data preparation to training, evaluating and deploying models.",
+            "vision",
+            "on request",
+            r#"["Data prep & labelling","Model training & evaluation","PyTorch / TensorFlow / OpenCV"]"#,
         ),
         (
-            "Performance & Reliability Audit",
-            "Find the bottleneck before your users do. Profiling, query tuning, capacity modelling and a prioritised remediation plan.",
-            "performance",
-            "from €2,000",
-            r#"["Load-test harness","Profiling report","Capacity model","Prioritised backlog"]"#,
+            "Data Collection & Web Scraping",
+            "Asynchronous scraping pipelines and dataset cleaning for research and small-business needs.",
+            "data",
+            "on request",
+            r#"["Playwright / asyncio pipelines","Structured CSV & Excel output","Data cleaning & normalization"]"#,
         ),
         (
-            "Technical Due Diligence",
-            "An independent, evidence-based assessment of an engineering organisation for investors and acquirers.",
-            "advisory",
-            "from €4,000",
-            r#"["Team & process review","Architecture assessment","Risk register","Confidential findings"]"#,
+            "Control Systems & Arduino Projects",
+            "Guidance on control theory, embedded programming and microcontroller builds with Arduino.",
+            "chip",
+            "on request",
+            r#"["Control theory fundamentals","Arduino & servo projects","Simulation in MATLAB/Simulink"]"#,
         ),
     ];
     for (i, s) in services.iter().enumerate() {
@@ -911,49 +908,8 @@ async fn seed_profile_sections(pool: &SqlitePool) -> Result<()> {
         .await?;
     }
 
-    // Testimonials
-    let testimonials = [
-        (
-            "Sarah Mitchell",
-            "VP Engineering",
-            "Northwind Systems",
-            "Amir joined us for a six-month engagement and left behind a platform team that is faster, calmer and far better documented than when he arrived. He is the rare engineer who improves the code *and* the people around it.",
-            5,
-            true,
-        ),
-        (
-            "Daniel Okafor",
-            "CTO",
-            "Helix Analytics",
-            "We brought Amir in to untangle an ingestion pipeline that had defeated three previous contractors. He found the real problem in a week, wrote it down clearly, and left a team that could maintain it without him.",
-            5,
-            true,
-        ),
-        (
-            "Elena Novak",
-            "Head of Product",
-            "Vireo Labs",
-            "Technically extraordinary, but the thing I remember is the communication. Weekly updates that were genuinely useful, bad news raised early, and a plan that never slipped.",
-            5,
-            true,
-        ),
-        (
-            "Ravi Menon",
-            "Engineering Manager",
-            "Kestrel",
-            "The architecture review alone paid for the engagement. We implemented four of the six recommendations in the first quarter and our on-call rota went from nightly to weekly.",
-            4,
-            false,
-        ),
-        (
-            "Marta Kowalski",
-            "Founder",
-            "Lumen Analytics",
-            "Amir is the rare consultant who will tell you when you do not need him. He scoped a two-week engagement, delivered it, and told us exactly what we could do ourselves afterwards.",
-            5,
-            false,
-        ),
-    ];
+    // Testimonials — intentionally left empty. Add genuine quotes via the admin panel.
+    let testimonials: [(&str, &str, &str, &str, i64, bool); 0] = [];
     for (i, t) in testimonials.iter().enumerate() {
         sqlx::query(
             "INSERT INTO testimonials (name, role, company, body, rating, is_featured, sort_order) VALUES (?, ?, ?, ?, ?, ?, ?)",
@@ -972,28 +928,10 @@ async fn seed_profile_sections(pool: &SqlitePool) -> Result<()> {
     // Awards
     let awards = [
         (
-            "Best Paper — Systems Track",
-            "ACM ICSE",
-            "2024",
-            "For the paper on predictable backpressure in tiered storage.",
-        ),
-        (
-            "Open Source Maintainer of the Year",
-            "Rust Community",
-            "2023",
-            "Recognised for stewardship of several widely used Rust crates.",
-        ),
-        (
-            "Distinguished Speaker",
-            "FOSDEM",
-            "2023",
-            "Invited talk on ownership patterns in large Rust codebases.",
-        ),
-        (
-            "Engineering Excellence Award",
-            "Northwind Systems",
-            "2022",
-            "For the platform reliability programme.",
+            "Pull Shark",
+            "GitHub",
+            "2025",
+            "Awarded for merging pull requests — building software in public, one PR at a time.",
         ),
     ];
     for (i, a) in awards.iter().enumerate() {
@@ -1007,41 +945,8 @@ async fn seed_profile_sections(pool: &SqlitePool) -> Result<()> {
             .await?;
     }
 
-    // Talks
-    let talks = [
-        (
-            "Ownership Without the Fear",
-            "FOSDEM",
-            "2023",
-            "Brussels, Belgium",
-            Some("https://video.example.com/fosdem2023"),
-            None,
-        ),
-        (
-            "Backpressure: The Hardest Part",
-            "SREcon",
-            "2022",
-            "Amsterdam, Netherlands",
-            None,
-            Some("https://slides.example.com/srecon2022"),
-        ),
-        (
-            "Building a Job Scheduler in Rust",
-            "Rust Nation",
-            "2021",
-            "London, United Kingdom",
-            None,
-            None,
-        ),
-        (
-            "Zero-Downtime Migrations",
-            "DataCouncil",
-            "2020",
-            "Berlin, Germany",
-            None,
-            None,
-        ),
-    ];
+    // Talks — intentionally left empty.
+    let talks: [(&str, &str, &str, &str, Option<&str>, Option<&str>); 0] = [];
     for (i, t) in talks.iter().enumerate() {
         sqlx::query("INSERT INTO talks (title, event, date, location, video_url, slides_url, sort_order) VALUES (?, ?, ?, ?, ?, ?, ?)")
             .bind(t.0)
@@ -1055,30 +960,8 @@ async fn seed_profile_sections(pool: &SqlitePool) -> Result<()> {
             .await?;
     }
 
-    // Publications
-    let publications = [
-        (
-            "Predictable Backpressure in Tiered Storage Systems",
-            "ACM Transactions on Storage",
-            "2024",
-            "https://doi.org/example/1",
-            "Co-authored with three researchers at TU Delft.",
-        ),
-        (
-            "Ownership Patterns for Long-Lived Rust Services",
-            "IEEE Software",
-            "2023",
-            "https://doi.org/example/2",
-            "A practical taxonomy of ownership in production Rust.",
-        ),
-        (
-            "A Field Study of Schema Migrations at Scale",
-            "VLDB",
-            "2022",
-            "https://doi.org/example/3",
-            "Analysis of 14,000 production migrations across six companies.",
-        ),
-    ];
+    // Publications — intentionally left empty.
+    let publications: [(&str, &str, &str, &str, &str); 0] = [];
     for (i, p) in publications.iter().enumerate() {
         sqlx::query("INSERT INTO publications (title, publisher, date, url, summary, sort_order) VALUES (?, ?, ?, ?, ?, ?)")
             .bind(p.0)
@@ -1091,35 +974,8 @@ async fn seed_profile_sections(pool: &SqlitePool) -> Result<()> {
             .await?;
     }
 
-    // Gallery
-    let gallery = [
-        (
-            "Mountain ridge at dawn",
-            "landscape",
-            "Shot on a cold morning above 2,400 m.",
-        ),
-        (
-            "The office whiteboard",
-            "workspace",
-            "Architecture diagrams, ad infinitum.",
-        ),
-        ("RustConf stage", "talks", "2023, FOSDEM."),
-        (
-            "Old harbour, blue hour",
-            "landscape",
-            "Somewhere between meetings.",
-        ),
-        (
-            "Ceramic glazes",
-            "hobbies",
-            "A recent and deeply unserious pursuit.",
-        ),
-        (
-            "Server room, 3am",
-            "workspace",
-            "The most honest photograph in this gallery.",
-        ),
-    ];
+    // Gallery — intentionally left empty until the owner adds photos.
+    let gallery: [(&str, &str, &str); 0] = [];
     for (i, g) in gallery.iter().enumerate() {
         sqlx::query("INSERT INTO gallery (title, image, caption, category, sort_order) VALUES (?, ?, ?, ?, ?)")
             .bind(g.0)
@@ -1133,12 +989,20 @@ async fn seed_profile_sections(pool: &SqlitePool) -> Result<()> {
 
     // Social links
     let socials = [
-        ("github", "https://github.com/example", "GitHub"),
-        ("linkedin", "https://linkedin.com/in/example", "LinkedIn"),
-        ("x", "https://x.com/example", "X"),
-        ("mastodon", "https://mastodon.social/@example", "Mastodon"),
+        ("github", "https://github.com/amirhosseineslami", "GitHub"),
+        (
+            "linkedin",
+            "https://www.linkedin.com/in/amir-hossein-eslami",
+            "LinkedIn",
+        ),
+        ("website", "https://about.me/amirhosseineslami", "Portfolio"),
+        ("orcid", "https://orcid.org/0009-0000-5547-1764", "ORCID"),
+        (
+            "email",
+            "mailto:amirhossein.eslami.ac@gmail.com",
+            "Email",
+        ),
         ("rss", "/feed.xml", "RSS Feed"),
-        ("email", "mailto:hello@example.com", "Email"),
     ];
     for (i, (platform, url, label)) in socials.iter().enumerate() {
         sqlx::query(
@@ -1159,73 +1023,62 @@ async fn seed_profile_sections(pool: &SqlitePool) -> Result<()> {
             "About",
             r#"## The short version
 
-I am a backend engineer who spends most of my time on the parts of software that
-only show up months later: the shape of a module, the failure mode of a deployment,
-the sentence in a runbook that saves somebody an hour at 3am.
+I am an Electrical Engineering (Control) student at Iran University of Science and Technology (IUST). I care about systems that can sense, learn, adapt and collaborate — which is why my interests sit at the intersection of robotics, artificial intelligence, control systems and computer vision.
 
-I have spent the last decade building high-throughput ingestion pipelines, event
-driven backends and the developer tooling that makes them bearable. Most of that
-work has been in Rust and Go, against PostgreSQL and the various queues and caches
-people insist on putting in front of it.
+I am currently working on decentralized and safe formation control for differential-drive mobile robots with minimal sensing: how a fleet of cheap robots can hold formation and stay safe using only local, relative measurements and no central coordinator.
 
-## What I care about
+## What I work on
 
-* **Boring technology.** The cleverest system is the one that still works when you
-  are paged at 3am.
-* **Written decisions.** Anything that lives only in someone's head gets lost,
-  argued about again, or quietly reversed.
-* **Measured performance.** A flamegraph beats intuition, every single time.
-* **Clear boundaries.** If your business logic mentions a framework type, it is not
-  business logic.
+* **Robotics & control** — formation control, feed and embedded control, and getting physical systems to behave.
+* **Machine learning & deep learning** — from classic classifiers to neural networks and reinforcement learning.
+* **Computer vision** — detection and counting with YOLOv8, image processing and open-source toolchains.
+* **Data engineering** — asynchronous scraping pipelines, dataset cleaning and turning messy data into answers.
+
+## Experience worth mentioning
+
+* Research & Data Assistant at **Lotus Futurists** — building scraping pipelines and cleaning data.
+* Computer Vision Research Intern at **CVLab, IUST**.
+* Teaching Assistant for Artificial Intelligence, the Industrial Control Lab and Programming.
+* Founder & Host of **EnglishConvey**, an initiative to help peers practice English.
 
 ## How I work
 
-Small teams, high trust, and a strong preference for handing over working software
-rather than status updates. I write things down — architecture decision records,
-runbooks, and the occasional long article about why a particular approach did not
-work.
+I write things down. Research notes, experiment logs and working papers — enough that any idea can be resumed months later. I believe the best engineering is boring, measured and documented.
 
-## Outside the editor
+## Outside the lab
 
-I climb, I cook far too much for two people, and I maintain a small number of open
-source Rust crates that I use in my own work. I am always happy to talk about any of
-it."#,
+I read broadly, enjoy working in the open, and I am always happy to talk about robotics, RL or a tricky control problem."#,
             false,
             8,
         ),
         (
             "uses",
             "Uses",
-            r#"## Hardware
+            r#"## Languages & tools
 
-I keep the desk simple and the machine fast.
+The tools I reach for most, in rough order of how much I live in them.
 
-* **MacBook Pro 16"** — M3 Max, 64 GB RAM. The compiler is the bottleneck, so the CPU is the tool.
-* **A 27" 5K display** calibrated to sRGB. Colour accuracy matters more than resolution.
-* **A real keyboard** — mechanical, quiet, with slightly heavy switches. Nothing else survives a long session.
-* **A standing desk** — because back pain is a career risk.
+* **Python** — my main language for ML, data and scripting.
+* **C / C++** — embedded work (Arduino) and performance-sensitive code.
+* **MATLAB** — control-theory work and simulations.
+* **Kotlin / Java** — Android and JVM projects.
 
-## Editor
+## Machine learning & data
 
-* **Neovim** with a small, deliberate configuration. I keep it fast and I keep it mine.
-* **Zellij** for panes, but I mostly use `:split` because muscle memory beats novelty.
-* **ripgrep**, `fd`, `fzf`, `jq`, `bat`, `delta`, `lazygit`. The boring UNIX tools done well.
+* **PyTorch** and **TensorFlow** — deep learning.
+* **scikit-learn**, **pandas**, **NumPy** — classic ML and data wrangling.
+* **Jupyter** — exploration and write-ups.
+* **OpenCV** — computer vision.
 
-## Terminal
+## Robotics & embedded
 
-* **Ghostty** — fast, native, no configuration archaeology.
-* **starship** prompt, **fish** shell (zsh was fine; fish is faster to type in).
-* **atuin** for shell history with fuzzy search.
+* **Arduino** — microcontrollers, servos and sensors.
+* **ROS** — robotics middleware (getting deeper into it).
+* Git, GitHub and Linux — the substrate for all of the above.
 
-## Software I actually pay for
+## The setup
 
-* **1Password** — the only password manager that has never let me down.
-* **Linear** — issue tracking that does not create busywork.
-* **Raycast** — a launcher that replaced four other applications.
-
-## Desk setup
-
-The goal is that nothing on the desk competes for attention. The monitor is on an arm, the keyboard is directly in front of me, and the notebook is for thinking rather than for lists."#,
+I keep things simple: a Linux environment, a solid editor, and the terminal for everything else. The goal is that the tools stay out of the way of the work."#,
             true,
             3,
         ),

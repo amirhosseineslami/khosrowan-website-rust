@@ -1,0 +1,10 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "personal-site",
+      "runtimeExecutable": "/home/amir/Projects/personal-site/scripts/dev-server.sh",
+      "port": 8788
+    }
+  ]
+}
