@@ -1,24 +1,24 @@
 <!doctype html>
-<html lang="en" data-theme="{{ view.base.default_theme }}">
+<html lang="{{ view.base.lang }}" dir="{{ view.base.dir }}" data-theme="{{ view.base.default_theme }}">
 <head>
 {% include "partials/head.html" %}
 </head>
 <body>
-<a class="skip-link" href="#main">Skip to content</a>
+<a class="skip-link" href="#main">{% if view.base.lang == "fa" %}پرش به محتوا{% else %}Skip to content{% endif %}</a>
 {% include "partials/header.html" %}
 
 <main id="main">
   <section class="page-hero">
     <div class="container">
-      <span class="eyebrow">Résumé</span>
+      <span class="eyebrow">{% if view.base.lang == "fa" %}رزومه{% else %}Résumé{% endif %}</span>
       <h1 class="page-title">{{ view.base.site.title }}</h1>
       <p class="section-subtitle" style="font-size:var(--step-1);">{{ view.base.site.subtitle }}{% if !view.base.site.location.is_empty() %} · {{ view.base.site.location }}{% endif %}</p>
       <div class="flex" style="margin-top:1.2rem;">
         {% if !view.cv_file.is_empty() %}
-        <a class="btn btn-primary" href="{{ view.cv_file }}" download>Download PDF</a>
+        <a class="btn btn-primary" href="{{ view.cv_file }}" download>{% if view.base.lang == "fa" %}دانلود PDF{% else %}Download PDF{% endif %}</a>
         {% endif %}
-        <button class="btn" type="button" onclick="window.print()">Print this page</button>
-        <a class="btn btn-ghost" href="/contact">Get in touch</a>
+        <button class="btn" type="button" onclick="window.print()">{% if view.base.lang == "fa" %}چاپ این صفحه{% else %}Print this page{% endif %}</button>
+        <a class="btn btn-ghost" href="/contact">{% if view.base.lang == "fa" %}در ارتباط باشید{% else %}Get in touch{% endif %}</a>
       </div>
     </div>
   </section>
@@ -37,7 +37,7 @@
 
       <div class="grid" style="grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:var(--space-xl);align-items:start;">
         <div>
-          <h2 style="margin-bottom:var(--space-l);">Experience</h2>
+          <h2 style="margin-bottom:var(--space-l);">{% if view.base.lang == "fa" %}تجربه{% else %}Experience{% endif %}</h2>
           <div class="timeline">
             {% for item in view.work %}
             <div class="timeline-item">
@@ -49,7 +49,7 @@
             {% endfor %}
           </div>
 
-          <h2 style="margin:var(--space-xl) 0 var(--space-l);">Education</h2>
+          <h2 style="margin:var(--space-xl) 0 var(--space-l);">{% if view.base.lang == "fa" %}تحصیلات{% else %}Education{% endif %}</h2>
           <div class="timeline">
             {% for item in view.education %}
             <div class="timeline-item">
@@ -64,7 +64,7 @@
 
         <aside class="stack">
           <div class="card">
-            <h3 class="card-title" style="font-size:var(--step-0);">Skills</h3>
+            <h3 class="card-title" style="font-size:var(--step-0);">{% if view.base.lang == "fa" %}مهارت‌ها{% else %}Skills{% endif %}</h3>
             {% for group in view.skills %}
             <div style="margin-top:1rem;">
               <div class="skill-group-title" style="color:var(--accent);">{{ group.label }}</div>
@@ -82,13 +82,13 @@
           </div>
 
           <div class="card">
-            <h3 class="card-title" style="font-size:var(--step-0);">Contact</h3>
+            <h3 class="card-title" style="font-size:var(--step-0);">{% if view.base.lang == "fa" %}تماس{% else %}Contact{% endif %}</h3>
             <div class="stack" style="--space-s:.6rem;margin-top:.8rem;">
-              <div class="text-sm"><span class="text-muted">E-mail</span><br>{{ view.base.site.email }}</div>
+              <div class="text-sm"><span class="text-muted">{% if view.base.lang == "fa" %}ایمیل{% else %}E-mail{% endif %}</span><br>{{ view.base.site.email }}</div>
               {% if !view.base.site.phone.is_empty() %}
-              <div class="text-sm"><span class="text-muted">Phone</span><br>{{ view.base.site.phone }}</div>
+              <div class="text-sm"><span class="text-muted">{% if view.base.lang == "fa" %}تلفن{% else %}Phone{% endif %}</span><br>{{ view.base.site.phone }}</div>
               {% endif %}
-              <div class="text-sm"><span class="text-muted">Location</span><br>{{ view.base.site.location }}</div>
+              <div class="text-sm"><span class="text-muted">{% if view.base.lang == "fa" %}موقعیت{% else %}Location{% endif %}</span><br>{{ view.base.site.location }}</div>
             </div>
           </div>
         </aside>

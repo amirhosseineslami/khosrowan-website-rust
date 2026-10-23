@@ -1,17 +1,17 @@
 <!doctype html>
-<html lang="en" data-theme="{{ view.base.default_theme }}">
+<html lang="{{ view.base.lang }}" dir="{{ view.base.dir }}" data-theme="{{ view.base.default_theme }}">
 <head>
 {% include "partials/head.html" %}
 </head>
 <body>
-<a class="skip-link" href="#main">Skip to content</a>
+<a class="skip-link" href="#main">{% if view.base.lang == "fa" %}پرش به محتوا{% else %}Skip to content{% endif %}</a>
 {% include "partials/header.html" %}
 
 <main id="main">
   <section class="section-tight" style="padding-top:var(--space-xl);">
     <div class="container {% if view.is_full_width %}container-narrow{% endif %}">
       <nav class="breadcrumbs" aria-label="Breadcrumb">
-        <a href="/">Home</a><span aria-hidden="true">/</span>
+        <a href="/">{% if view.base.lang == "fa" %}خانه{% else %}Home{% endif %}</a><span aria-hidden="true">/</span>
         <span>{{ view.title }}</span>
       </nav>
 

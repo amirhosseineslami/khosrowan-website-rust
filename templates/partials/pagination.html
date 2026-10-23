@@ -1,7 +1,7 @@
 {% if view.pagination.total_pages > 1 %}
-<nav class="pagination" aria-label="Pagination">
+<nav class="pagination" aria-label="{% if view.base.lang == "fa" %}صفحه‌بندی{% else %}Pagination{% endif %}">
   {% if !view.pagination.prev_href.is_empty() %}
-  <a href="{{ view.pagination.prev_href }}" aria-label="Previous page">←</a>
+  <a href="{{ view.pagination.prev_href }}" aria-label="{% if view.base.lang == "fa" %}صفحه قبل{% else %}Previous page{% endif %}">←</a>
   {% endif %}
 
   {% for link in view.pagination.links %}
@@ -15,7 +15,7 @@
   {% endfor %}
 
   {% if !view.pagination.next_href.is_empty() %}
-  <a href="{{ view.pagination.next_href }}" aria-label="Next page">→</a>
+  <a href="{{ view.pagination.next_href }}" aria-label="{% if view.base.lang == "fa" %}صفحه بعد{% else %}Next page{% endif %}">→</a>
   {% endif %}
 </nav>
 {% endif %}

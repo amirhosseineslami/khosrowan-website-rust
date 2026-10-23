@@ -1,20 +1,23 @@
 <!doctype html>
-<html lang="en" data-theme="{{ view.base.default_theme }}">
+<html lang="{{ view.base.lang }}" dir="{{ view.base.dir }}" data-theme="{{ view.base.default_theme }}">
 <head>
 {% include "partials/head.html" %}
 </head>
 <body>
-<a class="skip-link" href="#main">Skip to content</a>
+<a class="skip-link" href="#main">{% if view.base.lang == "fa" %}پرش به محتوا{% else %}Skip to content{% endif %}</a>
 {% include "partials/header.html" %}
 
 <main id="main">
   <section class="page-hero">
     <div class="container">
-      <span class="eyebrow">Services</span>
-      <h1 class="page-title">How I can help</h1>
+      <span class="eyebrow">{% if view.base.lang == "fa" %}خدمات{% else %}Services{% endif %}</span>
+      <h1 class="page-title">{% if view.base.lang == "fa" %}چطور می‌توانم کمک کنم{% else %}How I can help{% endif %}</h1>
       <p class="section-subtitle" style="font-size:var(--step-1);">
-        A small number of focused engagements. Every one of them ends with your team being
-        able to carry on without me.
+        {% if view.base.lang == "fa" %}
+        تعداد کمی همکاری متمرکز. هر کدام با توانایی تیم شما برای ادامه بدون من به پایان می‌رسد.
+        {% else %}
+        A small number of focused engagements. Every one of them ends with your team being able to carry on without me.
+        {% endif %}
       </p>
     </div>
   </section>
@@ -42,7 +45,7 @@
           </ul>
           {% endif %}
           <div class="flex" style="margin-top:1.4rem;">
-            <a class="btn btn-primary btn-sm" href="/contact?subject={{ service.title }}">Enquire</a>
+            <a class="btn btn-primary btn-sm" href="/contact?subject={{ service.title }}">{% if view.base.lang == "fa" %}درخواست{% else %}Enquire{% endif %}</a>
           </div>
         </article>
         {% endfor %}
@@ -54,9 +57,9 @@
     <div class="container">
       <div class="section-head reveal">
         <div>
-          <span class="eyebrow">Process</span>
-          <h2>How an engagement runs</h2>
-          <p class="section-subtitle">Predictable, documented and never a surprise invoice.</p>
+          <span class="eyebrow">{% if view.base.lang == "fa" %}فرآیند{% else %}Process{% endif %}</span>
+          <h2>{% if view.base.lang == "fa" %}یک همکاری چگونه پیش می‌رود{% else %}How an engagement runs{% endif %}</h2>
+          <p class="section-subtitle">{% if view.base.lang == "fa" %}پیش‌بینی‌پذیر، مستند و هرگز فاکتور غافلگیرکننده.{% else %}Predictable, documented and never a surprise invoice.{% endif %}</p>
         </div>
       </div>
 
@@ -76,10 +79,10 @@
     <div class="container">
       <div class="section-head reveal">
         <div>
-          <span class="eyebrow">Kind words</span>
-          <h2>What clients say</h2>
+          <span class="eyebrow">{% if view.base.lang == "fa" %}نظرها{% else %}Kind words{% endif %}</span>
+          <h2>{% if view.base.lang == "fa" %}مشتریان چه می‌گویند{% else %}What clients say{% endif %}</h2>
         </div>
-        <a class="link-arrow" href="/testimonials">More</a>
+        <a class="link-arrow" href="/testimonials">{% if view.base.lang == "fa" %}بیشتر{% else %}More{% endif %}</a>
       </div>
       <div class="grid grid-2">
         {% for testimonial in view.testimonials %}

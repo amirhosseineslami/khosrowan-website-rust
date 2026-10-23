@@ -2,6 +2,15 @@
    personal-site — admin panel styles
    ========================================================================== */
 
+.admin-body,
+.admin-body input,
+.admin-body textarea,
+.admin-body select,
+.admin-body button {
+  font-family: "Vazirmatn", "Inter", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
 .admin-body {
   display: grid;
   grid-template-columns: 256px minmax(0, 1fr);

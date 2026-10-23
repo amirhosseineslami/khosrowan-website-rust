@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="en" data-theme="{{ view.base.default_theme }}">
+<html lang="{{ view.base.lang }}" dir="{{ view.base.dir }}" data-theme="{{ view.base.default_theme }}">
 <head>
 {% include "partials/head.html" %}
 </head>
 <body>
-<a class="skip-link" href="#main">Skip to content</a>
+<a class="skip-link" href="#main">{% if view.base.lang == "fa" %}پرش به محتوا{% else %}Skip to content{% endif %}</a>
 {% include "partials/header.html" %}
 
 <main id="main">
@@ -15,19 +15,19 @@
         <div class="icon-circle" style="margin-inline:auto;">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m20 6-11 11-5-5"/></svg>
         </div>
-        <h1 style="font-size:var(--step-3);">You're on the list</h1>
+        <h1 style="font-size:var(--step-3);">{% if view.base.lang == "fa" %}در فهرست هستید{% else %}You're on the list{% endif %}</h1>
         <p class="text-muted" style="margin-top:.7rem;">{{ view.message }}</p>
         {% else %}
         <div class="icon-circle" style="margin-inline:auto;">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></svg>
         </div>
-        <h1 style="font-size:var(--step-3);">That didn't work</h1>
+        <h1 style="font-size:var(--step-3);">{% if view.base.lang == "fa" %}موفق نشد{% else %}That didn't work{% endif %}</h1>
         <p class="text-muted" style="margin-top:.7rem;">{{ view.message }}</p>
         {% endif %}
 
         <div class="flex" style="justify-content:center;margin-top:1.6rem;">
-          <a class="btn btn-primary" href="/">Back to home</a>
-          <a class="btn" href="/blog">Read the blog</a>
+          <a class="btn btn-primary" href="/">{% if view.base.lang == "fa" %}بازگشت به خانه{% else %}Back to home{% endif %}</a>
+          <a class="btn" href="/blog">{% if view.base.lang == "fa" %}خواندن وبلاگ{% else %}Read the blog{% endif %}</a>
         </div>
       </div>
     </div>

@@ -1,10 +1,28 @@
 <!doctype html>
-<html lang="en" data-theme="{{ view.base.default_theme }}">
+<html lang="{{ view.base.lang }}" dir="{{ view.base.dir }}" data-theme="{{ view.base.default_theme }}">
 <head>
 {% include "partials/head.html" %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "{{ view.post.title }}",
+  "description": "{{ view.post.excerpt }}",
+  "datePublished": "{{ view.post.published_iso }}",
+  "inLanguage": "{{ view.base.lang }}",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "{{ view.base.canonical_url }}"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "{{ view.base.site.title }}"
+  }
+}
+</script>
 </head>
 <body>
-<a class="skip-link" href="#main">Skip to content</a>
+<a class="skip-link" href="#main">{% if view.base.lang == "fa" %}پرش به محتوا{% else %}Skip to content{% endif %}</a>
 <div class="progress-bar" data-progress></div>
 {% include "partials/header.html" %}
 
@@ -13,8 +31,8 @@
     <section class="section-tight" style="padding-top:var(--space-xl);">
       <div class="container container-narrow">
         <nav class="breadcrumbs" aria-label="Breadcrumb">
-          <a href="/">Home</a><span aria-hidden="true">/</span>
-          <a href="/blog">Blog</a>
+          <a href="/">{% if view.base.lang == "fa" %}خانه{% else %}Home{% endif %}</a><span aria-hidden="true">/</span>
+          <a href="/blog">{% if view.base.lang == "fa" %}وبلاگ{% else %}Blog{% endif %}</a>
           {% if !view.post.category_name.is_empty() %}
           <span aria-hidden="true">/</span>
           <a href="/blog?category={{ view.post.category_slug }}">{{ view.post.category_name }}</a>
@@ -35,11 +53,11 @@
               <time datetime="{{ view.post.published_iso }}">{{ view.post.published_at }}</time>
             </span>
             <span aria-hidden="true">·</span>
-            <span>{{ view.post.reading_time }} min read</span>
+            <span>{{ view.post.reading_time }} {% if view.base.lang == "fa" %}دقیقه مطالعه{% else %}min read{% endif %}</span>
             <span aria-hidden="true">·</span>
-            <span>{{ view.post.word_count }} words</span>
+            <span>{{ view.post.word_count }} {% if view.base.lang == "fa" %}کلمه{% else %}words{% endif %}</span>
             <span aria-hidden="true">·</span>
-            <span>{{ view.post.view_count }} views</span>
+            <span>{{ view.post.view_count }} {% if view.base.lang == "fa" %}بازدید{% else %}views{% endif %}</span>
           </div>
         </header>
 
@@ -64,12 +82,12 @@
 
               <div class="flex-between">
                 <div>
-                  <div class="footer-title" style="margin-bottom:.4rem;">Share this article</div>
+                  <div class="footer-title" style="margin-bottom:.4rem;">{% if view.base.lang == "fa" %}اشتراک این مقاله{% else %}Share this article{% endif %}</div>
                   <div class="share-row">
                     <a class="share-btn" href="https://twitter.com/intent/tweet?text={{ view.post.title }}&url={{ view.post.share_url }}" target="_blank" rel="noopener noreferrer">Twitter / X</a>
                     <a class="share-btn" href="https://www.linkedin.com/sharing/share-offsite/?url={{ view.post.share_url }}" target="_blank" rel="noopener noreferrer">LinkedIn</a>
                     <a class="share-btn" href="https://news.ycombinator.com/submitlink?u={{ view.post.share_url }}&t={{ view.post.title }}" target="_blank" rel="noopener noreferrer">Hacker News</a>
-                    <button class="share-btn" type="button" data-copy="[data-share-url]">Copy link</button>
+                    <button class="share-btn" type="button" data-copy="[data-share-url]">{% if view.base.lang == "fa" %}کپی لینک{% else %}Copy link{% endif %}</button>
                   </div>
                   <span data-share-url hidden>{{ view.post.share_url }}</span>
                 </div>
@@ -79,13 +97,13 @@
               <div class="post-nav">
                 {% if view.post.prev.is_some() %}
                 <a href="{{ view.post.prev.as_ref().unwrap().url }}">
-                  <span class="post-nav-label">← Previous</span>
+                  <span class="post-nav-label">← {% if view.base.lang == "fa" %}قبلی{% else %}Previous{% endif %}</span>
                   <div class="post-nav-title">{{ view.post.prev.as_ref().unwrap().title }}</div>
                 </a>
                 {% endif %}
                 {% if view.post.next.is_some() %}
                 <a href="{{ view.post.next.as_ref().unwrap().url }}" style="text-align:right;">
-                  <span class="post-nav-label">Next →</span>
+                  <span class="post-nav-label">{% if view.base.lang == "fa" %}بعدی{% else %}Next{% endif %} →</span>
                   <div class="post-nav-title">{{ view.post.next.as_ref().unwrap().title }}</div>
                 </a>
                 {% endif %}
@@ -101,8 +119,8 @@
                 <p class="text-muted" style="margin-top:.4rem;">{{ view.post.author_bio }}</p>
                 {% endif %}
                 <div class="flex" style="margin-top:.8rem;">
-                  <a class="btn btn-sm" href="/about">More about me</a>
-                  <a class="btn btn-sm btn-ghost" href="/blog">All articles</a>
+                  <a class="btn btn-sm" href="/about">{% if view.base.lang == "fa" %}درباره من{% else %}More about me{% endif %}</a>
+                  <a class="btn btn-sm btn-ghost" href="/blog">{% if view.base.lang == "fa" %}همه مقاله‌ها{% else %}All articles{% endif %}</a>
                 </div>
               </div>
             </section>
@@ -110,7 +128,7 @@
             {% if !view.post.related.is_empty() %}
             <section style="margin-top:var(--space-xl);">
               <div class="section-head" style="margin-bottom:var(--space-m);">
-                <h2 style="font-size:var(--step-2);">Related reading</h2>
+                <h2 style="font-size:var(--step-2);">{% if view.base.lang == "fa" %}مطالب مرتبط{% else %}Related reading{% endif %}</h2>
               </div>
               <div class="post-grid">
                 {% for post in view.post.related %}
@@ -122,9 +140,9 @@
 
             {% if view.comments_enabled %}
             <section id="comments" style="margin-top:var(--space-xl);">
-              <h2 style="font-size:var(--step-2);margin-bottom:.4rem;">Discussion</h2>
+              <h2 style="font-size:var(--step-2);margin-bottom:.4rem;">{% if view.base.lang == "fa" %}بحث{% else %}Discussion{% endif %}</h2>
               <p class="text-muted text-sm" style="margin-bottom:1.2rem;">
-                Comments are moderated — they appear once approved.
+                {% if view.base.lang == "fa" %}نظرها بازبینی می‌شوند — پس از تأیید نمایش داده می‌شوند.{% else %}Comments are moderated — they appear once approved.{% endif %}
               </p>
 
               {% if !view.post.comments.is_empty() %}
@@ -161,31 +179,31 @@
               {% endif %}
 
               <form class="card form" method="post" action="/blog/{{ view.post.slug }}/comment" style="margin-top:var(--space-m);">
-                <h3 style="font-size:var(--step-1);">Leave a comment</h3>
+                <h3 style="font-size:var(--step-1);">{% if view.base.lang == "fa" %}ثبت نظر{% else %}Leave a comment{% endif %}</h3>
                 <div class="hp">
                   <label>Website<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
                 </div>
                 <div class="form-row">
                   <div class="field">
-                    <label for="c-name">Name</label>
+                    <label for="c-name">{% if view.base.lang == "fa" %}نام{% else %}Name{% endif %}</label>
                     <input id="c-name" type="text" name="author_name" required maxlength="120" placeholder="Ada Lovelace">
                   </div>
                   <div class="field">
-                    <label for="c-email">E-mail <span class="text-faint">(not published)</span></label>
+                    <label for="c-email">{% if view.base.lang == "fa" %}ایمیل <span class="text-faint">(منتشر نمی‌شود)</span>{% else %}E-mail <span class="text-faint">(not published)</span>{% endif %}</label>
                     <input id="c-email" type="email" name="author_email" required placeholder="ada@example.com">
                   </div>
                 </div>
                 <div class="field">
-                  <label for="c-website">Website <span class="text-faint">(optional)</span></label>
+                  <label for="c-website">{% if view.base.lang == "fa" %}وب‌سایت <span class="text-faint">(اختیاری)</span>{% else %}Website <span class="text-faint">(optional)</span>{% endif %}</label>
                   <input id="c-website" type="text" name="author_website" placeholder="example.com">
                 </div>
                 <div class="field">
-                  <label for="c-body">Comment</label>
-                  <textarea id="c-body" name="body" required placeholder="What did you think?" style="min-height:120px;"></textarea>
+                  <label for="c-body">{% if view.base.lang == "fa" %}نظر{% else %}Comment{% endif %}</label>
+                  <textarea id="c-body" name="body" required placeholder="{% if view.base.lang == "fa" %}نظرت چه بود؟{% else %}What did you think?{% endif %}" style="min-height:120px;"></textarea>
                 </div>
                 <div class="form-actions">
-                  <button class="btn btn-primary" type="submit">Post comment</button>
-                  <span class="text-faint text-sm">Markdown is supported.</span>
+                  <button class="btn btn-primary" type="submit">{% if view.base.lang == "fa" %}ثبت نظر{% else %}Post comment{% endif %}</button>
+                  <span class="text-faint text-sm">{% if view.base.lang == "fa" %}مارک‌داون پشتیبانی می‌شود.{% else %}Markdown is supported.{% endif %}</span>
                 </div>
               </form>
             </section>
@@ -194,7 +212,7 @@
 
           {% if !view.post.toc.is_empty() %}
           <aside class="toc">
-            <div class="toc-title">On this page</div>
+            <div class="toc-title">{% if view.base.lang == "fa" %}در این صفحه{% else %}On this page{% endif %}</div>
             {% for item in view.post.toc %}
             <a class="level-{{ item.level }}" href="#{{ item.anchor }}">{{ item.text }}</a>
             {% endfor %}

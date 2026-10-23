@@ -132,6 +132,7 @@ pub async fn index(
 
     let mut posts: Vec<PostCard> = summaries.iter().map(PostCard::from_summary).collect();
     data::attach_tags(&state.db, &mut posts).await?;
+    data::apply_post_card_translations(&state.db, &mut posts, &base.lang).await?;
 
     let pagination = PaginationView::from_page(
         &util::Page::new(Vec::<()>::new(), page, per_page, total),
@@ -139,24 +140,51 @@ pub async fn index(
         &query_string(&query),
     );
 
-    let heading = if !term.is_empty() {
-        format!("Search results for “{term}”")
+    let (heading, subheading) = if !term.is_empty() {
+        let h = if base.lang == "fa" {
+            format!("نتایج جستجو برای «{term}»")
+        } else {
+            format!("Search results for “{term}”")
+        };
+        (h, String::new())
     } else if !category.is_empty() {
-        category
-            .split('-')
-            .map(|w| {
-                let mut chars = w.chars();
-                match chars.next() {
-                    Some(first) => first.to_uppercase().collect::<String>() + chars.as_str(),
-                    None => String::new(),
-                }
-            })
-            .collect::<Vec<_>>()
-            .join(" ")
+        let h = if base.lang == "fa" {
+            format!("مقاله‌های «{category}»")
+        } else {
+            category
+                .split('-')
+                .map(|w| {
+                    let mut chars = w.chars();
+                    match chars.next() {
+                        Some(first) => {
+                            first.to_uppercase().collect::<String>() + chars.as_str()
+                        }
+                        None => String::new(),
+                    }
+                })
+                .collect::<Vec<_>>()
+                .join(" ")
+        };
+        (h, String::new())
     } else if !tag.is_empty() {
-        format!("Posts tagged “{tag}”")
+        let h = if base.lang == "fa" {
+            format!("برچسب «{tag}»")
+        } else {
+            format!("Posts tagged “{tag}”")
+        };
+        (h, String::new())
     } else {
-        "Writing".to_string()
+        let h = if base.lang == "fa" {
+            "نوشته‌ها".to_string()
+        } else {
+            "Writing".to_string()
+        };
+        let s = if base.lang == "fa" {
+            "یادداشت‌های بلند درباره رباتیک، کنترل، هوش مصنوعی و مهندسی.".to_string()
+        } else {
+            "Long-form notes on robotics, control, AI and engineering.".to_string()
+        };
+        (h, s)
     };
 
     base.page_title = format!("{heading} · {}", base.site.title);
@@ -165,12 +193,10 @@ pub async fn index(
         featured: Vec::new(),
         posts,
         pagination,
-        categories: data::categories(&state.db).await?,
-        tags: data::tags(&state.db).await?,
+        categories: data::categories(&state.db, &base.lang).await?,
+        tags: data::tags(&state.db, &base.lang).await?,
         heading,
-        subheading:
-            "Long-form notes on engineering, systems and the craft of building software that lasts."
-                .into(),
+        subheading,
         active_category: category,
         active_tag: tag,
         query: term,
@@ -273,15 +299,6 @@ pub async fn show(
             .await?
             .unwrap_or_else(|| ("Anonymous".into(), None));
 
-    let toc = markdown::table_of_contents(&post.content_md)
-        .into_iter()
-        .map(|entry| TocItem {
-            level: entry.level,
-            text: entry.text,
-            anchor: entry.anchor,
-        })
-        .collect();
-
     let comments = load_comments(&state, post.id).await?;
 
     let (prev, next) = adjacent_posts(&state, post.id, post.published_at).await?;
@@ -295,14 +312,36 @@ pub async fn show(
         &format!("/blog/{}", post.slug),
     )
     .await?;
-    base.page_title = post
-        .meta_title
+
+    // Apply the active locale's translation, falling back to the base row.
+    let translation = data::post_translation(&state.db, post.id, &base.lang).await?;
+    let (title, excerpt, content_md, content_html, meta_title, meta_description) =
+        if let Some(t) = &translation {
+            (
+                t.title.clone(),
+                t.excerpt.clone(),
+                t.content_md.clone(),
+                t.content_html.clone(),
+                t.meta_title.clone().or_else(|| post.meta_title.clone()),
+                t.meta_description.clone().or_else(|| post.meta_description.clone()),
+            )
+        } else {
+            (
+                post.title.clone(),
+                post.excerpt.clone(),
+                post.content_md.clone(),
+                post.content_html.clone(),
+                post.meta_title.clone(),
+                post.meta_description.clone(),
+            )
+        };
+
+    base.page_title = meta_title
         .clone()
-        .unwrap_or_else(|| format!("{} · {}", post.title, base.site.title));
-    base.meta_description = post
-        .meta_description
+        .unwrap_or_else(|| format!("{} · {}", title, base.site.title));
+    base.meta_description = meta_description
         .clone()
-        .unwrap_or_else(|| util::meta_description(&post.excerpt, &base.site.description));
+        .unwrap_or_else(|| util::meta_description(&excerpt, &base.site.description));
     base.og_image = post
         .og_image
         .clone()
@@ -312,12 +351,21 @@ pub async fn show(
 
     let settings = state.settings.snapshot();
 
+    let toc = markdown::table_of_contents(&content_md)
+        .into_iter()
+        .map(|entry| TocItem {
+            level: entry.level,
+            text: entry.text,
+            anchor: entry.anchor,
+        })
+        .collect();
+
     let view = BlogPostView {
         post: PostView {
             slug: post.slug.clone(),
-            title: post.title.clone(),
-            excerpt: post.excerpt.clone(),
-            content_html: post.content_html.clone(),
+            title,
+            excerpt,
+            content_html,
             cover_image: post.cover_image.clone().unwrap_or_default(),
             has_cover: post.cover_image.is_some(),
             category: category.as_ref().map(|c| c.0.clone()).unwrap_or_default(),
@@ -331,7 +379,7 @@ pub async fn show(
             published_iso: util::format_datetime(post.published_at),
             updated_at: util::format_date(post.updated_at),
             reading_time: post.reading_time,
-            word_count: markdown::word_count(&post.content_md),
+            word_count: markdown::word_count(&content_md),
             view_count: post.view_count + 1,
             allow_comments: post.allow_comments && settings.enable_comments,
             toc,
@@ -552,24 +600,30 @@ pub async fn comment(
     let email = form.author_email.trim().to_string();
     let body = form.body.trim().to_string();
 
+    let fa = headers
+        .get(axum::http::header::COOKIE)
+        .and_then(|v| v.to_str().ok())
+        .map(|c| c.split(';').any(|p| p.trim().starts_with("lang=") && p.trim().contains("fa")))
+        .unwrap_or(false);
+
     let mut errors: Vec<String> = Vec::new();
     if name.is_empty() || name.chars().count() > 120 {
-        errors.push("Please provide a name.".into());
+        errors.push(if fa { "لطفاً نام خود را وارد کنید.".into() } else { "Please provide a name.".into() });
     }
     if !util::is_valid_email(&email) {
-        errors.push("Please provide a valid e-mail address.".into());
+        errors.push(if fa { "لطفاً یک نشانی ایمیل معتبر وارد کنید.".into() } else { "Please provide a valid e-mail address.".into() });
     }
     if body.chars().count() < 3 {
-        errors.push("Your comment is too short.".into());
+        errors.push(if fa { "نظر شما خیلی کوتاه است.".into() } else { "Your comment is too short.".into() });
     }
     if body.chars().count() > 5000 {
-        errors.push("Your comment is too long.".into());
+        errors.push(if fa { "نظر شما خیلی طولانی است.".into() } else { "Your comment is too long.".into() });
     }
 
     // Very short comments with links are usually spam.
     let link_count = body.matches("http").count();
     if body.chars().count() < 40 && link_count > 0 {
-        errors.push("Your comment was flagged as spam.".into());
+        errors.push(if fa { "نظر شما به‌عنوان اسپم علامت‌گذاری شد.".into() } else { "Your comment was flagged as spam.".into() });
     }
 
     if !errors.is_empty() {

@@ -165,6 +165,15 @@ pub fn session_cookie(session_id: &str, max_age: i64, secure: bool) -> Cookie<'s
     cookie.build()
 }
 
+/// Build the `Set-Cookie` header that stores the chosen language.
+pub fn language_cookie(locale: &str) -> Cookie<'static> {
+    Cookie::build(("lang", locale.to_string()))
+        .path("/")
+        .same_site(SameSite::Lax)
+        .max_age(time::Duration::days(365))
+        .build()
+}
+
 /// Build the `Set-Cookie` header that clears the session.
 pub fn clear_session_cookie(secure: bool) -> Cookie<'static> {
     let mut cookie = Cookie::build((SESSION_COOKIE, ""))

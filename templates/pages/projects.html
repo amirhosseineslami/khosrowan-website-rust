@@ -1,19 +1,23 @@
 <!doctype html>
-<html lang="en" data-theme="{{ view.base.default_theme }}">
+<html lang="{{ view.base.lang }}" dir="{{ view.base.dir }}" data-theme="{{ view.base.default_theme }}">
 <head>
 {% include "partials/head.html" %}
 </head>
 <body>
-<a class="skip-link" href="#main">Skip to content</a>
+<a class="skip-link" href="#main">{% if view.base.lang == "fa" %}پرش به محتوا{% else %}Skip to content{% endif %}</a>
 {% include "partials/header.html" %}
 
 <main id="main">
   <section class="page-hero">
     <div class="container">
-      <span class="eyebrow">Portfolio</span>
-      <h1 class="page-title">Projects</h1>
+      <span class="eyebrow">{% if view.base.lang == "fa" %}پروژه‌ها{% else %}Projects{% endif %}</span>
+      <h1 class="page-title">{% if view.base.lang == "fa" %}پروژه‌های پژوهشی و فنی{% else %}Research &amp; technical projects{% endif %}</h1>
       <p class="section-subtitle" style="font-size:var(--step-1);">
-        Systems I have designed, built and operated — from firmware to multi-region platforms.
+        {% if view.base.lang == "fa" %}
+        پروژه‌هایی که طراحی، ساخته و اجرا کرده‌ام — از رباتیک و بینایی ماشین تا بلاگچین‌ها و ابزارهای مهندسی.
+        {% else %}
+        Systems I have designed, built and operated — from robotics and computer vision to toolchains and engineering infrastructure.
+        {% endif %}
       </p>
     </div>
   </section>
@@ -22,7 +26,7 @@
     <div class="container">
       {% if !view.tech.is_empty() %}
       <div class="filter-bar reveal" style="margin-bottom:var(--space-l);">
-        <a class="filter-chip{% if view.active_tech.is_empty() %} active{% endif %}" href="/projects">All</a>
+        <a class="filter-chip{% if view.active_tech.is_empty() %} active{% endif %}" href="/projects">{% if view.base.lang == "fa" %}همه{% else %}All{% endif %}</a>
         {% for tech in view.tech %}
         <a class="filter-chip{% if view.active_tech == tech.as_str() %} active{% endif %}" href="/projects?tech={{ tech }}">{{ tech }}</a>
         {% endfor %}
@@ -31,8 +35,8 @@
 
       {% if view.projects.is_empty() %}
       <div class="empty-state">
-        <strong>No projects match that filter.</strong>
-        Try another technology, or <a class="link-arrow" href="/projects">see everything</a>.
+        <strong>{% if view.base.lang == "fa" %}پروژه‌ای با این فیلتر یافت نشد.{% else %}No projects match that filter.{% endif %}</strong>
+        {% if view.base.lang == "fa" %}فناوری دیگری را امتحان کنید یا <a class="link-arrow" href="/projects">همه را ببینید</a>.{% else %}Try another technology, or <a class="link-arrow" href="/projects">see everything</a>.{% endif %}
       </div>
       {% else %}
       <div class="post-grid">
@@ -56,12 +60,12 @@
             </div>
             {% endif %}
             <div class="project-links">
-              <a class="btn btn-sm" href="{{ project.url }}">Read more</a>
+              <a class="btn btn-sm" href="{{ project.url }}">{% if view.base.lang == "fa" %}ادامه مطلب{% else %}Read more{% endif %}</a>
               {% if project.has_repo %}
-              <a class="btn btn-sm btn-ghost" href="{{ project.repo_url }}" target="_blank" rel="noopener noreferrer">Source</a>
+              <a class="btn btn-sm btn-ghost" href="{{ project.repo_url }}" target="_blank" rel="noopener noreferrer">{% if view.base.lang == "fa" %}کد منبع{% else %}Source{% endif %}</a>
               {% endif %}
               {% if project.has_live %}
-              <a class="btn btn-sm btn-ghost" href="{{ project.live_url }}" target="_blank" rel="noopener noreferrer">Live</a>
+              <a class="btn btn-sm btn-ghost" href="{{ project.live_url }}" target="_blank" rel="noopener noreferrer">{% if view.base.lang == "fa" %}دمو{% else %}Live{% endif %}</a>
               {% endif %}
             </div>
           </div>

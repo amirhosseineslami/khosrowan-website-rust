@@ -1,19 +1,19 @@
 <!doctype html>
-<html lang="en" data-theme="{{ view.base.default_theme }}">
+<html lang="{{ view.base.lang }}" dir="{{ view.base.dir }}" data-theme="{{ view.base.default_theme }}">
 <head>
 {% include "partials/head.html" %}
 </head>
 <body>
-<a class="skip-link" href="#main">Skip to content</a>
+<a class="skip-link" href="#main">{% if view.base.lang == "fa" %}پرش به محتوا{% else %}Skip to content{% endif %}</a>
 {% include "partials/header.html" %}
 
 <main id="main">
   <section class="page-hero">
     <div class="container">
-      <span class="eyebrow">Gallery</span>
-      <h1 class="page-title">A few photographs</h1>
+      <span class="eyebrow">{% if view.base.lang == "fa" %}گالری{% else %}Gallery{% endif %}</span>
+      <h1 class="page-title">{% if view.base.lang == "fa" %}چند عکس{% else %}A few photographs{% endif %}</h1>
       <p class="section-subtitle" style="font-size:var(--step-1);">
-        Places, workspaces and the occasional event.
+        {% if view.base.lang == "fa" %}مکان‌ها، فضای کار و گاهی یک رویداد.{% else %}Places, workspaces and the occasional event.{% endif %}
       </p>
     </div>
   </section>
@@ -22,7 +22,7 @@
     <div class="container">
       {% if !view.categories.is_empty() %}
       <div class="filter-bar reveal" style="margin-bottom:var(--space-l);">
-        <a class="filter-chip{% if view.active_category.is_empty() %} active{% endif %}" href="/gallery">All</a>
+        <a class="filter-chip{% if view.active_category.is_empty() %} active{% endif %}" href="/gallery">{% if view.base.lang == "fa" %}همه{% else %}All{% endif %}</a>
         {% for category in view.categories %}
         <a class="filter-chip{% if view.active_category == category.as_str() %} active{% endif %}" href="/gallery?category={{ category }}">{{ category }}</a>
         {% endfor %}
@@ -30,7 +30,7 @@
       {% endif %}
 
       {% if view.items.is_empty() %}
-      <div class="empty-state"><strong>Nothing here yet.</strong></div>
+      <div class="empty-state"><strong>{% if view.base.lang == "fa" %}هنوز چیزی اینجا نیست.{% else %}Nothing here yet.{% endif %}</strong></div>
       {% else %}
       <div class="gallery-grid">
         {% for item in view.items %}

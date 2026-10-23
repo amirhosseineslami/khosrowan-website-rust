@@ -52,13 +52,14 @@ pub async fn rss(State(state): State<AppState>) -> AppResult<Response> {
     <title>{title}</title>
     <link>{base}</link>
     <description>{description}</description>
-    <language>en</language>
+    <language>{language}</language>
     <lastBuildDate>{now}</lastBuildDate>
     <atom:link href="{base}/feed.xml" rel="self" type="application/rss+xml"/>
 {items}  </channel>
 </rss>"#,
         title = markdown::escape(&settings.title),
         description = markdown::escape(&settings.seo_meta_description),
+        language = if settings.default_locale == "fa" { "fa" } else { "en" },
         now = chrono::Utc::now().format("%a, %d %b %Y %H:%M:%S %z"),
     );
 

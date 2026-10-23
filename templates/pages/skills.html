@@ -1,20 +1,23 @@
 <!doctype html>
-<html lang="en" data-theme="{{ view.base.default_theme }}">
+<html lang="{{ view.base.lang }}" dir="{{ view.base.dir }}" data-theme="{{ view.base.default_theme }}">
 <head>
 {% include "partials/head.html" %}
 </head>
 <body>
-<a class="skip-link" href="#main">Skip to content</a>
+<a class="skip-link" href="#main">{% if view.base.lang == "fa" %}پرش به محتوا{% else %}Skip to content{% endif %}</a>
 {% include "partials/header.html" %}
 
 <main id="main">
   <section class="page-hero">
     <div class="container">
-      <span class="eyebrow">Toolkit</span>
-      <h1 class="page-title">Skills</h1>
+      <span class="eyebrow">{% if view.base.lang == "fa" %}ابزارها{% else %}Toolkit{% endif %}</span>
+      <h1 class="page-title">{% if view.base.lang == "fa" %}مهارت‌ها{% else %}Skills{% endif %}</h1>
       <p class="section-subtitle" style="font-size:var(--step-1);">
-        {{ view.total }} technologies I have used in production — grouped by what they are
-        actually for.
+        {% if view.base.lang == "fa" %}
+        {{ view.total }} فناوری که در کار واقعی استفاده کرده‌ام — گروه‌بندی‌شده بر اساس اینکه واقعاً برای چه به کار می‌روند.
+        {% else %}
+        {{ view.total }} technologies I have used in production — grouped by what they are actually for.
+        {% endif %}
       </p>
     </div>
   </section>
@@ -39,11 +42,13 @@
       </div>
 
       <div class="card reveal" style="margin-top:var(--space-xl);">
-        <h3 class="card-title">How to read these numbers</h3>
+        <h3 class="card-title">{% if view.base.lang == "fa" %}چطور این اعداد را بخوانیم{% else %}How to read these numbers{% endif %}</h3>
         <p class="card-body">
-          The bars reflect how comfortable I am shipping production code with each tool, not
-          how many years I have used it. Years of experience are shown next to each name —
-          sometimes a tool I know well is a newer one, and sometimes the reverse.
+          {% if view.base.lang == "fa" %}
+          میله‌ها نشان می‌دهند با هر ابزار چقدر در نوشتن کد واقعی راحت هستم، نه چند سال از آن استفاده کرده‌ام. سال‌های تجربه کنار هر نام نمایش داده می‌شود — گاهی ابزاری که خوب می‌شناسم جدیدتر است و گاهی برعکس.
+          {% else %}
+          The bars reflect how comfortable I am shipping production code with each tool, not how many years I have used it. Years of experience are shown next to each name — sometimes a tool I know well is a newer one, and sometimes the reverse.
+          {% endif %}
         </p>
       </div>
     </div>

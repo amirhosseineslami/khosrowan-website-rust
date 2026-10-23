@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="{{ view.base.lang }}" dir="{{ view.base.dir }}" data-theme="{{ view.base.default_theme }}">
+<head>
+{% include "admin/partials/head.html" %}
+</head>
+<body>
+<div class="admin-body">
+  {% include "admin/partials/sidebar.html" %}
+
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <div>
+        <h1>Profile content</h1>
+        <p>Edit experiences, services and skills — in Persian and English.</p>
+      </div>
+    </header>
+
+    <div class="admin-content">
+      <section class="card">
+        <h2 style="font-size:var(--step-1);margin-bottom:1rem;">Experiences</h2>
+        <div class="stack">
+          {% for e in view.experiences %}
+          <form method="post" action="/admin/profile-content/save" class="form" style="border:1px solid var(--border);border-radius:var(--radius);padding:1rem;">
+            <input type="hidden" name="csrf_token" value="{{ view.csrf_token }}">
+            <input type="hidden" name="entity_type" value="experience">
+            <input type="hidden" name="id" value="{{ e.id }}">
+            <input type="hidden" name="kind" value="{{ e.kind }}">
+            <div class="form-row">
+              <div class="field">
+                <label>Title (فارسی)</label>
+                <input type="text" name="title" value="{{ e.title }}" required>
+              </div>
+              <div class="field">
+                <label>Title (English)</label>
+                <input type="text" name="title_en" value="{{ e.title_en }}">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="field">
+                <label>Company</label>
+                <input type="text" name="company" value="{{ e.company }}">
+              </div>
+              <div class="field">
+                <label>Company (English)</label>
+                <input type="text" name="company_en" value="{{ e.company_en }}">
+              </div>
+              <div class="field">
+                <label>Location</label>
+                <input type="text" name="location" value="{{ e.location }}">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="field">
+                <label>Start</label>
+                <input type="text" name="start_date" value="{{ e.start_date }}" placeholder="2021">
+              </div>
+              <div class="field">
+                <label>End</label>
+                <input type="text" name="end_date" value="{{ e.end_date }}" placeholder="2024">
+              </div>
+              <div class="field">
+                <label class="checkbox"><input type="checkbox" name="is_current" value="on" {% if e.is_current %}checked{% endif %}> Current</label>
+              </div>
+              <div class="field">
+                <label>Sort</label>
+                <input type="number" name="sort_order" value="{{ e.sort_order }}">
+              </div>
+            </div>
+            <div class="field">
+              <label>Description (فارسی)</label>
+              <textarea name="description" style="min-height:70px;">{{ e.description }}</textarea>
+            </div>
+            <div class="field">
+              <label>Description (English)</label>
+              <textarea name="description_en" style="min-height:70px;">{{ e.description_en }}</textarea>
+            </div>
+            <div class="form-actions">
+              <button class="btn btn-primary btn-sm" type="submit">Save</button>
+              <button class="btn btn-sm btn-ghost" type="submit" formaction="/admin/profile-content/experience/{{ e.id }}/delete" formmethod="post" onclick="return confirm('Delete this experience?')">Delete</button>
+            </div>
+          </form>
+          {% endfor %}
+        </div>
+      </section>
+
+      <section class="card" style="margin-top:var(--space-l);">
+        <h2 style="font-size:var(--step-1);margin-bottom:1rem;">Services</h2>
+        <div class="stack">
+          {% for s in view.services %}
+          <form method="post" action="/admin/profile-content/save" class="form" style="border:1px solid var(--border);border-radius:var(--radius);padding:1rem;">
+            <input type="hidden" name="csrf_token" value="{{ view.csrf_token }}">
+            <input type="hidden" name="entity_type" value="service">
+            <input type="hidden" name="id" value="{{ s.id }}">
+            <div class="form-row">
+              <div class="field">
+                <label>Title (فارسی)</label>
+                <input type="text" name="title" value="{{ s.title }}" required>
+              </div>
+              <div class="field">
+                <label>Title (English)</label>
+                <input type="text" name="title_en" value="{{ s.title_en }}">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="field">
+                <label>Icon</label>
+                <input type="text" name="icon" value="{{ s.icon }}">
+              </div>
+              <div class="field">
+                <label>Price</label>
+                <input type="text" name="price_from" value="{{ s.price_from }}">
+              </div>
+              <div class="field">
+                <label>Sort</label>
+                <input type="number" name="sort_order" value="{{ s.sort_order }}">
+              </div>
+            </div>
+            <div class="field">
+              <label>Description (فارسی)</label>
+              <textarea name="description" style="min-height:70px;">{{ s.description }}</textarea>
+            </div>
+            <div class="field">
+              <label>Description (English)</label>
+              <textarea name="description_en" style="min-height:70px;">{{ s.description_en }}</textarea>
+            </div>
+            <div class="form-row">
+              <div class="field">
+                <label>Features JSON (فارسی)</label>
+                <textarea name="features" style="min-height:50px;">{{ s.features }}</textarea>
+              </div>
+              <div class="field">
+                <label>Features JSON (English)</label>
+                <textarea name="features_en" style="min-height:50px;">{{ s.features_en }}</textarea>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button class="btn btn-primary btn-sm" type="submit">Save</button>
+              <button class="btn btn-sm btn-ghost" type="submit" formaction="/admin/profile-content/service/{{ s.id }}/delete" formmethod="post" onclick="return confirm('Delete this service?')">Delete</button>
+            </div>
+          </form>
+          {% endfor %}
+        </div>
+      </section>
+
+      <section class="card" style="margin-top:var(--space-l);">
+        <h2 style="font-size:var(--step-1);margin-bottom:1rem;">Skills</h2>
+        <div class="stack">
+          {% for k in view.skills %}
+          <form method="post" action="/admin/profile-content/save" class="form" style="border:1px solid var(--border);border-radius:var(--radius);padding:1rem;">
+            <input type="hidden" name="csrf_token" value="{{ view.csrf_token }}">
+            <input type="hidden" name="entity_type" value="skill">
+            <input type="hidden" name="id" value="{{ k.id }}">
+            <div class="form-row">
+              <div class="field">
+                <label>Name (فارسی)</label>
+                <input type="text" name="name" value="{{ k.name }}" required>
+              </div>
+              <div class="field">
+                <label>Name (English)</label>
+                <input type="text" name="name_en" value="{{ k.name_en }}">
+              </div>
+              <div class="field">
+                <label>Category (فارسی)</label>
+                <input type="text" name="category" value="{{ k.category }}">
+              </div>
+              <div class="field">
+                <label>Category (English)</label>
+                <input type="text" name="category_en" value="{{ k.category_en }}">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="field">
+                <label>Level (0-100)</label>
+                <input type="number" name="level" value="{{ k.level }}" min="0" max="100">
+              </div>
+              <div class="field">
+                <label>Years</label>
+                <input type="text" name="years" value="{{ k.years }}">
+              </div>
+              <div class="field">
+                <label>Sort</label>
+                <input type="number" name="sort_order" value="{{ k.sort_order }}">
+              </div>
+            </div>
+            <div class="form-actions">
+              <button class="btn btn-primary btn-sm" type="submit">Save</button>
+              <button class="btn btn-sm btn-ghost" type="submit" formaction="/admin/profile-content/skill/{{ k.id }}/delete" formmethod="post" onclick="return confirm('Delete this skill?')">Delete</button>
+            </div>
+          </form>
+          {% endfor %}
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+</body>
+</html>

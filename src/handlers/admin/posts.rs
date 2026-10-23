@@ -312,6 +312,16 @@ pub async fn store(
     )
     .await?;
 
+    if let Some(category_id) = form.category_id {
+        let exists: Option<i64> = sqlx::query_scalar("SELECT id FROM categories WHERE id = ?")
+            .bind(category_id)
+            .fetch_optional(&state.db)
+            .await?;
+        if exists.is_none() {
+            return Err(AppError::validation("The selected category does not exist."));
+        }
+    }
+
     let html = markdown::to_html(&form.content);
     let reading_time = markdown::reading_time(&form.content);
 
@@ -401,11 +411,15 @@ pub async fn update(
     let reading_time = markdown::reading_time(&form.content);
     let status = normalise_status(&form.status);
 
-    let existing_published: Option<chrono::DateTime<chrono::Utc>> =
+    // Read the raw value so NULL/empty string doesn't trip the DateTime decoder.
+    let existing_published: Option<String> =
         sqlx::query_scalar("SELECT published_at FROM posts WHERE id = ?")
             .bind(id)
             .fetch_optional(&state.db)
             .await?;
+    let existing_published = existing_published
+        .filter(|s| !s.is_empty())
+        .and_then(|s| parse_datetime(&s));
 
     let published_at = parse_datetime(&form.published_at)
         .or(existing_published)

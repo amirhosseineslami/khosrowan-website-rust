@@ -1,19 +1,23 @@
 <!doctype html>
-<html lang="en" data-theme="{{ view.base.default_theme }}">
+<html lang="{{ view.base.lang }}" dir="{{ view.base.dir }}" data-theme="{{ view.base.default_theme }}">
 <head>
 {% include "partials/head.html" %}
 </head>
 <body>
-<a class="skip-link" href="#main">Skip to content</a>
+<a class="skip-link" href="#main">{% if view.base.lang == "fa" %}پرش به محتوا{% else %}Skip to content{% endif %}</a>
 {% include "partials/header.html" %}
 
 <main id="main">
   <section class="page-hero">
     <div class="container">
-      <span class="eyebrow">Experience</span>
-      <h1 class="page-title">Experience &amp; education</h1>
+      <span class="eyebrow">{% if view.base.lang == "fa" %}تجربه{% else %}Experience{% endif %}</span>
+      <h1 class="page-title">{% if view.base.lang == "fa" %}تجربه و تحصیلات{% else %}Experience &amp; education{% endif %}</h1>
       <p class="section-subtitle" style="font-size:var(--step-1);">
+        {% if view.base.lang == "fa" %}
+        جایی که کار کرده‌ام، چه ساخته‌ام و در این راه چه آموخته‌ام.
+        {% else %}
         Where I have worked, what I built, and what I learned on the way.
+        {% endif %}
       </p>
     </div>
   </section>
@@ -32,11 +36,11 @@
 
       <div class="grid grid-2" style="align-items:start;">
         <div class="reveal">
-          <h2 style="margin-bottom:var(--space-l);">Work</h2>
+          <h2 style="margin-bottom:var(--space-l);">{% if view.base.lang == "fa" %}تجربه کاری{% else %}Work{% endif %}</h2>
           <div class="timeline">
             {% for item in view.work %}
             <div class="timeline-item">
-              <div class="timeline-period">{{ item.period }}{% if item.is_current %} <span class="pill" style="font-size:.66rem;padding:.1rem .45rem;">Current</span>{% endif %}</div>
+              <div class="timeline-period">{{ item.period }}{% if item.is_current %} <span class="pill" style="font-size:.66rem;padding:.1rem .45rem;">{% if view.base.lang == "fa" %}فعلی{% else %}Current{% endif %}</span>{% endif %}</div>
               <div class="timeline-title">{{ item.title }}</div>
               <div class="timeline-org">{{ item.company }}{% if !item.location.is_empty() %} · {{ item.location }}{% endif %}</div>
               <p class="timeline-desc">{{ item.description }}</p>
@@ -46,7 +50,7 @@
         </div>
 
         <div class="reveal">
-          <h2 style="margin-bottom:var(--space-l);">Education</h2>
+          <h2 style="margin-bottom:var(--space-l);">{% if view.base.lang == "fa" %}تحصیلات{% else %}Education{% endif %}</h2>
           <div class="timeline">
             {% for item in view.education %}
             <div class="timeline-item">
@@ -59,7 +63,7 @@
           </div>
 
           {% if !view.skills.is_empty() %}
-          <h2 style="margin:var(--space-xl) 0 var(--space-l);">Technologies</h2>
+          <h2 style="margin:var(--space-xl) 0 var(--space-l);">{% if view.base.lang == "fa" %}فناوری‌ها{% else %}Technologies{% endif %}</h2>
           <div class="skill-grid">
             {% for group in view.skills %}
             <div class="card" style="margin-bottom:var(--space-m);">

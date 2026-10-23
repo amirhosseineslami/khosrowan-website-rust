@@ -1,27 +1,25 @@
 <!doctype html>
-<html lang="en" data-theme="{{ view.base.default_theme }}">
+<html lang="{{ view.base.lang }}" dir="{{ view.base.dir }}" data-theme="{{ view.base.default_theme }}">
 <head>
 {% include "partials/head.html" %}
 </head>
 <body>
-<a class="skip-link" href="#main">Skip to content</a>
+<a class="skip-link" href="#main">{% if view.base.lang == "fa" %}پرش به محتوا{% else %}Skip to content{% endif %}</a>
 
 {% include "partials/header.html" %}
 
 <main id="main">
+  <!-- Compact, content-first hero (Jadi-inspired): no big avatar, no CV stats. -->
   <section class="hero">
     <div class="container">
       <div class="hero-grid">
         <div>
-          {% if view.base.site.available %}
-          <span class="availability">
-            <span class="dot" aria-hidden="true"></span>
-            Available for select engagements
-          </span>
-          {% endif %}
-
           <h1 class="hero-title">
-            Hi, I'm <span class="gradient-text">{{ view.hero_title }}</span>.
+            {% if view.base.lang == "fa" %}
+            پژوهش در <span class="gradient-text">رباتیک و سیستم‌های هوشمند</span>.
+            {% else %}
+            Research in <span class="gradient-text">robotics &amp; intelligent systems</span>.
+            {% endif %}
           </h1>
 
           <p class="hero-lede">
@@ -32,71 +30,58 @@
           <p class="text-muted" style="max-width:52ch;margin-top:1rem;">
             {{ view.hero_subtitle }}
           </p>
-
-          <div class="flex" style="margin-top:1.8rem;">
-            <a class="btn btn-primary btn-lg" href="/contact">
-              Start a conversation
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-            </a>
-            <a class="btn btn-lg" href="/projects">See my work</a>
-            {% if !view.base.site.cv_file.is_empty() %}
-            <a class="btn btn-lg btn-ghost" href="{{ view.base.site.cv_file }}" download>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7.5 10.5 12 15l4.5-4.5M4 20h16"/></svg>
-              Résumé
-            </a>
-            {% endif %}
-          </div>
-
-          <div class="hero-meta">
-            <div class="hero-meta-item">
-              <span class="hero-meta-label">Based in</span>
-              <span class="hero-meta-value">{{ view.base.site.location }}</span>
-            </div>
-            <div class="hero-meta-item">
-              <span class="hero-meta-label">Focus</span>
-              <span class="hero-meta-value">Backend &amp; systems</span>
-            </div>
-            <div class="hero-meta-item">
-              <span class="hero-meta-label">Writing</span>
-              <span class="hero-meta-value">{{ view.blog_count }} articles</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="hero-avatar reveal">
-          <img src="/assets/img/profile.svg" alt="Portrait of {{ view.base.site.title }}" width="520" height="520">
         </div>
       </div>
     </div>
   </section>
 
-  <section class="section-tight">
+  <!-- Recent writing comes first — the site is a blog, not a résumé. -->
+  {% if !view.latest_posts.is_empty() || !view.featured_posts.is_empty() %}
+  <section class="section-tight" id="writing">
     <div class="container">
-      <div class="stat-grid reveal">
-        {% for stat in view.stats %}
-        <div class="stat">
-          <div class="stat-value">{{ stat.value }}</div>
-          <div class="stat-label">{{ stat.label }}</div>
-          <div class="stat-hint">{{ stat.hint }}</div>
+      <div class="section-head reveal">
+        <div>
+          <span class="eyebrow">{% if view.base.lang == "fa" %}از وبلاگ{% else %}From the blog{% endif %}</span>
+          <h2>{% if view.base.lang == "fa" %}تازه‌ترین نوشته‌ها{% else %}Recent writing{% endif %}</h2>
+          <p class="section-subtitle">
+            {% if view.base.lang == "fa" %}
+            یادداشت‌های بلند درباره رباتیک، کنترل، هوش مصنوعی و مهندسی.
+            {% else %}
+            Long-form notes on robotics, control, AI and engineering.
+            {% endif %}
+          </p>
         </div>
+        <a class="link-arrow" href="/blog">{% if view.base.lang == "fa" %}همه مقاله‌ها{% else %}All articles{% endif %}</a>
+      </div>
+
+      <div class="post-grid">
+        {% for post in view.featured_posts %}
+        {% include "partials/post_card.html" %}
+        {% endfor %}
+        {% for post in view.latest_posts %}
+        {% include "partials/post_card.html" %}
         {% endfor %}
       </div>
     </div>
   </section>
+  {% endif %}
 
   {% if !view.featured_projects.is_empty() %}
   <section class="section" id="work">
     <div class="container">
       <div class="section-head reveal">
         <div>
-          <span class="eyebrow">Selected work</span>
-          <h2>Projects I'm proud of</h2>
+          <span class="eyebrow">{% if view.base.lang == "fa" %}پروژه‌های منتخب{% else %}Selected work{% endif %}</span>
+          <h2>{% if view.base.lang == "fa" %}پروژه‌هایی که به آن‌ها افتخار می‌کنم{% else %}Projects I'm proud of{% endif %}</h2>
           <p class="section-subtitle">
-            A few things I have designed, built and operated — from embedded firmware to
-            multi-region platforms.
+            {% if view.base.lang == "fa" %}
+            چند مورد از چیزهایی که طراحی، ساخته و اجرا کرده‌ام — از رباتیک و بینایی ماشین تا ابزارهای مهندسی.
+            {% else %}
+            A few things I have designed, built and operated — from robotics and computer vision to engineering toolchains.
+            {% endif %}
           </p>
         </div>
-        <a class="link-arrow" href="/projects">All projects</a>
+        <a class="link-arrow" href="/projects">{% if view.base.lang == "fa" %}همه پروژه‌ها{% else %}All projects{% endif %}</a>
       </div>
 
       <div class="post-grid">
@@ -120,39 +105,13 @@
             </div>
             {% endif %}
             <div class="project-links">
-              <a class="btn btn-sm" href="{{ project.url }}">Case study</a>
+              <a class="btn btn-sm" href="{{ project.url }}">{% if view.base.lang == "fa" %}ادامه مطلب{% else %}Case study{% endif %}</a>
               {% if project.has_repo %}
-              <a class="btn btn-sm btn-ghost" href="{{ project.repo_url }}" target="_blank" rel="noopener noreferrer">Source</a>
+              <a class="btn btn-sm btn-ghost" href="{{ project.repo_url }}" target="_blank" rel="noopener noreferrer">{% if view.base.lang == "fa" %}کد منبع{% else %}Source{% endif %}</a>
               {% endif %}
             </div>
           </div>
         </article>
-        {% endfor %}
-      </div>
-    </div>
-  </section>
-  {% endif %}
-
-  {% if !view.latest_posts.is_empty() || !view.featured_posts.is_empty() %}
-  <section class="section" id="writing">
-    <div class="container">
-      <div class="section-head reveal">
-        <div>
-          <span class="eyebrow">From the blog</span>
-          <h2>Recent writing</h2>
-          <p class="section-subtitle">
-            Long-form notes on engineering, systems design and the craft of shipping software that lasts.
-          </p>
-        </div>
-        <a class="link-arrow" href="/blog">All articles</a>
-      </div>
-
-      <div class="post-grid">
-        {% for post in view.featured_posts %}
-        {% include "partials/post_card.html" %}
-        {% endfor %}
-        {% for post in view.latest_posts %}
-        {% include "partials/post_card.html" %}
         {% endfor %}
       </div>
     </div>
@@ -164,13 +123,17 @@
     <div class="container">
       <div class="section-head reveal">
         <div>
-          <span class="eyebrow">Toolkit</span>
-          <h2>Skills &amp; technologies</h2>
+          <span class="eyebrow">{% if view.base.lang == "fa" %}ابزارها{% else %}Toolkit{% endif %}</span>
+          <h2>{% if view.base.lang == "fa" %}مهارت‌ها و فناوری‌ها{% else %}Skills &amp; technologies{% endif %}</h2>
           <p class="section-subtitle">
+            {% if view.base.lang == "fa" %}
+            ابزارهایی که استفاده می‌کنم و تقریباً چقدر در آن‌ها عمق دارم.
+            {% else %}
             The tools I reach for, and roughly how deep that experience goes.
+            {% endif %}
           </p>
         </div>
-        <a class="link-arrow" href="/skills">Full breakdown</a>
+        <a class="link-arrow" href="/skills">{% if view.base.lang == "fa" %}تجزیه کامل{% else %}Full breakdown{% endif %}</a>
       </div>
 
       <div class="grid grid-3 skill-grid">
@@ -200,13 +163,17 @@
     <div class="container">
       <div class="section-head reveal">
         <div>
-          <span class="eyebrow">How I can help</span>
-          <h2>Services</h2>
+          <span class="eyebrow">{% if view.base.lang == "fa" %}چطور می‌توانم کمک کنم{% else %}How I can help{% endif %}</span>
+          <h2>{% if view.base.lang == "fa" %}خدمات{% else %}Services{% endif %}</h2>
           <p class="section-subtitle">
+            {% if view.base.lang == "fa" %}
+            همکاری‌های متمرکز برای کسانی که به یک نظر دوم یا یک دست کمک‌کننده نیاز دارند.
+            {% else %}
             Focused engagements for teams that want a second opinion — or a pair of hands.
+            {% endif %}
           </p>
         </div>
-        <a class="link-arrow" href="/services">Details</a>
+        <a class="link-arrow" href="/services">{% if view.base.lang == "fa" %}جزئیات{% else %}Details{% endif %}</a>
       </div>
 
       <div class="grid grid-2">
@@ -232,10 +199,10 @@
     <div class="container">
       <div class="section-head reveal">
         <div>
-          <span class="eyebrow">Experience</span>
-          <h2>Where I have worked</h2>
+          <span class="eyebrow">{% if view.base.lang == "fa" %}تجربه{% else %}Experience{% endif %}</span>
+          <h2>{% if view.base.lang == "fa" %}جایی که کار کرده‌ام{% else %}Where I have worked{% endif %}</h2>
         </div>
-        <a class="link-arrow" href="/experience">Full history</a>
+        <a class="link-arrow" href="/experience">{% if view.base.lang == "fa" %}تاریخچه کامل{% else %}Full history{% endif %}</a>
       </div>
 
       <div class="grid grid-2">
@@ -275,19 +242,22 @@
     <div class="container">
       <div class="newsletter reveal">
         <div>
-          <span class="eyebrow">Newsletter</span>
-          <h2 style="margin-top:.5rem;">Get the next article in your inbox</h2>
+          <span class="eyebrow">{% if view.base.lang == "fa" %}خبرنامه{% else %}Newsletter{% endif %}</span>
+          <h2 style="margin-top:.5rem;">{% if view.base.lang == "fa" %}مقاله بعدی را در ایمیل خود دریافت کنید{% else %}Get the next article in your inbox{% endif %}</h2>
           <p class="text-muted" style="margin-top:.6rem;max-width:44ch;">
-            One thoughtful email every couple of weeks — deep dives on Rust, systems and
-            engineering craft. No spam, ever.
+            {% if view.base.lang == "fa" %}
+            هر چند هفته یک ایمیل مفید — غواصی عمیق در رباتیک، کنترل و مهندسی. بدون اسپم.
+            {% else %}
+            One thoughtful email every couple of weeks — deep dives on robotics, control and engineering craft. No spam, ever.
+            {% endif %}
           </p>
         </div>
         <form class="newsletter-form" method="post" action="/newsletter/subscribe">
           <div class="hp">
             <label>Website<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
           </div>
-          <input type="email" name="email" placeholder="you@example.com" required aria-label="E-mail address">
-          <button class="btn btn-primary" type="submit">Subscribe</button>
+          <input type="email" name="email" placeholder="you@example.com" required aria-label="{% if view.base.lang == "fa" %}نشانی ایمیل{% else %}E-mail address{% endif %}">
+          <button class="btn btn-primary" type="submit">{% if view.base.lang == "fa" %}عضویت{% else %}Subscribe{% endif %}</button>
         </form>
       </div>
     </div>
@@ -296,14 +266,17 @@
   <section class="section">
     <div class="container">
       <div class="card text-center reveal" style="padding:clamp(2rem,6vw,3.6rem);">
-        <h2 style="font-size:var(--step-3);">Let's build something worth keeping.</h2>
+        <h2 style="font-size:var(--step-3);">{% if view.base.lang == "fa" %}بیایید چیزی ارزشمند بسازیم.{% else %}Let's build something worth keeping.{% endif %}</h2>
         <p class="text-muted" style="max-width:46ch;margin:1rem auto 1.8rem;">
-          I take on a small number of consulting and advisory engagements each year.
-          If you have a hard problem, I'd like to hear about it.
+          {% if view.base.lang == "fa" %}
+          اگر به یک مشکل دشوار برخورده‌اید (رباتیک، کنترل یا هوش مصنوعی)، خوشحال می‌شوم در موردش بشنوم.
+          {% else %}
+          If you have a hard problem in robotics, control or AI, I'd like to hear about it.
+          {% endif %}
         </p>
         <div class="flex" style="justify-content:center;">
-          <a class="btn btn-primary btn-lg" href="/contact">Get in touch</a>
-          <a class="btn btn-lg" href="/blog">Read the blog</a>
+          <a class="btn btn-primary btn-lg" href="/contact">{% if view.base.lang == "fa" %}ارتباط با من{% else %}Get in touch{% endif %}</a>
+          <a class="btn btn-lg" href="/blog">{% if view.base.lang == "fa" %}خواندن وبلاگ{% else %}Read the blog{% endif %}</a>
         </div>
       </div>
     </div>

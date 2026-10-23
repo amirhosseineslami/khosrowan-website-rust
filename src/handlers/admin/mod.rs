@@ -10,6 +10,7 @@ pub mod newsletter;
 pub mod pages;
 pub mod posts;
 pub mod profile;
+pub mod profile_content;
 pub mod projects;
 pub mod redirects;
 pub mod settings;
@@ -117,6 +118,10 @@ pub fn router() -> Router<AppState> {
             get(projects::edit).post(projects::update),
         )
         .route("/projects/{id}/delete", post(projects::destroy))
+        // Profile content (experiences / services / skills)
+        .route("/profile-content", get(profile_content::index))
+        .route("/profile-content/save", post(profile_content::store))
+        .route("/profile-content/{entity}/{id}/delete", post(profile_content::destroy))
         // Taxonomy
         .route("/taxonomy", get(taxonomy::index))
         .route("/taxonomy/tags", post(taxonomy::store_tag))

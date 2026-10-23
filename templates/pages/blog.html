@@ -1,30 +1,30 @@
 <!doctype html>
-<html lang="en" data-theme="{{ view.base.default_theme }}">
+<html lang="{{ view.base.lang }}" dir="{{ view.base.dir }}" data-theme="{{ view.base.default_theme }}">
 <head>
 {% include "partials/head.html" %}
 </head>
 <body>
-<a class="skip-link" href="#main">Skip to content</a>
+<a class="skip-link" href="#main">{% if view.base.lang == "fa" %}پرش به محتوا{% else %}Skip to content{% endif %}</a>
 {% include "partials/header.html" %}
 
 <main id="main">
   <section class="page-hero">
     <div class="container">
-      <span class="eyebrow">Writing</span>
+      <span class="eyebrow">{% if view.base.lang == "fa" %}نوشته‌ها{% else %}Writing{% endif %}</span>
       <h1 class="page-title">{{ view.heading }}</h1>
       <p class="section-subtitle" style="font-size:var(--step-1);">{{ view.subheading }}</p>
 
       <form class="filter-bar" method="get" action="/blog" style="margin-top:1.4rem;">
-        <input type="search" name="q" value="{{ view.query }}" placeholder="Search articles…" style="max-width:260px;" aria-label="Search articles">
+        <input type="search" name="q" value="{{ view.query }}" placeholder="{% if view.base.lang == "fa" %}جستجوی مقاله‌ها…{% else %}Search articles…{% endif %}" style="max-width:260px;" aria-label="{% if view.base.lang == "fa" %}جستجوی مقاله‌ها{% else %}Search articles{% endif %}">
         {% if !view.active_category.is_empty() %}
         <input type="hidden" name="category" value="{{ view.active_category }}">
         {% endif %}
         {% if !view.active_tag.is_empty() %}
         <input type="hidden" name="tag" value="{{ view.active_tag }}">
         {% endif %}
-        <button class="btn btn-sm" type="submit">Search</button>
+        <button class="btn btn-sm" type="submit">{% if view.base.lang == "fa" %}جستجو{% else %}Search{% endif %}</button>
         {% if !view.query.is_empty() || !view.active_category.is_empty() || !view.active_tag.is_empty() %}
-        <a class="btn btn-sm btn-ghost" href="/blog">Clear</a>
+        <a class="btn btn-sm btn-ghost" href="/blog">{% if view.base.lang == "fa" %}پاک‌کردن{% else %}Clear{% endif %}</a>
         {% endif %}
       </form>
     </div>
@@ -36,8 +36,8 @@
         <div>
           {% if view.posts.is_empty() %}
           <div class="empty-state">
-            <strong>No articles found.</strong>
-            Try a different search term, or <a class="link-arrow" href="/blog">browse everything</a>.
+            <strong>{% if view.base.lang == "fa" %}مقاله‌ای یافت نشد.{% else %}No articles found.{% endif %}</strong>
+            {% if view.base.lang == "fa" %}عبارت دیگری را جستجو کنید یا <a class="link-arrow" href="/blog">همه نوشته‌ها</a> را ببینید.{% else %}Try a different search term, or <a class="link-arrow" href="/blog">browse everything</a>.{% endif %}
           </div>
           {% else %}
           <div class="post-grid">
@@ -51,10 +51,10 @@
 
         <aside class="stack" style="--space-l:1.6rem;">
           <div class="card reveal">
-            <h3 class="footer-title">Categories</h3>
+            <h3 class="footer-title">{% if view.base.lang == "fa" %}دسته‌بندی‌ها{% else %}Categories{% endif %}</h3>
             <div class="stack" style="--space-s:.55rem;">
               <a class="flex-between text-sm" href="/blog">
-                <span class="text-muted">All articles</span>
+                <span class="text-muted">{% if view.base.lang == "fa" %}همه مقاله‌ها{% else %}All articles{% endif %}</span>
                 <span class="mono text-faint">{{ view.total }}</span>
               </a>
               {% for category in view.categories %}
@@ -68,7 +68,7 @@
 
           {% if !view.tags.is_empty() %}
           <div class="card reveal">
-            <h3 class="footer-title">Tags</h3>
+            <h3 class="footer-title">{% if view.base.lang == "fa" %}برچسب‌ها{% else %}Tags{% endif %}</h3>
             <div class="tag-cloud">
               {% for tag in view.tags %}
               <a class="tag" href="/blog?tag={{ tag.slug }}">#{{ tag.name }}</a>
@@ -78,14 +78,14 @@
           {% endif %}
 
           <div class="card reveal">
-            <h3 class="footer-title">Stay in the loop</h3>
-            <p class="text-muted text-sm">One email every couple of weeks. No spam.</p>
+            <h3 class="footer-title">{% if view.base.lang == "fa" %}در جریان باشید{% else %}Stay in the loop{% endif %}</h3>
+            <p class="text-muted text-sm">{% if view.base.lang == "fa" %}هر چند هفته یک ایمیل مفید. بدون اسپم.{% else %}One email every couple of weeks. No spam.{% endif %}</p>
             <form class="newsletter-form" method="post" action="/newsletter/subscribe" style="margin-top:.9rem;">
               <div class="hp">
                 <label>Website<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
               </div>
-              <input type="email" name="email" placeholder="you@example.com" required aria-label="E-mail address">
-              <button class="btn btn-sm btn-primary" type="submit">Join</button>
+              <input type="email" name="email" placeholder="you@example.com" required aria-label="{% if view.base.lang == "fa" %}نشانی ایمیل{% else %}E-mail address{% endif %}">
+              <button class="btn btn-sm btn-primary" type="submit">{% if view.base.lang == "fa" %}عضویت{% else %}Join{% endif %}</button>
             </form>
           </div>
         </aside>

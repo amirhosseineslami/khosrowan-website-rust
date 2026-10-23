@@ -1,19 +1,23 @@
 <!doctype html>
-<html lang="en" data-theme="{{ view.base.default_theme }}">
+<html lang="{{ view.base.lang }}" dir="{{ view.base.dir }}" data-theme="{{ view.base.default_theme }}">
 <head>
 {% include "partials/head.html" %}
 </head>
 <body>
-<a class="skip-link" href="#main">Skip to content</a>
+<a class="skip-link" href="#main">{% if view.base.lang == "fa" %}پرش به محتوا{% else %}Skip to content{% endif %}</a>
 {% include "partials/header.html" %}
 
 <main id="main">
   <section class="page-hero">
     <div class="container">
-      <span class="eyebrow">About</span>
-      <h1 class="page-title">The person behind the commits</h1>
+      <span class="eyebrow">{% if view.base.lang == "fa" %}درباره{% else %}About{% endif %}</span>
+      <h1 class="page-title">{% if view.base.lang == "fa" %}پشت این وب‌سایت{% else %}The person behind the site{% endif %}</h1>
       <p class="section-subtitle" style="font-size:var(--step-1);">
-        Engineer, writer, and relentless simplifier of complicated systems.
+        {% if view.base.lang == "fa" %}
+        پژوهشگر، نویسنده و مهندسی که شیفته سیستم‌های هوشمند است.
+        {% else %}
+        Researcher, writer and an engineer fascinated by intelligent systems.
+        {% endif %}
       </p>
     </div>
   </section>
@@ -24,19 +28,19 @@
         <div class="grid" style="grid-template-columns:minmax(0,320px) minmax(0,1fr);gap:var(--space-xl);align-items:start;">
           <div class="reveal" style="position:sticky;top:96px;">
             <div class="card" style="padding:0;overflow:hidden;">
-              <img src="{{ view.photo_url }}" alt="Portrait of {{ view.base.site.title }}" style="width:100%;display:block;">
+              <img src="{{ view.photo_url }}" alt="{{ view.base.site.title }}" style="width:100%;display:block;">
               <div style="padding:1.3rem;">
                 <h3 style="font-size:var(--step-1);">{{ view.base.site.title }}</h3>
                 <p class="text-muted text-sm" style="margin-top:.25rem;">{{ view.base.site.subtitle }}</p>
                 <div class="stack" style="margin-top:1.1rem;--space-s:.7rem;">
                   <div class="flex-between text-sm">
-                    <span class="text-muted">Location</span><span>{{ view.base.site.location }}</span>
+                    <span class="text-muted">{% if view.base.lang == "fa" %}موقعیت{% else %}Location{% endif %}</span><span>{{ view.base.site.location }}</span>
                   </div>
                   <div class="flex-between text-sm">
-                    <span class="text-muted">E-mail</span><span>{{ view.base.site.email }}</span>
+                    <span class="text-muted">{% if view.base.lang == "fa" %}ایمیل{% else %}E-mail{% endif %}</span><span>{{ view.base.site.email }}</span>
                   </div>
                   {% if !view.base.site.cv_file.is_empty() %}
-                  <a class="btn btn-sm btn-block" href="{{ view.base.site.cv_file }}" download>Download résumé</a>
+                  <a class="btn btn-sm btn-block" href="{{ view.base.site.cv_file }}" download>{% if view.base.lang == "fa" %}دانلود رزومه{% else %}Download résumé{% endif %}</a>
                   {% endif %}
                 </div>
               </div>
@@ -49,22 +53,11 @@
             {% else %}
             <div class="prose">
               <p>
-                I am a software engineer who cares about the parts of software that only show
-                up months later: the shape of a module, the failure mode of a deployment, the
-                sentence in a runbook that saves somebody an hour at 3am.
-              </p>
-              <h2>How I work</h2>
-              <p>
-                I like small teams, written decisions and boring technology. Most of my
-                engagements start with the same question — <em>what is actually going to break
-                here?</em> — and end with a system that a new engineer can reason about without
-                me in the room.
-              </p>
-              <h2>What I do</h2>
-              <p>
-                Backend architecture, Rust and Go services, data-intensive platforms, and the
-                developer experience work that makes the rest of it bearable. I also write
-                about all of it here.
+                {% if view.base.lang == "fa" %}
+                این وب‌سایت محل انتشار پژوهش‌ها، بلاگ‌های تخصصی و تجربه‌های مهندسی من است.
+                {% else %}
+                This site is where I publish my research, technical writing and engineering experiments.
+                {% endif %}
               </p>
             </div>
             {% endif %}
@@ -102,10 +95,10 @@
     <div class="container">
       <div class="section-head reveal">
         <div>
-          <span class="eyebrow">Toolkit</span>
-          <h2>What I work with</h2>
+          <span class="eyebrow">{% if view.base.lang == "fa" %}ابزارها{% else %}Toolkit{% endif %}</span>
+          <h2>{% if view.base.lang == "fa" %}چه چیزهایی با آن‌ها کار می‌کنم{% else %}What I work with{% endif %}</h2>
         </div>
-        <a class="link-arrow" href="/skills">Details</a>
+        <a class="link-arrow" href="/skills">{% if view.base.lang == "fa" %}جزئیات{% else %}Details{% endif %}</a>
       </div>
       <div class="grid grid-3 skill-grid">
         {% for group in view.skills %}
@@ -132,10 +125,10 @@
     <div class="container">
       <div class="section-head reveal">
         <div>
-          <span class="eyebrow">Experience</span>
-          <h2>The path so far</h2>
+          <span class="eyebrow">{% if view.base.lang == "fa" %}تجربه{% else %}Experience{% endif %}</span>
+          <h2>{% if view.base.lang == "fa" %}مسیر تاکنون{% else %}The path so far{% endif %}</h2>
         </div>
-        <a class="link-arrow" href="/experience">Full history</a>
+        <a class="link-arrow" href="/experience">{% if view.base.lang == "fa" %}تاریخچه کامل{% else %}Full history{% endif %}</a>
       </div>
       <div class="timeline reveal">
         {% for item in view.timeline %}
@@ -156,8 +149,8 @@
     <div class="container">
       <div class="section-head reveal">
         <div>
-          <span class="eyebrow">Kind words</span>
-          <h2>What colleagues say</h2>
+          <span class="eyebrow">{% if view.base.lang == "fa" %}نظرها{% else %}Kind words{% endif %}</span>
+          <h2>{% if view.base.lang == "fa" %}همکاران چه می‌گویند{% else %}What colleagues say{% endif %}</h2>
         </div>
       </div>
       <div class="grid grid-2">

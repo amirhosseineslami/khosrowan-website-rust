@@ -1,19 +1,23 @@
 <!doctype html>
-<html lang="en" data-theme="{{ view.base.default_theme }}">
+<html lang="{{ view.base.lang }}" dir="{{ view.base.dir }}" data-theme="{{ view.base.default_theme }}">
 <head>
 {% include "partials/head.html" %}
 </head>
 <body>
-<a class="skip-link" href="#main">Skip to content</a>
+<a class="skip-link" href="#main">{% if view.base.lang == "fa" %}پرش به محتوا{% else %}Skip to content{% endif %}</a>
 {% include "partials/header.html" %}
 
 <main id="main">
   <section class="page-hero">
     <div class="container">
-      <span class="eyebrow">Contact</span>
-      <h1 class="page-title">Get in touch</h1>
+      <span class="eyebrow">{% if view.base.lang == "fa" %}تماس{% else %}Contact{% endif %}</span>
+      <h1 class="page-title">{% if view.base.lang == "fa" %}در ارتباط باشید{% else %}Get in touch{% endif %}</h1>
       <p class="section-subtitle" style="font-size:var(--step-1);">
+        {% if view.base.lang == "fa" %}
+        درباره مشکلی که دارید برایم بنویسید. معمولاً ظرف دو روز کاری پاسخ می‌دهم.
+        {% else %}
         Tell me about the problem. I usually reply within two business days.
+        {% endif %}
       </p>
     </div>
   </section>
@@ -22,9 +26,9 @@
     <div class="container">
       <div class="grid" style="grid-template-columns:minmax(0,1.3fr) minmax(0,0.7fr);gap:var(--space-xl);align-items:start;">
         <div class="card reveal">
-          <h2 class="card-title">Send a message</h2>
+          <h2 class="card-title">{% if view.base.lang == "fa" %}ارسال پیام{% else %}Send a message{% endif %}</h2>
           <p class="card-body" style="margin-bottom:1.4rem;">
-            The more context you can give, the more useful my reply will be.
+            {% if view.base.lang == "fa" %}هرچه زمینه بیشتری بدهید، پاسخ من مفیدتر خواهد بود.{% else %}The more context you can give, the more useful my reply will be.{% endif %}
           </p>
 
           {% if !view.errors.is_empty() %}
@@ -46,52 +50,52 @@
 
             <div class="form-row">
               <div class="field">
-                <label for="name">Your name</label>
+                <label for="name">{% if view.base.lang == "fa" %}نام شما{% else %}Your name{% endif %}</label>
                 <input id="name" type="text" name="name" value="{{ view.form_name }}" required maxlength="120" placeholder="Ada Lovelace">
               </div>
               <div class="field">
-                <label for="email">E-mail</label>
+                <label for="email">{% if view.base.lang == "fa" %}ایمیل{% else %}E-mail{% endif %}</label>
                 <input id="email" type="email" name="email" value="{{ view.form_email }}" required placeholder="ada@example.com">
               </div>
             </div>
 
             <div class="field">
-              <label for="subject">Subject <span class="text-faint">(optional)</span></label>
-              <input id="subject" type="text" name="subject" value="{{ view.form_subject }}" maxlength="160" placeholder="A brief summary of what you need">
+              <label for="subject">{% if view.base.lang == "fa" %}موضوع <span class="text-faint">(اختیاری)</span>{% else %}Subject <span class="text-faint">(optional)</span>{% endif %}</label>
+              <input id="subject" type="text" name="subject" value="{{ view.form_subject }}" maxlength="160" placeholder="{% if view.base.lang == "fa" %}خلاصه‌ای کوتاه از آنچه نیاز دارید{% else %}A brief summary of what you need{% endif %}">
             </div>
 
             <div class="field">
-              <label for="message">Message</label>
-              <textarea id="message" name="message" required placeholder="What are you working on, and where are you stuck?" style="min-height:180px;">{{ view.form_message }}</textarea>
-              <span class="hint">Please do not include passwords, keys or other secrets.</span>
+              <label for="message">{% if view.base.lang == "fa" %}پیام{% else %}Message{% endif %}</label>
+              <textarea id="message" name="message" required placeholder="{% if view.base.lang == "fa" %}روی چه چیزی کار می‌کنید و کجا گیر کرده‌اید؟{% else %}What are you working on, and where are you stuck?{% endif %}" style="min-height:180px;">{{ view.form_message }}</textarea>
+              <span class="hint">{% if view.base.lang == "fa" %}لطفاً رمز عبور، کلید یا سایر اسرار را ارسال نکنید.{% else %}Please do not include passwords, keys or other secrets.{% endif %}</span>
             </div>
 
             <div class="form-actions">
-              <button class="btn btn-primary" type="submit">Send message</button>
-              <span class="text-faint text-sm">I never share your details.</span>
+              <button class="btn btn-primary" type="submit">{% if view.base.lang == "fa" %}ارسال پیام{% else %}Send message{% endif %}</button>
+              <span class="text-faint text-sm">{% if view.base.lang == "fa" %}هرگز اطلاعات شما را به اشتراک نمی‌گذارم.{% else %}I never share your details.{% endif %}</span>
             </div>
           </form>
         </div>
 
         <aside class="stack reveal">
           <div class="card">
-            <h3 class="card-title" style="font-size:var(--step-0);">Direct</h3>
+            <h3 class="card-title" style="font-size:var(--step-0);">{% if view.base.lang == "fa" %}ارتباط مستقیم{% else %}Direct{% endif %}</h3>
             <div class="stack" style="--space-s:.7rem;margin-top:.9rem;">
               {% if !view.base.site.email.is_empty() %}
               <div>
-                <div class="toc-title" style="margin-bottom:.15rem;">E-mail</div>
+                <div class="toc-title" style="margin-bottom:.15rem;">{% if view.base.lang == "fa" %}ایمیل{% else %}E-mail{% endif %}</div>
                 <a href="mailto:{{ view.base.site.email }}" style="color:var(--accent);">{{ view.base.site.email }}</a>
               </div>
               {% endif %}
               {% if !view.base.site.phone.is_empty() %}
               <div>
-                <div class="toc-title" style="margin-bottom:.15rem;">Phone</div>
+                <div class="toc-title" style="margin-bottom:.15rem;">{% if view.base.lang == "fa" %}تلفن{% else %}Phone{% endif %}</div>
                 <a href="tel:{{ view.base.site.phone }}">{{ view.base.site.phone }}</a>
               </div>
               {% endif %}
               {% if !view.base.site.location.is_empty() %}
               <div>
-                <div class="toc-title" style="margin-bottom:.15rem;">Location</div>
+                <div class="toc-title" style="margin-bottom:.15rem;">{% if view.base.lang == "fa" %}موقعیت{% else %}Location{% endif %}</div>
                 <span>{{ view.base.site.location }}</span>
               </div>
               {% endif %}
@@ -100,7 +104,7 @@
 
           {% if !view.socials.is_empty() %}
           <div class="card">
-            <h3 class="card-title" style="font-size:var(--step-0);">Elsewhere</h3>
+            <h3 class="card-title" style="font-size:var(--step-0);">{% if view.base.lang == "fa" %}سایر شبکه‌ها{% else %}Elsewhere{% endif %}</h3>
             <div class="social-row" style="margin-top:.9rem;">
               {% for social in view.socials %}
               <a class="social-link" href="{{ social.url }}" title="{{ social.label }}" aria-label="{{ social.label }}"
@@ -113,11 +117,11 @@
           {% endif %}
 
           <div class="card">
-            <h3 class="card-title" style="font-size:var(--step-0);">What happens next</h3>
+            <h3 class="card-title" style="font-size:var(--step-0);">{% if view.base.lang == "fa" %}مرحله بعد چیست{% else %}What happens next{% endif %}</h3>
             <ol class="check-list" style="margin-top:.9rem;list-style:none;padding:0;">
-              <li>I read your message and check whether I am the right person.</li>
-              <li>You get a reply within two business days.</li>
-              <li>If it looks like a fit, we set up a short call.</li>
+              <li>{% if view.base.lang == "fa" %}پیام شما را می‌خوانم و بررسی می‌کنم آیا شخص مناسبی هستم.{% else %}I read your message and check whether I am the right person.{% endif %}</li>
+              <li>{% if view.base.lang == "fa" %}ظرف دو روز کاری پاسخ می‌گیرید.{% else %}You get a reply within two business days.{% endif %}</li>
+              <li>{% if view.base.lang == "fa" %}اگر مناسب بود، یک تماس کوتاه ترتیب می‌دهیم.{% else %}If it looks like a fit, we set up a short call.{% endif %}</li>
             </ol>
           </div>
         </aside>

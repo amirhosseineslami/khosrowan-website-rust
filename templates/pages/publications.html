@@ -1,19 +1,19 @@
 <!doctype html>
-<html lang="en" data-theme="{{ view.base.default_theme }}">
+<html lang="{{ view.base.lang }}" dir="{{ view.base.dir }}" data-theme="{{ view.base.default_theme }}">
 <head>
 {% include "partials/head.html" %}
 </head>
 <body>
-<a class="skip-link" href="#main">Skip to content</a>
+<a class="skip-link" href="#main">{% if view.base.lang == "fa" %}پرش به محتوا{% else %}Skip to content{% endif %}</a>
 {% include "partials/header.html" %}
 
 <main id="main">
   <section class="page-hero">
     <div class="container">
-      <span class="eyebrow">Research</span>
-      <h1 class="page-title">Publications</h1>
+      <span class="eyebrow">{% if view.base.lang == "fa" %}پژوهش{% else %}Research{% endif %}</span>
+      <h1 class="page-title">{% if view.base.lang == "fa" %}انتشارات{% else %}Publications{% endif %}</h1>
       <p class="section-subtitle" style="font-size:var(--step-1);">
-        Peer-reviewed work and long-form technical writing.
+        {% if view.base.lang == "fa" %}پژوهش‌های داوری‌شده و نوشته‌های فنی بلند.{% else %}Peer-reviewed work and long-form technical writing.{% endif %}
       </p>
     </div>
   </section>
@@ -46,7 +46,7 @@
 
       {% if !view.talks.is_empty() %}
       <section class="section">
-        <h2 style="margin-bottom:var(--space-l);">Recent talks</h2>
+        <h2 style="margin-bottom:var(--space-l);">{% if view.base.lang == "fa" %}سخنرانی‌های اخیر{% else %}Recent talks{% endif %}</h2>
         <div class="stack">
           {% for talk in view.talks %}
           <div class="card">

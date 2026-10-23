@@ -4,7 +4,7 @@
     <img src="{{ post.cover_image }}" alt="{{ post.title }}" loading="lazy">
     {% endif %}
     {% if post.is_featured %}
-    <span class="pill post-card-badge">Featured</span>
+    <span class="pill post-card-badge">{% if view.base.lang == "fa" %}ویژه{% else %}Featured{% endif %}</span>
     {% endif %}
   </div>
   <div class="post-card-body">
@@ -31,7 +31,7 @@
       <span aria-hidden="true">·</span>
       <time datetime="{{ post.published_iso }}">{{ post.published_at }}</time>
       <span aria-hidden="true">·</span>
-      <span>{{ post.reading_time }} min read</span>
+      <span>{{ post.reading_time }} {% if view.base.lang == "fa" %}دقیقه مطالعه{% else %}min read{% endif %}</span>
     </div>
   </div>
 </article>

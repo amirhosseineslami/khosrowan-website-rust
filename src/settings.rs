@@ -21,6 +21,15 @@ pub struct Settings {
     pub favicon: String,
     pub default_og_image: String,
     pub cv_file: String,
+    /// Primary site language: `fa` (Persian, RTL) or `en` (English).
+    pub default_locale: String,
+    // English variants of site-wide copy, used when the active locale is English.
+    pub description_en: String,
+    pub tagline_en: String,
+    pub availability_note_en: String,
+    pub newsletter_heading_en: String,
+    pub newsletter_subheading_en: String,
+    pub contact_success_message_en: String,
 
     pub theme_accent: String,
     pub theme_accent_2: String,
@@ -37,6 +46,8 @@ pub struct Settings {
     pub seo_twitter_site: String,
     pub seo_google_site_verification: String,
     pub seo_bing_verification: String,
+    pub seo_person_name: String,
+    pub seo_person_name_en: String,
 
     pub analytics_provider: String,
     pub analytics_plausible_domain: String,
@@ -68,6 +79,13 @@ impl Default for Settings {
             favicon: "/assets/img/favicon.svg".into(),
             default_og_image: "/assets/img/og-default.svg".into(),
             cv_file: String::new(),
+            default_locale: "fa".into(),
+            description_en: String::new(),
+            tagline_en: String::new(),
+            availability_note_en: String::new(),
+            newsletter_heading_en: String::new(),
+            newsletter_subheading_en: String::new(),
+            contact_success_message_en: String::new(),
             theme_accent: "#6366f1".into(),
             theme_accent_2: "#22d3ee".into(),
             default_theme: "dark".into(),
@@ -81,6 +99,8 @@ impl Default for Settings {
             seo_twitter_site: String::new(),
             seo_google_site_verification: String::new(),
             seo_bing_verification: String::new(),
+            seo_person_name: String::new(),
+            seo_person_name_en: String::new(),
             analytics_provider: "none".into(),
             analytics_plausible_domain: String::new(),
             analytics_ga_measurement_id: String::new(),
@@ -134,6 +154,13 @@ impl Settings {
         set_str!(favicon, "site.favicon");
         set_str!(default_og_image, "site.default_og_image");
         set_str!(cv_file, "site.cv_file");
+        set_str!(default_locale, "site.default_locale");
+        set_str!(description_en, "site.description_en");
+        set_str!(tagline_en, "site.tagline_en");
+        set_str!(availability_note_en, "site.availability_note_en");
+        set_str!(newsletter_heading_en, "newsletter.heading_en");
+        set_str!(newsletter_subheading_en, "newsletter.subheading_en");
+        set_str!(contact_success_message_en, "contact.success_message_en");
 
         set_str!(theme_accent, "site.theme_accent");
         set_str!(theme_accent_2, "site.theme_accent_2");
@@ -150,6 +177,8 @@ impl Settings {
         set_str!(seo_twitter_site, "seo.twitter_site");
         set_str!(seo_google_site_verification, "seo.google_site_verification");
         set_str!(seo_bing_verification, "seo.bing_verification");
+        set_str!(seo_person_name, "seo.person_name");
+        set_str!(seo_person_name_en, "seo.person_name_en");
 
         set_str!(analytics_provider, "analytics.provider");
         set_str!(analytics_plausible_domain, "analytics.plausible_domain");

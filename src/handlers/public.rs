@@ -28,16 +28,25 @@ pub async fn home(
     headers: axum::http::HeaderMap,
     auth: crate::extract::MaybeAuth,
 ) -> AppResult<Response> {
-    let base = context::build(&state, auth.0.as_ref(), &headers, "/").await?;
+    let mut base = context::build(&state, auth.0.as_ref(), &headers, "/").await?;
+    // For SEO, put the real (indexed) name first, then the brand.
+    base.page_title = if base.lang == "fa" {
+        format!("امیرحسین اسلامی · خسروان — پژوهش رباتیک و کنترل")
+    } else {
+        format!("Amirhossein Eslami · Khosrowan — Robotics & Control Research")
+    };
+    base.meta_description = base.site.description.clone();
 
-    let stats = data::stats(&state.db).await?;
-    let featured_projects = data::project_cards(&state.db, "active").await?;
+    let stats = data::stats(&state.db, base.lang == "fa").await?;
+    let mut featured_projects = data::project_cards(&state.db, "active").await?;
+    data::apply_project_card_translations(&state.db, &mut featured_projects, &base.lang).await?;
     let featured_projects: Vec<ProjectCard> = featured_projects
         .into_iter()
         .filter(|p| p.is_featured)
         .take(3)
         .collect();
-    let latest_posts = data::post_cards(&state.db, Some(3), Some(0)).await?;
+    let mut latest_posts = data::post_cards(&state.db, Some(3), Some(0)).await?;
+    data::apply_post_card_translations(&state.db, &mut latest_posts, &base.lang).await?;
     let featured_posts: Vec<PostCard> = latest_posts
         .iter()
         .filter(|p| p.is_featured)
@@ -48,20 +57,30 @@ pub async fn home(
         .filter(|p| !p.is_featured)
         .take(3)
         .collect();
-    let skills = data::skill_groups(&state.db).await?;
-    let services = data::services(&state.db).await?;
+    let skills = data::skill_groups(&state.db, &base.lang).await?;
+    let services = data::services(&state.db, &base.lang).await?;
     let testimonials = data::testimonials(&state.db, true).await?;
-    let timeline = data::experiences(&state.db, "work").await?;
+    let timeline = data::experiences(&state.db, "work", &base.lang).await?;
     let blog_count = data::count_published_posts(&state.db).await?;
     let project_count = featured_projects.len() as i64;
 
-    let hero_words = vec![
-        "Rust".to_string(),
-        "distributed systems".to_string(),
-        "developer tooling".to_string(),
-        "performance".to_string(),
-        "reliable APIs".to_string(),
-    ];
+    let hero_words: Vec<String> = if base.lang == "fa" {
+        vec![
+            "روباتیک".into(),
+            "کنترل هوشمند".into(),
+            "یادگیری ماشین".into(),
+            "بینایی ماشین".into(),
+            "مهندسی".into(),
+        ]
+    } else {
+        vec![
+            "robotics".into(),
+            "intelligent control".into(),
+            "machine learning".into(),
+            "computer vision".into(),
+            "engineering".into(),
+        ]
+    };
 
     let view = HomeView {
         hero_title: base.site.title.clone(),
@@ -101,33 +120,58 @@ pub async fn about(
     auth: crate::extract::MaybeAuth,
 ) -> AppResult<Response> {
     let mut base = context::build(&state, auth.0.as_ref(), &headers, "/about").await?;
-    base.page_title = format!("About · {}", base.site.title);
+    base.page_title = if base.lang == "fa" {
+        format!("درباره · {}", base.site.title)
+    } else {
+        format!("About · {}", base.site.title)
+    };
 
-    let content_html = load_page_html(&state, "about").await?;
-    let stats = data::stats(&state.db).await?;
-    let skills = data::skill_groups(&state.db).await?;
-    let timeline = data::experiences(&state.db, "work").await?;
-    let services = data::services(&state.db).await?;
+    let content_html = load_page_html(&state, "about", &base.lang).await?;
+    let stats = data::stats(&state.db, base.lang == "fa").await?;
+    let skills = data::skill_groups(&state.db, &base.lang).await?;
+    let timeline = data::experiences(&state.db, "work", &base.lang).await?;
+    let services = data::services(&state.db, &base.lang).await?;
     let testimonials = data::testimonials(&state.db, true).await?;
 
-    let facts = vec![
-        FactView {
-            label: "Currently".into(),
-            value: base.site.location.clone(),
-        },
-        FactView {
-            label: "Focus".into(),
-            value: "Backend architecture, Rust, developer experience".into(),
-        },
-        FactView {
-            label: "Working style".into(),
-            value: "Small teams, high trust, written decisions".into(),
-        },
-        FactView {
-            label: "Open to".into(),
-            value: "Consulting, advisory and the occasional interesting problem".into(),
-        },
-    ];
+    let facts = if base.lang == "fa" {
+        vec![
+            FactView {
+                label: "سکونت".into(),
+                value: base.site.location.clone(),
+            },
+            FactView {
+                label: "تمرکز".into(),
+                value: "معماری بک‌اند، راست، تجربه توسعه‌دهنده".into(),
+            },
+            FactView {
+                label: "سبک کار".into(),
+                value: "تیم‌های کوچک، اعتماد بالا، تصمیم‌های مکتوب".into(),
+            },
+            FactView {
+                label: "باز پیشنهاد".into(),
+                value: "مشاوره، راهنمایی و گاهی یک مسئله جذاب".into(),
+            },
+        ]
+    } else {
+        vec![
+            FactView {
+                label: "Currently".into(),
+                value: base.site.location.clone(),
+            },
+            FactView {
+                label: "Focus".into(),
+                value: "Backend architecture, Rust, developer experience".into(),
+            },
+            FactView {
+                label: "Working style".into(),
+                value: "Small teams, high trust, written decisions".into(),
+            },
+            FactView {
+                label: "Open to".into(),
+                value: "Consulting, advisory and the occasional interesting problem".into(),
+            },
+        ]
+    };
 
     let view = AboutView {
         content_html,
@@ -144,15 +188,33 @@ pub async fn about(
     Ok(crate::templates::Html(AboutTemplate { view }).into_response())
 }
 
-/// Load the rendered HTML of a CMS page, falling back to a sensible default.
-async fn load_page_html(state: &AppState, slug: &str) -> AppResult<String> {
-    let html: Option<String> = sqlx::query_scalar(
-        "SELECT content_html FROM pages WHERE slug = ? AND status = 'published'",
+/// Load the rendered HTML of a CMS page, favouring the active locale's
+/// translation when one exists, and falling back to the base row.
+async fn load_page_html(state: &AppState, slug: &str, locale: &str) -> AppResult<String> {
+    let page: Option<(i64, String)> = sqlx::query_as(
+        "SELECT id, content_html FROM pages WHERE slug = ? AND status = 'published'",
     )
     .bind(slug)
     .fetch_optional(&state.db)
     .await?;
-    Ok(html.unwrap_or_default())
+
+    let Some((page_id, base_html)) = page else {
+        return Ok(String::new());
+    };
+
+    if locale == "fa" {
+        return Ok(base_html);
+    }
+
+    let translation: Option<String> = sqlx::query_scalar(
+        "SELECT content_html FROM page_translations WHERE page_id = ? AND locale = ?",
+    )
+    .bind(page_id)
+    .bind(locale)
+    .fetch_optional(&state.db)
+    .await?;
+
+    Ok(translation.unwrap_or(base_html))
 }
 
 // ---------------------------------------------------------------------------
@@ -177,9 +239,13 @@ pub async fn projects(
     Query(query): Query<ProjectsQuery>,
 ) -> AppResult<Response> {
     let mut base = context::build(&state, auth.0.as_ref(), &headers, "/projects").await?;
-    base.page_title = format!("Projects · {}", base.site.title);
+    base.page_title = if base.lang == "fa" {
+        format!("پروژه‌ها · {}", base.site.title)
+    } else {
+        format!("Projects · {}", base.site.title)
+    };
 
-    let all = data::project_cards(&state.db, "active").await?;
+    let mut all = data::project_cards(&state.db, "active").await?;
     let total = all.len() as i64;
 
     let mut tech_list: Vec<String> = Vec::new();
@@ -191,6 +257,8 @@ pub async fn projects(
         }
     }
     tech_list.sort();
+
+    data::apply_project_card_translations(&state.db, &mut all, &base.lang).await?;
 
     let active_tech = query.tech.unwrap_or_default();
     let filtered: Vec<ProjectCard> = if active_tech.is_empty() {
@@ -236,11 +304,28 @@ pub async fn project_detail(
         &format!("/projects/{slug}"),
     )
     .await?;
-    base.page_title = format!("{} · {}", project.title, base.site.title);
+
+    // Apply the active locale's translation, falling back to the base row.
+    let translation = data::project_translation(&state.db, project.id, &base.lang).await?;
+    let (title, summary, description_html) = if let Some(t) = &translation {
+        (
+            t.title.clone(),
+            t.summary.clone(),
+            t.description_html.clone(),
+        )
+    } else {
+        (
+            project.title.clone(),
+            project.summary.clone(),
+            project.description_html.clone(),
+        )
+    };
+
+    base.page_title = format!("{} · {}", title, base.site.title);
     base.meta_description = project
         .meta_description
         .clone()
-        .unwrap_or_else(|| project.summary.clone());
+        .unwrap_or_else(|| summary.clone());
     base.og_image = project.cover_image.clone().unwrap_or(base.og_image);
 
     let tech = project
@@ -249,7 +334,8 @@ pub async fn project_detail(
         .and_then(|t| serde_json::from_str::<Vec<String>>(t).ok())
         .unwrap_or_default();
 
-    let all = data::project_cards(&state.db, "active").await?;
+    let mut all = data::project_cards(&state.db, "active").await?;
+    data::apply_project_card_translations(&state.db, &mut all, &base.lang).await?;
     let related: Vec<ProjectCard> = all
         .into_iter()
         .filter(|p| p.slug != project.slug)
@@ -259,9 +345,9 @@ pub async fn project_detail(
     let view = ProjectDetailView {
         project: ProjectView {
             slug: project.slug.clone(),
-            title: project.title.clone(),
-            summary: project.summary.clone(),
-            description_html: project.description_html.clone(),
+            title,
+            summary,
+            description_html,
             cover_image: project.cover_image.clone().unwrap_or_default(),
             has_cover: project.cover_image.is_some(),
             repo_url: project.repo_url.clone().unwrap_or_default(),
@@ -299,13 +385,17 @@ pub async fn experience(
     auth: crate::extract::MaybeAuth,
 ) -> AppResult<Response> {
     let mut base = context::build(&state, auth.0.as_ref(), &headers, "/experience").await?;
-    base.page_title = format!("Experience · {}", base.site.title);
+    base.page_title = if base.lang == "fa" {
+        format!("تجربه و تحصیلات · {}", base.site.title)
+    } else {
+        format!("Experience · {}", base.site.title)
+    };
 
     let view = ExperiencePageView {
-        work: data::experiences(&state.db, "work").await?,
-        education: data::experiences(&state.db, "education").await?,
-        skills: data::skill_groups(&state.db).await?,
-        stats: data::stats(&state.db).await?,
+        work: data::experiences(&state.db, "work", &base.lang).await?,
+        education: data::experiences(&state.db, "education", &base.lang).await?,
+        skills: data::skill_groups(&state.db, &base.lang).await?,
+        stats: data::stats(&state.db, base.lang == "fa").await?,
         base,
     };
 
@@ -324,9 +414,13 @@ pub async fn skills(
     auth: crate::extract::MaybeAuth,
 ) -> AppResult<Response> {
     let mut base = context::build(&state, auth.0.as_ref(), &headers, "/skills").await?;
-    base.page_title = format!("Skills · {}", base.site.title);
+    base.page_title = if base.lang == "fa" {
+        format!("مهارت‌ها · {}", base.site.title)
+    } else {
+        format!("Skills · {}", base.site.title)
+    };
 
-    let groups = data::skill_groups(&state.db).await?;
+    let groups = data::skill_groups(&state.db, &base.lang).await?;
     let total = groups.iter().map(|g| g.items.len() as i64).sum();
 
     let view = SkillsView {
@@ -350,29 +444,54 @@ pub async fn services(
     auth: crate::extract::MaybeAuth,
 ) -> AppResult<Response> {
     let mut base = context::build(&state, auth.0.as_ref(), &headers, "/services").await?;
-    base.page_title = format!("Services · {}", base.site.title);
+    base.page_title = if base.lang == "fa" {
+        format!("خدمات · {}", base.site.title)
+    } else {
+        format!("Services · {}", base.site.title)
+    };
 
-    let process = vec![
-        FactView {
-            label: "01 · Discover".into(),
-            value: "We talk about the problem, the constraints and what success looks like.".into(),
-        },
-        FactView {
-            label: "02 · Design".into(),
-            value: "A written proposal with an architecture, a plan and honest estimates.".into(),
-        },
-        FactView {
-            label: "03 · Deliver".into(),
-            value: "Hands-on implementation, in small reviewable increments.".into(),
-        },
-        FactView {
-            label: "04 · Hand over".into(),
-            value: "Documentation, a walkthrough, and a team that no longer needs me.".into(),
-        },
-    ];
+    let process = if base.lang == "fa" {
+        vec![
+            FactView {
+                label: "۰۱ · کشف".into(),
+                value: "در مورد مسئله، محدودیت‌ها و تعریف موفقیت گفت‌وگو می‌کنیم.".into(),
+            },
+            FactView {
+                label: "۰۲ · طراحی".into(),
+                value: "پیشنهاد مکتوب با معماری، برنامه و برآورد صادقانه.".into(),
+            },
+            FactView {
+                label: "۰۳ · تحویل".into(),
+                value: "اجرای عملی، در گام‌های کوچک قابل بازبینی.".into(),
+            },
+            FactView {
+                label: "۰۴ · انتقال".into(),
+                value: "مستندات، راهنمای گام‌به‌گام، و تیمی که دیگر به من نیاز ندارد.".into(),
+            },
+        ]
+    } else {
+        vec![
+            FactView {
+                label: "01 · Discover".into(),
+                value: "We talk about the problem, the constraints and what success looks like.".into(),
+            },
+            FactView {
+                label: "02 · Design".into(),
+                value: "A written proposal with an architecture, a plan and honest estimates.".into(),
+            },
+            FactView {
+                label: "03 · Deliver".into(),
+                value: "Hands-on implementation, in small reviewable increments.".into(),
+            },
+            FactView {
+                label: "04 · Hand over".into(),
+                value: "Documentation, a walkthrough, and a team that no longer needs me.".into(),
+            },
+        ]
+    };
 
     let view = ServicesView {
-        services: data::services(&state.db).await?,
+        services: data::services(&state.db, &base.lang).await?,
         process,
         testimonials: data::testimonials(&state.db, true).await?,
         base,
@@ -393,11 +512,15 @@ pub async fn testimonials(
     auth: crate::extract::MaybeAuth,
 ) -> AppResult<Response> {
     let mut base = context::build(&state, auth.0.as_ref(), &headers, "/testimonials").await?;
-    base.page_title = format!("Testimonials · {}", base.site.title);
+    base.page_title = if base.lang == "fa" {
+        format!("نظرها · {}", base.site.title)
+    } else {
+        format!("Testimonials · {}", base.site.title)
+    };
 
     let view = TestimonialsView {
         testimonials: data::testimonials(&state.db, false).await?,
-        stats: data::stats(&state.db).await?,
+        stats: data::stats(&state.db, base.lang == "fa").await?,
         base,
     };
 
@@ -416,7 +539,11 @@ pub async fn awards(
     auth: crate::extract::MaybeAuth,
 ) -> AppResult<Response> {
     let mut base = context::build(&state, auth.0.as_ref(), &headers, "/awards").await?;
-    base.page_title = format!("Awards & Recognition · {}", base.site.title);
+    base.page_title = if base.lang == "fa" {
+        format!("جوایز و افتخارات · {}", base.site.title)
+    } else {
+        format!("Awards & Recognition · {}", base.site.title)
+    };
 
     let view = AwardsView {
         awards: data::awards(&state.db).await?,
@@ -440,7 +567,11 @@ pub async fn speaking(
     auth: crate::extract::MaybeAuth,
 ) -> AppResult<Response> {
     let mut base = context::build(&state, auth.0.as_ref(), &headers, "/speaking").await?;
-    base.page_title = format!("Speaking · {}", base.site.title);
+    base.page_title = if base.lang == "fa" {
+        format!("سخنرانی‌ها · {}", base.site.title)
+    } else {
+        format!("Speaking · {}", base.site.title)
+    };
 
     let view = SpeakingView {
         talks: data::talks(&state.db).await?,
@@ -463,7 +594,11 @@ pub async fn publications(
     auth: crate::extract::MaybeAuth,
 ) -> AppResult<Response> {
     let mut base = context::build(&state, auth.0.as_ref(), &headers, "/publications").await?;
-    base.page_title = format!("Publications · {}", base.site.title);
+    base.page_title = if base.lang == "fa" {
+        format!("انتشارات · {}", base.site.title)
+    } else {
+        format!("Publications · {}", base.site.title)
+    };
 
     let view = PublicationsView {
         publications: data::publications(&state.db).await?,
@@ -487,7 +622,11 @@ pub async fn gallery(
     Query(query): Query<GalleryQuery>,
 ) -> AppResult<Response> {
     let mut base = context::build(&state, auth.0.as_ref(), &headers, "/gallery").await?;
-    base.page_title = format!("Gallery · {}", base.site.title);
+    base.page_title = if base.lang == "fa" {
+        format!("گالری · {}", base.site.title)
+    } else {
+        format!("Gallery · {}", base.site.title)
+    };
 
     let items = data::gallery(&state.db).await?;
     let mut categories: Vec<String> = Vec::new();
@@ -584,14 +723,18 @@ pub async fn resume(
     auth: crate::extract::MaybeAuth,
 ) -> AppResult<Response> {
     let mut base = context::build(&state, auth.0.as_ref(), &headers, "/resume").await?;
-    base.page_title = format!("Résumé · {}", base.site.title);
+    base.page_title = if base.lang == "fa" {
+        format!("رزومه · {}", base.site.title)
+    } else {
+        format!("Résumé · {}", base.site.title)
+    };
 
     let cv_file = base.site.cv_file.clone();
     let view = ResumeView {
-        work: data::experiences(&state.db, "work").await?,
-        education: data::experiences(&state.db, "education").await?,
-        skills: data::skill_groups(&state.db).await?,
-        stats: data::stats(&state.db).await?,
+        work: data::experiences(&state.db, "work", &base.lang).await?,
+        education: data::experiences(&state.db, "education", &base.lang).await?,
+        skills: data::skill_groups(&state.db, &base.lang).await?,
+        stats: data::stats(&state.db, base.lang == "fa").await?,
         cv_file,
         base,
     };
@@ -675,7 +818,13 @@ pub async fn search(
             .collect();
     }
 
-    base.page_title = if term.is_empty() {
+    base.page_title = if base.lang == "fa" {
+        if term.is_empty() {
+            format!("جستجو · {}", base.site.title)
+        } else {
+            format!("جستجو: {term} · {}", base.site.title)
+        }
+    } else if term.is_empty() {
         format!("Search · {}", base.site.title)
     } else {
         format!("Search: {term} · {}", base.site.title)
@@ -757,20 +906,21 @@ pub async fn contact_submit(
     let subject = form.subject.unwrap_or_default().trim().to_string();
     let message = form.message.trim().to_string();
 
+    let fa = base.lang == "fa";
     if name.is_empty() || name.chars().count() < 2 {
-        errors.push("Please tell me your name.".into());
+        errors.push(if fa { "لطفاً نام خود را بنویسید.".into() } else { "Please tell me your name.".into() });
     }
     if name.chars().count() > 120 {
-        errors.push("That name is a little too long.".into());
+        errors.push(if fa { "این نام کمی طولانی است.".into() } else { "That name is a little too long.".into() });
     }
     if !util::is_valid_email(&email) {
-        errors.push("Please enter a valid e-mail address.".into());
+        errors.push(if fa { "لطفاً یک نشانی ایمیل معتبر وارد کنید.".into() } else { "Please enter a valid e-mail address.".into() });
     }
     if message.chars().count() < 10 {
-        errors.push("Please write at least a sentence or two.".into());
+        errors.push(if fa { "لطفاً دست‌کم یک یا دو جمله بنویسید.".into() } else { "Please write at least a sentence or two.".into() });
     }
     if message.chars().count() > 10_000 {
-        errors.push("That message is too long.".into());
+        errors.push(if fa { "این پیام بیش از حد طولانی است.".into() } else { "That message is too long.".into() });
     }
 
     // Honeypot: a filled-in hidden field means a bot.
@@ -788,14 +938,14 @@ pub async fn contact_submit(
     if let Some(started_at) = form.started_at {
         let elapsed = chrono::Utc::now().timestamp() - started_at;
         if elapsed < 2 {
-            errors.push("That was submitted a little too quickly — please try again.".into());
+            errors.push(if fa { "کمی سریع ارسال شد — لطفاً دوباره تلاش کنید.".into() } else { "That was submitted a little too quickly — please try again.".into() });
         }
     }
 
     if !errors.is_empty() {
         let view = ContactView {
             success: false,
-            message: "Please correct the errors below.".into(),
+            message: if fa { "لطفاً خطاهای زیر را اصلاح کنید.".into() } else { "Please correct the errors below.".into() },
             errors,
             form_name: name,
             form_email: email,
@@ -893,6 +1043,7 @@ pub async fn subscribe(
     let success;
     let message;
 
+    let fa = base.lang == "fa";
     if form
         .website
         .as_deref()
@@ -900,10 +1051,10 @@ pub async fn subscribe(
         .unwrap_or(false)
     {
         success = true;
-        message = "You are subscribed. Thank you!".into();
+        message = if fa { "عضو خبرنامه شدید. متشکریم!".into() } else { "You are subscribed. Thank you!".into() };
     } else if !util::is_valid_email(&email) {
         success = false;
-        message = "Please enter a valid e-mail address.".into();
+        message = if fa { "لطفاً یک نشانی ایمیل معتبر وارد کنید.".into() } else { "Please enter a valid e-mail address.".into() };
     } else {
         let token = uuid::Uuid::new_v4().to_string();
         let result = sqlx::query(
@@ -926,7 +1077,7 @@ pub async fn subscribe(
         match result {
             Ok(_) => {
                 success = true;
-                message = "You are subscribed. Thank you!".into();
+                message = if fa { "عضو خبرنامه شدید. متشکریم!".into() } else { "You are subscribed. Thank you!".into() };
                 crate::audit(
                     &state,
                     None,
@@ -940,14 +1091,22 @@ pub async fn subscribe(
             Err(err) => {
                 tracing::warn!(error = %err, "failed to subscribe");
                 success = false;
-                message = "Something went wrong. Please try again later.".into();
+                message = if fa { "خطایی رخ داد. لطفاً بعداً دوباره تلاش کنید.".into() } else { "Something went wrong. Please try again later.".into() };
             }
         }
     }
 
     let view = NewsletterView {
-        heading: settings.newsletter_heading.clone(),
-        subheading: settings.newsletter_subheading.clone(),
+        heading: if !fa && !settings.newsletter_heading_en.is_empty() {
+            settings.newsletter_heading_en.clone()
+        } else {
+            settings.newsletter_heading.clone()
+        },
+        subheading: if !fa && !settings.newsletter_subheading_en.is_empty() {
+            settings.newsletter_subheading_en.clone()
+        } else {
+            settings.newsletter_subheading.clone()
+        },
         success,
         message,
         base,
@@ -959,6 +1118,39 @@ pub async fn subscribe(
 // ---------------------------------------------------------------------------
 // Utility
 // ---------------------------------------------------------------------------
+
+/// The optional `?next=` query used by the language switcher.
+#[derive(Debug, Deserialize)]
+pub struct LangQuery {
+    pub next: Option<String>,
+}
+
+/// Set the preferred language via a cookie, then redirect back to the page the
+/// visitor came from (or home).
+pub async fn set_language(
+    Path(locale): Path<String>,
+    Query(query): Query<LangQuery>,
+) -> Response {
+    let locale = if locale == "en" { "en" } else { "fa" };
+    let cookie = crate::auth::session::language_cookie(locale);
+
+    let next = query.next.unwrap_or_else(|| "/".into());
+    // Only allow relative paths to avoid open redirects.
+    let next = if next.starts_with('/') && !next.starts_with("//") {
+        next
+    } else {
+        "/".into()
+    };
+
+    let mut response = Redirect::to(&next).into_response();
+    if let Ok(value) = axum::http::HeaderValue::from_str(&cookie.to_string()) {
+        response.headers_mut().insert(
+            axum::http::header::SET_COOKIE,
+            value,
+        );
+    }
+    response
+}
 
 /// Return a 404 response rendered by the custom error page.
 pub async fn not_found() -> Response {

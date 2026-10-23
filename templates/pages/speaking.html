@@ -1,20 +1,19 @@
 <!doctype html>
-<html lang="en" data-theme="{{ view.base.default_theme }}">
+<html lang="{{ view.base.lang }}" dir="{{ view.base.dir }}" data-theme="{{ view.base.default_theme }}">
 <head>
 {% include "partials/head.html" %}
 </head>
 <body>
-<a class="skip-link" href="#main">Skip to content</a>
+<a class="skip-link" href="#main">{% if view.base.lang == "fa" %}پرش به محتوا{% else %}Skip to content{% endif %}</a>
 {% include "partials/header.html" %}
 
 <main id="main">
   <section class="page-hero">
     <div class="container">
-      <span class="eyebrow">Speaking</span>
-      <h1 class="page-title">Talks &amp; keynotes</h1>
+      <span class="eyebrow">{% if view.base.lang == "fa" %}سخنرانی{% else %}Speaking{% endif %}</span>
+      <h1 class="page-title">{% if view.base.lang == "fa" %}سخنرانی‌ها{% else %}Talks &amp; keynotes{% endif %}</h1>
       <p class="section-subtitle" style="font-size:var(--step-1);">
-        Conferences, meetups and internal sessions — usually about the lessons that only
-        show up in production.
+        {% if view.base.lang == "fa" %}کنفرانس‌ها، میت‌آپ‌ها و جلسات داخلی — معمولاً درباره درس‌هایی که فقط در تولید نمایان می‌شوند.{% else %}Conferences, meetups and internal sessions — usually about the lessons that only show up in production.{% endif %}
       </p>
     </div>
   </section>
@@ -37,10 +36,10 @@
             </div>
             <div class="flex">
               {% if talk.has_video %}
-              <a class="btn btn-sm" href="{{ talk.video_url }}" target="_blank" rel="noopener noreferrer">Watch</a>
+              <a class="btn btn-sm" href="{{ talk.video_url }}" target="_blank" rel="noopener noreferrer">{% if view.base.lang == "fa" %}تماشا{% else %}Watch{% endif %}</a>
               {% endif %}
               {% if talk.has_slides %}
-              <a class="btn btn-sm btn-ghost" href="{{ talk.slides_url }}" target="_blank" rel="noopener noreferrer">Slides</a>
+              <a class="btn btn-sm btn-ghost" href="{{ talk.slides_url }}" target="_blank" rel="noopener noreferrer">{% if view.base.lang == "fa" %}اسلاید‌ها{% else %}Slides{% endif %}</a>
               {% endif %}
             </div>
           </div>
@@ -52,8 +51,8 @@
       <section class="section">
         <div class="section-head">
           <div>
-            <span class="eyebrow">Writing</span>
-            <h2>Publications</h2>
+            <span class="eyebrow">{% if view.base.lang == "fa" %}نوشته‌ها{% else %}Writing{% endif %}</span>
+            <h2>{% if view.base.lang == "fa" %}انتشارات{% else %}Publications{% endif %}</h2>
           </div>
         </div>
         <div class="grid grid-2">

@@ -35,6 +35,7 @@ pub fn router(state: AppState) -> Router {
         .route("/projects", get(public::projects))
         .route("/projects/{slug}", get(public::project_detail))
         .route("/blog", get(blog::index))
+        .route("/lang/{locale}", get(public::set_language))
         .route("/blog/{slug}", get(blog::show))
         .route("/blog/{slug}/comment", post(blog::comment))
         .route("/tags/{slug}", get(tag_redirect))
@@ -194,16 +195,44 @@ async fn fallback(
         }
 
         // A CMS page?
-        let page: Option<(String, String, String)> =
-            sqlx::query_as("SELECT title, content_html, status FROM pages WHERE slug = ?")
+        let page: Option<(i64, String, String, String)> =
+            sqlx::query_as("SELECT id, title, content_html, status FROM pages WHERE slug = ?")
                 .bind(&path)
                 .fetch_optional(&state.db)
                 .await
                 .ok()
                 .flatten();
 
-        if let Some((title, content_html, status)) = page {
+        // Resolve the requested locale from the `?lang=` query parameter, falling
+        // back to the site default.
+        let default_locale = state.settings.snapshot().default_locale;
+        let requested_locale = uri
+            .query()
+            .and_then(|q| q.split('&').find_map(|p| p.strip_prefix("lang=")))
+            .unwrap_or(&default_locale);
+        let locale = if requested_locale == "en" { "en" } else { "fa" };
+
+        if let Some((page_id, title, content_html, status)) = page {
             if status == "published" {
+                // Prefer a translated variant for the active locale.
+                let (title, content_html) = if locale != "fa" {
+                    let translated: Option<(String, String)> = sqlx::query_as(
+                        "SELECT title, content_html FROM page_translations WHERE page_id = ? AND locale = ?",
+                    )
+                    .bind(page_id)
+                    .bind(locale)
+                    .fetch_optional(&state.db)
+                    .await
+                    .ok()
+                    .flatten();
+                    match translated {
+                        Some((t_title, t_html)) => (t_title, t_html),
+                        None => (title, content_html),
+                    }
+                } else {
+                    (title, content_html)
+                };
+
                 let mut base = crate::handlers::context::build(
                     &state,
                     auth.0.as_ref(),
@@ -225,7 +254,11 @@ async fn fallback(
                         logo_text: String::new(),
                         favicon: String::new(),
                         cv_file: String::new(),
+                        person_name: String::new(),
+                        person_name_en: String::new(),
                     },
+                    lang: "fa".into(),
+                    dir: "rtl".into(),
                     nav: Vec::new(),
                     socials: Vec::new(),
                     user: None,
@@ -258,6 +291,7 @@ async fn fallback(
                     csrf_token: String::new(),
                 });
                 base.page_title = format!("{title} · {}", base.site.title);
+                base.meta_description = base.site.description.clone();
 
                 #[derive(askama::Template)]
                 #[template(path = "pages/page.html")]

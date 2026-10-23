@@ -86,6 +86,87 @@ pub struct PostSummary {
     pub updated_at: DateTime<Utc>,
 }
 
+/// A translated variant of a post. Falls back to the base row when absent.
+#[derive(Debug, Clone, Serialize, Deserialize, sqlx::FromRow)]
+pub struct PostTranslation {
+    pub post_id: i64,
+    pub locale: String,
+    pub title: String,
+    pub excerpt: String,
+    pub content_md: String,
+    pub content_html: String,
+    pub meta_title: Option<String>,
+    pub meta_description: Option<String>,
+}
+
+/// A translated variant of a page.
+#[derive(Debug, Clone, Serialize, Deserialize, sqlx::FromRow)]
+pub struct PageTranslation {
+    pub page_id: i64,
+    pub locale: String,
+    pub title: String,
+    pub content_md: String,
+    pub content_html: String,
+}
+
+/// A translated variant of a project.
+#[derive(Debug, Clone, Serialize, Deserialize, sqlx::FromRow)]
+pub struct ProjectTranslation {
+    pub project_id: i64,
+    pub locale: String,
+    pub title: String,
+    pub summary: String,
+    pub description_md: String,
+    pub description_html: String,
+}
+
+/// A translated variant of an experience entry.
+#[derive(Debug, Clone, Serialize, Deserialize, sqlx::FromRow)]
+pub struct ExperienceTranslation {
+    pub experience_id: i64,
+    pub locale: String,
+    pub title: String,
+    pub company: String,
+    pub location: Option<String>,
+    pub description: String,
+}
+
+/// A translated variant of a service entry.
+#[derive(Debug, Clone, Serialize, Deserialize, sqlx::FromRow)]
+pub struct ServiceTranslation {
+    pub service_id: i64,
+    pub locale: String,
+    pub title: String,
+    pub description: String,
+    pub features: Option<String>,
+}
+
+/// A translated variant of a skill entry.
+#[derive(Debug, Clone, Serialize, Deserialize, sqlx::FromRow)]
+pub struct SkillTranslation {
+    pub skill_id: i64,
+    pub locale: String,
+    pub name: String,
+    pub category: String,
+}
+
+/// A translated variant of a category.
+#[derive(Debug, Clone, Serialize, Deserialize, sqlx::FromRow)]
+pub struct CategoryTranslation {
+    pub category_id: i64,
+    pub locale: String,
+    pub name: String,
+    pub description: Option<String>,
+}
+
+/// A translated variant of a tag.
+#[derive(Debug, Clone, Serialize, Deserialize, sqlx::FromRow)]
+pub struct TagTranslation {
+    pub tag_id: i64,
+    pub locale: String,
+    pub name: String,
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize, sqlx::FromRow)]
 pub struct Tag {
     pub id: i64,

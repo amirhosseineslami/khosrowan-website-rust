@@ -13,15 +13,22 @@ use crate::util;
 use crate::views::{BaseContext, FlashView, NavItem, SiteInfo, SocialView, UserView};
 
 /// The primary navigation, before dynamic pages are appended.
-fn primary_nav(current_path: &str) -> Vec<NavItem> {
+///
+/// Kept deliberately lean: the focus is on the technical content hub (blog and
+/// projects). The résumé and the supporting pages (experience, skills, services)
+/// remain reachable from the footer and their own routes, not the top nav.
+fn primary_nav(current_path: &str, lang: &str) -> Vec<NavItem> {
+    let (home, about, projects, blog, contact) = match lang {
+        "fa" => ("خانه", "درباره", "پروژه‌ها", "وبلاگ", "تماس"),
+        _ => ("Home", "About", "Projects", "Blog", "Contact"),
+    };
+
     let items = [
-        ("Home", "/"),
-        ("About", "/about"),
-        ("Projects", "/projects"),
-        ("Blog", "/blog"),
-        ("Experience", "/experience"),
-        ("Services", "/services"),
-        ("Contact", "/contact"),
+        (home, "/"),
+        (blog, "/blog"),
+        (projects, "/projects"),
+        (about, "/about"),
+        (contact, "/contact"),
     ];
 
     items
@@ -108,7 +115,10 @@ pub async fn build(
 ) -> AppResult<BaseContext> {
     let settings: Settings = state.settings.snapshot();
 
-    let mut nav = primary_nav(current_path);
+    let lang = resolve_locale(headers, &settings.default_locale);
+    let dir = if lang == "fa" { "rtl" } else { "ltr" };
+
+    let mut nav = primary_nav(current_path, &lang);
     nav.extend(nav_pages(&state.db, current_path).await?);
 
     let socials = socials(&state.db).await?;
@@ -129,19 +139,35 @@ pub async fn build(
     });
 
     Ok(BaseContext {
+        lang: lang.clone(),
+        dir: dir.to_string(),
         site: SiteInfo {
             title: settings.title.clone(),
             subtitle: settings.subtitle.clone(),
-            description: settings.description.clone(),
-            tagline: settings.tagline.clone(),
+            description: if lang == "en" && !settings.description_en.is_empty() {
+                settings.description_en.clone()
+            } else {
+                settings.description.clone()
+            },
+            tagline: if lang == "en" && !settings.tagline_en.is_empty() {
+                settings.tagline_en.clone()
+            } else {
+                settings.tagline.clone()
+            },
             email: settings.email.clone(),
             phone: settings.phone.clone(),
             location: settings.location.clone(),
             available: settings.available,
-            availability_note: settings.availability_note.clone(),
+            availability_note: if lang == "en" && !settings.availability_note_en.is_empty() {
+                settings.availability_note_en.clone()
+            } else {
+                settings.availability_note.clone()
+            },
             logo_text: settings.logo_text.clone(),
             favicon: settings.favicon.clone(),
             cv_file: settings.cv_file.clone(),
+            person_name: settings.seo_person_name.clone(),
+            person_name_en: settings.seo_person_name_en.clone(),
         },
         nav,
         socials,
@@ -175,6 +201,33 @@ pub async fn build(
         sitemap_url: "/sitemap.xml".to_string(),
         csrf_token: auth.map(|a| a.csrf_token.clone()).unwrap_or_default(),
     })
+}
+
+/// Resolve the active locale from the `lang` cookie (or query param), falling
+/// back to the site default. Only `fa` and `en` are recognised.
+fn resolve_locale(headers: &HeaderMap, default: &str) -> String {
+    let requested = headers
+        .get(axum::http::header::COOKIE)
+        .and_then(|v| v.to_str().ok())
+        .and_then(|c| {
+            c.split(';').find_map(|part| {
+                let part = part.trim();
+                part.strip_prefix("lang=")
+                    .or_else(|| part.strip_prefix("lang ="))
+            })
+        })
+        .map(|v| v.trim().trim_matches('"').to_string());
+
+    match requested.as_deref() {
+        Some("fa") | Some("en") => requested.unwrap(),
+        _ => {
+            if default == "fa" {
+                "fa".into()
+            } else {
+                "en".into()
+            }
+        }
+    }
 }
 
 /// Parse the `flash` query parameter used for redirect messages.

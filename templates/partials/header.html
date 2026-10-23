@@ -16,6 +16,16 @@
       </ul>
 
       <div class="nav-actions">
+        <div class="lang-switch" role="group" aria-label="Language">
+          {% if view.base.lang == "fa" %}
+          <a href="/lang/en?next={{ view.base.current_path }}" hreflang="en" title="English">EN</a>
+          <span class="lang-current">فا</span>
+          {% else %}
+          <span class="lang-current">EN</span>
+          <a href="/lang/fa?next={{ view.base.current_path }}" hreflang="fa" title="فارسی">فا</a>
+          {% endif %}
+        </div>
+
         {% if view.base.enable_dark_mode %}
         <button class="icon-btn" type="button" data-theme-toggle aria-label="Toggle colour theme">
           <span data-icon="moon">
@@ -28,9 +38,9 @@
         {% endif %}
 
         {% if view.base.user.is_some() %}
-        <a class="btn btn-sm btn-ghost" href="/admin">Dashboard</a>
+        <a class="btn btn-sm btn-ghost" href="/admin">{% if view.base.lang == "fa" %}پنل مدیریت{% else %}Dashboard{% endif %}</a>
         {% else %}
-        <a class="btn btn-sm btn-ghost" href="/admin/login">Sign in</a>
+        <a class="btn btn-sm btn-ghost" href="/admin/login">{% if view.base.lang == "fa" %}ورود{% else %}Sign in{% endif %}</a>
         {% endif %}
 
         <button class="icon-btn nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-label="Toggle navigation">

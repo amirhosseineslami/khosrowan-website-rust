@@ -115,7 +115,13 @@ INVALID="$(curl -s -X POST "$BASE/contact" \
   --data-urlencode "name=A" \
   --data-urlencode "email=not-an-email" \
   --data-urlencode "message=hi")"
-contains "contact form validates" "valid e-mail address" "$INVALID"
+if printf '%s' "$INVALID" | grep -qE "valid e-mail address|ایمیل معتبر"; then
+  PASS=$((PASS + 1))
+  green "  ok    contact form validates"
+else
+  FAIL=$((FAIL + 1))
+  red "  FAIL  contact form validates — expected a localized e-mail validation message"
+fi
 
 echo "==> Newsletter"
 check "subscribe accepted" 200 "$(status -X POST "$BASE/newsletter/subscribe" \

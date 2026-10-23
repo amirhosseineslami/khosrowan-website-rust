@@ -7,13 +7,51 @@
    1. Design tokens
    -------------------------------------------------------------------------- */
 
+/* Self-hosted Vazirmatn (Vazir) — the primary Persian typeface.
+   Only woff2 is shipped; TTF fallbacks are intentionally omitted. */
+@font-face {
+  font-family: "Vazirmatn";
+  src: url("/assets/fonts/Vazirmatn-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Vazirmatn";
+  src: url("/assets/fonts/Vazirmatn-Light.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Vazirmatn";
+  src: url("/assets/fonts/Vazirmatn-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Vazirmatn";
+  src: url("/assets/fonts/Vazirmatn-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Vazirmatn";
+  src: url("/assets/fonts/Vazirmatn-ExtraBold.woff2") format("woff2");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
-  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, "Noto Sans", sans-serif;
-  --font-mono: "JetBrains Mono", "SFMono-Regular", "SF Mono", Menlo, Consolas,
-    "Liberation Mono", monospace;
-  --font-serif: "Newsreader", "Iowan Old Style", "Palatino Linotype", Georgia,
-    "Times New Roman", serif;
+  --font-sans: "Vazirmatn", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --font-mono: "Vazirmatn", "JetBrains Mono", "SFMono-Regular", "SF Mono", Menlo,
+    Consolas, "Liberation Mono", monospace;
+  --font-serif: "Vazirmatn", "Newsreader", "Iowan Old Style", "Palatino Linotype",
+    Georgia, "Times New Roman", serif;
 
   --container: 1180px;
   --container-narrow: 760px;
@@ -126,11 +164,20 @@ body {
   color: var(--text);
   font-family: var(--font-sans);
   font-size: var(--step-0);
-  line-height: 1.68;
+  line-height: 1.72;
   letter-spacing: -0.006em;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
+}
+
+/* Persian (Vazirmatn) typography: the script sits fuller and benefits from a
+   looser line-height and zero letter-spacing (negative tracking clips Arabic
+   joining forms). */
+[dir="rtl"] body {
+  font-size: var(--step-0);
+  line-height: 1.9;
+  letter-spacing: 0;
 }
 
 body::before {
@@ -599,6 +646,36 @@ p { text-wrap: pretty; }
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+.lang-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.2rem 0.45rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.lang-switch a {
+  color: var(--text-muted);
+  padding: 0.1rem 0.3rem;
+  border-radius: 999px;
+  transition: color var(--transition), background var(--transition);
+}
+
+.lang-switch a:hover {
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+
+.lang-switch .lang-current {
+  color: var(--accent);
+  pointer-events: none;
 }
 
 .icon-btn {
@@ -2057,5 +2134,126 @@ table.data tbody tr:hover {
     content: " (" attr(href) ")";
     font-size: 0.75em;
     color: #555;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * RTL (Persian) support
+ *
+ * Flexbox, grid and padding/margin already honour the `dir="rtl"` attribute,
+ * so we only need to fix the few hardcoded directional bits: mirrored SVGs,
+ * text alignment utilities and icon flips.
+ * --------------------------------------------------------------------------- */
+[dir="rtl"] .link-arrow svg,
+[dir="rtl"] .btn svg,
+[dir="rtl"] .project-links svg {
+  transform: scaleX(-1);
+}
+
+[dir="rtl"] .text-left { text-align: right; }
+[dir="rtl"] .text-right { text-align: left; }
+
+[dir="rtl"] .hero-lede .rotator {
+  display: inline-block;
+}
+
+[dir="rtl"] .hero-meta {
+  flex-direction: row;
+}
+
+/* ---------------------------------------------------------------------------
+ * Design polish
+ * RTL heading refinements, focus-visible states and softer interactive
+ * surfaces. All additions are append-only overrides.
+ * --------------------------------------------------------------------------- */
+
+/* Persian headings: remove tight negative tracking (clips joining forms) and
+   let Vazirmatn breathe. */
+[dir="rtl"] .hero-title,
+[dir="rtl"] h1,
+[dir="rtl"] h2,
+[dir="rtl"] h3,
+[dir="rtl"] .page-title {
+  letter-spacing: 0;
+  line-height: 1.5;
+}
+
+/* Explicit, high-contrast focus ring for keyboard users (and RTL-safe). */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Card hover: raise + tint border for a tactile, modern feel. */
+.card,
+.post-card,
+.project-card {
+  transition: transform var(--transition), box-shadow var(--transition),
+    border-color var(--transition);
+}
+
+.card:hover,
+.post-card:hover,
+.project-card:hover {
+  border-color: var(--border-strong);
+}
+
+/* Soft rise on interactive cards (desktop only). */
+@media (hover: hover) and (pointer: fine) {
+  .post-card:hover,
+  .project-card:hover,
+  .card-hover:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow);
+  }
+}
+
+/* Hero avatar: a gentle ring that reads well in both themes. */
+.hero-avatar {
+  box-shadow: var(--shadow-lg), 0 0 0 1px var(--border);
+}
+
+/* Stats: align numeric value with a clearer label hierarchy. */
+.stat {
+  transition: transform var(--transition), border-color var(--transition),
+    background var(--transition);
+}
+@media (hover: hover) and (pointer: fine) {
+  .stat:hover {
+    transform: translateY(-2px);
+  }
+}
+
+/* Buttons: crisp active press. */
+.btn:active {
+  transform: translateY(1px);
+  box-shadow: none;
+}
+
+/* Make the language switcher pill sit flush in the header actions. */
+.lang-switch {
+  font-family: var(--font-sans);
+}
+
+/* Newsletter + footer: subtle top divider for separation. */
+.newsletter {
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+
+/* Smooth the section reveal (already used via .reveal). */
+.reveal {
+  will-change: opacity, transform;
+}
+
+/* Mobile nav: ensure the action row wraps gracefully in RTL. */
+@media (max-width: 640px) {
+  .nav-actions {
+    gap: 0.4rem;
+  }
+  .lang-switch {
+    font-size: 0.72rem;
+    padding: 0.15rem 0.4rem;
   }
 }

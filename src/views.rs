@@ -22,6 +22,10 @@ pub struct SiteInfo {
     pub logo_text: String,
     pub favicon: String,
     pub cv_file: String,
+    /// The real, indexed person name (used for SEO titles and Person schema).
+    pub person_name: String,
+    /// The real person's (English) name, e.g. "Amirhossein Eslami".
+    pub person_name_en: String,
 }
 
 #[derive(Debug, Clone)]
@@ -60,6 +64,8 @@ pub struct FlashView {
 #[derive(Debug, Clone)]
 pub struct BaseContext {
     pub site: SiteInfo,
+    pub lang: String,
+    pub dir: String,
     pub nav: Vec<NavItem>,
     pub socials: Vec<SocialView>,
     pub user: Option<UserView>,
@@ -189,6 +195,7 @@ pub struct CommentView {
 
 #[derive(Debug, Clone)]
 pub struct ProjectCard {
+    pub id: i64,
     pub slug: String,
     pub title: String,
     pub summary: String,
@@ -580,6 +587,7 @@ impl ProjectCard {
             .unwrap_or_default();
 
         Self {
+            id: project.id,
             slug: project.slug.clone(),
             title: project.title.clone(),
             summary: project.summary.clone(),
@@ -1206,4 +1214,62 @@ pub struct AdminTaxonomyEdit {
     pub description: String,
     pub color: String,
     pub post_count: i64,
+}
+
+/// An editable experience row shown in the admin profile-content panel.
+#[derive(Debug, Clone)]
+pub struct AdminExperienceRow {
+    pub id: i64,
+    pub title: String,
+    pub company: String,
+    pub location: String,
+    pub start_date: String,
+    pub end_date: String,
+    pub is_current: bool,
+    pub description: String,
+    pub kind: String,
+    pub sort_order: i64,
+    // English translation fields (may be empty).
+    pub title_en: String,
+    pub company_en: String,
+    pub description_en: String,
+}
+
+/// An editable service row shown in the admin profile-content panel.
+#[derive(Debug, Clone)]
+pub struct AdminServiceRow {
+    pub id: i64,
+    pub title: String,
+    pub description: String,
+    pub icon: String,
+    pub price_from: String,
+    pub features: String,
+    pub sort_order: i64,
+    pub title_en: String,
+    pub description_en: String,
+    pub features_en: String,
+}
+
+/// An editable skill row shown in the admin profile-content panel.
+#[derive(Debug, Clone)]
+pub struct AdminSkillRow {
+    pub id: i64,
+    pub name: String,
+    pub category: String,
+    pub level: i64,
+    pub years: String,
+    pub sort_order: i64,
+    pub name_en: String,
+    pub category_en: String,
+}
+
+#[derive(Debug, Clone)]
+pub struct AdminProfileContentView {
+    pub ctx: AdminContext,
+    pub base: BaseContext,
+    pub csrf_token: String,
+    pub experiences: Vec<AdminExperienceRow>,
+    pub services: Vec<AdminServiceRow>,
+    pub skills: Vec<AdminSkillRow>,
+    pub flash: FlashView,
 }
