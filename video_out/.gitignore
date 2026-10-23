@@ -1,9 +1,0 @@
-# generated video & audio outputs
-*.mp4
-*.mp3
-seg/
-img/
-*.log
-json,base64
-json,sys
-*.bak*

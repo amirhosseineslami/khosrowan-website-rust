@@ -8,3 +8,10 @@
 *.db-shm
 .DS_Store
 *.log
+
+# Compiled server binary (build artifact, rebuilt on deploy)
+/personal-site
+
+# Accidental ImageMagick PS dumps (junk)
+json,base64
+json,sys

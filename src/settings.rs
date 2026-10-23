@@ -24,6 +24,8 @@ pub struct Settings {
     /// Primary site language: `fa` (Persian, RTL) or `en` (English).
     pub default_locale: String,
     // English variants of site-wide copy, used when the active locale is English.
+    pub subtitle_en: String,
+    pub location_en: String,
     pub description_en: String,
     pub tagline_en: String,
     pub availability_note_en: String,
@@ -80,6 +82,8 @@ impl Default for Settings {
             default_og_image: "/assets/img/og-default.svg".into(),
             cv_file: String::new(),
             default_locale: "fa".into(),
+            subtitle_en: String::new(),
+            location_en: String::new(),
             description_en: String::new(),
             tagline_en: String::new(),
             availability_note_en: String::new(),
@@ -155,6 +159,8 @@ impl Settings {
         set_str!(default_og_image, "site.default_og_image");
         set_str!(cv_file, "site.cv_file");
         set_str!(default_locale, "site.default_locale");
+        set_str!(subtitle_en, "site.subtitle_en");
+        set_str!(location_en, "site.location_en");
         set_str!(description_en, "site.description_en");
         set_str!(tagline_en, "site.tagline_en");
         set_str!(availability_note_en, "site.availability_note_en");

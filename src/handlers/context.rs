@@ -49,19 +49,36 @@ fn is_active(current_path: &str, url: &str) -> bool {
 }
 
 /// Load the navigation pages that are flagged for the main menu.
-async fn nav_pages(pool: &SqlitePool, current_path: &str) -> AppResult<Vec<NavItem>> {
-    let rows: Vec<(String, String)> = sqlx::query_as(
-        "SELECT title, slug FROM pages WHERE status = 'published' AND show_in_nav = 1 ORDER BY nav_order ASC, title ASC",
+async fn nav_pages(pool: &SqlitePool, current_path: &str, locale: &str) -> AppResult<Vec<NavItem>> {
+    let rows: Vec<(i64, String, String)> = sqlx::query_as(
+        "SELECT id, title, slug FROM pages WHERE status = 'published' AND show_in_nav = 1 ORDER BY nav_order ASC, title ASC",
     )
     .fetch_all(pool)
     .await?;
 
+    // Map page_id -> translated title for the active locale.
+    let trans: Vec<(i64, String)> = if locale == "fa" {
+        Vec::new()
+    } else {
+        sqlx::query_as(
+            "SELECT pt.page_id, pt.title FROM page_translations pt WHERE pt.locale = ?",
+        )
+        .bind(locale)
+        .fetch_all(pool)
+        .await?
+    };
+
     Ok(rows
         .into_iter()
-        .map(|(title, slug)| {
+        .map(|(id, title, slug)| {
+            let label = trans
+                .iter()
+                .find(|(pid, _)| *pid == id)
+                .map(|(_, t)| t.clone())
+                .unwrap_or(title);
             let url = format!("/{slug}");
             NavItem {
-                label: title,
+                label,
                 active: is_active(current_path, &url),
                 url,
             }
@@ -119,7 +136,7 @@ pub async fn build(
     let dir = if lang == "fa" { "rtl" } else { "ltr" };
 
     let mut nav = primary_nav(current_path, &lang);
-    nav.extend(nav_pages(&state.db, current_path).await?);
+    nav.extend(nav_pages(&state.db, current_path, &lang).await?);
 
     let socials = socials(&state.db).await?;
 
@@ -143,7 +160,11 @@ pub async fn build(
         dir: dir.to_string(),
         site: SiteInfo {
             title: settings.title.clone(),
-            subtitle: settings.subtitle.clone(),
+            subtitle: if lang == "en" && !settings.subtitle_en.is_empty() {
+                settings.subtitle_en.clone()
+            } else {
+                settings.subtitle.clone()
+            },
             description: if lang == "en" && !settings.description_en.is_empty() {
                 settings.description_en.clone()
             } else {
@@ -156,7 +177,11 @@ pub async fn build(
             },
             email: settings.email.clone(),
             phone: settings.phone.clone(),
-            location: settings.location.clone(),
+            location: if lang == "en" && !settings.location_en.is_empty() {
+                settings.location_en.clone()
+            } else {
+                settings.location.clone()
+            },
             available: settings.available,
             availability_note: if lang == "en" && !settings.availability_note_en.is_empty() {
                 settings.availability_note_en.clone()

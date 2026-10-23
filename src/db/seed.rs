@@ -19,6 +19,12 @@ pub const DEFAULT_SETTINGS: &[(&str, &str, &str, &str)] = &[
         "general",
     ),
     (
+        "site.subtitle_en",
+        "Electrical & Control Engineering · AI & Robotics",
+        "text",
+        "general",
+    ),
+    (
         "site.description",
         "دانشجوی مهندسی برق (گرایش کنترل) در دانشگاه علم و صنعت ایران؛ متمرکز بر رباتیک، هوش مصنوعی، سیستم‌های کنترل، بینایی ماشین و راه‌حل‌های هوشمند مهندسی. پژوهشگر کنترل غیرمتمرکز و ایمن آرایش ربات‌های متحرک.",
         "textarea",
@@ -54,6 +60,12 @@ pub const DEFAULT_SETTINGS: &[(&str, &str, &str, &str)] = &[
     ("site.default_theme", "dark", "text", "appearance"),
     ("site.enable_dark_mode", "true", "bool", "appearance"),
     ("site.default_locale", "fa", "text", "appearance"),
+    (
+        "site.location_en",
+        "Tehran, Iran · Iran University of Science and Technology",
+        "text",
+        "general",
+    ),
     (
         "site.description_en",
         "Electrical Engineering (Control) student at Iran University of Science and Technology, focused on robotics, AI/ML, control systems, computer vision and intelligent engineering solutions. Researching decentralized and safe formation control for mobile robots.",
@@ -264,34 +276,38 @@ async fn seed_profile_translations(pool: &SqlitePool) -> Result<()> {
         }
     }
 
-    // Services
-    let services: Vec<(&str, &str, &str, &str)> = vec![
+    // Services: [fa_title, en_title, en_desc, en_features, en_price]
+    let services: Vec<(&str, &str, &str, &str, &str)> = vec![
         (
             "آموزش خصوصی برنامه‌نویسی و ریاضیات",
             "Programming & Maths Tutoring",
             "One-on-one tutoring in Python, C/C++, MATLAB and engineering mathematics — for students who want to go deeper than the syllabus.",
             r#"["Python / C++ / MATLAB","Engineering mathematics","Sessions for students at any level"]"#,
+            "on request",
         ),
         (
             "کمک در بینایی ماشین و یادگیری ماشین",
             "Computer Vision & ML Help",
             "Hands-on help with computer-vision and machine-learning projects: from data preparation to training, evaluating and deploying models.",
             r#"["Data prep & labelling","Model training & evaluation","PyTorch / TensorFlow / OpenCV"]"#,
+            "on request",
         ),
         (
             "جمع‌آوری داده و خراش وب",
             "Data Collection & Web Scraping",
             "Asynchronous scraping pipelines and dataset cleaning for research and small-business needs.",
             r#"["Playwright / asyncio pipelines","Structured CSV & Excel output","Data cleaning & normalization"]"#,
+            "on request",
         ),
         (
             "پروژه‌های سیستم کنترل و آردوینو",
             "Control Systems & Arduino Projects",
             "Guidance on control theory, embedded programming and microcontroller builds with Arduino.",
             r#"["Control theory fundamentals","Arduino & servo projects","Simulation in MATLAB/Simulink"]"#,
+            "on request",
         ),
     ];
-    for (fa_title, en_title, en_desc, en_features) in services {
+    for (fa_title, en_title, en_desc, en_features, en_price) in services {
         let id = sqlx::query_scalar::<_, i64>("SELECT id FROM services WHERE title = ?")
             .bind(fa_title)
             .fetch_optional(pool)
@@ -299,13 +315,14 @@ async fn seed_profile_translations(pool: &SqlitePool) -> Result<()> {
         if let Some(id) = id {
             sqlx::query(
                 "INSERT OR REPLACE INTO service_translations
-                     (service_id, locale, title, description, features)
-                 VALUES (?, 'en', ?, ?, ?)",
+                     (service_id, locale, title, description, features, price_from)
+                 VALUES (?, 'en', ?, ?, ?, ?)",
             )
             .bind(id)
             .bind(en_title)
             .bind(en_desc)
             .bind(en_features)
+            .bind(en_price)
             .execute(pool)
             .await?;
         }

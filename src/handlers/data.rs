@@ -131,10 +131,35 @@ pub async fn apply_post_card_translations(
     }
     let ids: Vec<i64> = cards.iter().map(|c| c.id).collect();
     let trans = post_translations(pool, &ids, locale).await?;
+
+    // Category and tag name translations for the active locale.
+    let cat_trans: Vec<(String, String)> = sqlx::query_as(
+        "SELECT c.slug, ct.name FROM category_translations ct
+         JOIN categories c ON c.id = ct.category_id WHERE ct.locale = ?",
+    )
+    .bind(locale)
+    .fetch_all(pool)
+    .await?;
+    let tag_trans: Vec<(String, String)> = sqlx::query_as(
+        "SELECT t.slug, tt.name FROM tag_translations tt
+         JOIN tags t ON t.id = tt.tag_id WHERE tt.locale = ?",
+    )
+    .bind(locale)
+    .fetch_all(pool)
+    .await?;
+
     for card in cards.iter_mut() {
         if let Some(t) = trans.iter().find(|t| t.post_id == card.id) {
             card.title = t.title.clone();
             card.excerpt = t.excerpt.clone();
+        }
+        if let Some((_, name)) = cat_trans.iter().find(|(slug, _)| *slug == card.category_slug) {
+            card.category_name = name.clone();
+        }
+        for tag in &mut card.tags {
+            if let Some((_, name)) = tag_trans.iter().find(|(slug, _)| *slug == tag.slug) {
+                tag.name = name.clone();
+            }
         }
     }
     Ok(())
@@ -444,7 +469,10 @@ pub async fn services(pool: &SqlitePool, locale: &str) -> AppResult<Vec<ServiceV
                 title: t.map(|t| t.title.clone()).unwrap_or(row.title),
                 description: t.map(|t| t.description.clone()).unwrap_or(row.description),
                 icon: row.icon.unwrap_or_else(|| "sparkles".into()),
-                price_from: row.price_from.unwrap_or_default(),
+                price_from: t
+                    .and_then(|t| t.price_from.clone())
+                    .or(row.price_from)
+                    .unwrap_or_default(),
                 features: t
                     .and_then(|t| t.features.clone())
                     .or(row.features)

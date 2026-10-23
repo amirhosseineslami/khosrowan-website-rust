@@ -139,6 +139,7 @@ pub struct ServiceTranslation {
     pub title: String,
     pub description: String,
     pub features: Option<String>,
+    pub price_from: Option<String>,
 }
 
 /// A translated variant of a skill entry.
