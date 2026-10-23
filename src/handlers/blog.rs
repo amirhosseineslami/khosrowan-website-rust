@@ -280,8 +280,8 @@ pub async fn show(
         .execute(&state.db)
         .await;
 
-    let tags = tags_for_post(&state.db, post.id).await?;
-    let category = match post.category_id {
+    let mut tags = tags_for_post(&state.db, post.id).await?;
+    let mut category = match post.category_id {
         Some(id) => {
             sqlx::query_as::<_, (String, String)>("SELECT name, slug FROM categories WHERE id = ?")
                 .bind(id)
@@ -301,9 +301,9 @@ pub async fn show(
 
     let comments = load_comments(&state, post.id).await?;
 
-    let (prev, next) = adjacent_posts(&state, post.id, post.published_at).await?;
+    let (mut prev, mut next) = adjacent_posts(&state, post.id, post.published_at).await?;
 
-    let related = related_posts(&state, post.id, post.category_id).await?;
+    let mut related = related_posts(&state, post.id, post.category_id).await?;
 
     let mut base = context::build(
         &state,
@@ -312,6 +312,50 @@ pub async fn show(
         &format!("/blog/{}", post.slug),
     )
     .await?;
+
+    // Translate adjacent + related cards for the active locale.
+    data::apply_post_card_translations(&state.db, &mut related, &base.lang).await?;
+    if let Some(card) = prev.as_mut() {
+        let mut one = [card.clone()];
+        data::apply_post_card_translations(&state.db, &mut one, &base.lang).await?;
+        *card = one.into_iter().next().unwrap();
+    }
+    if let Some(card) = next.as_mut() {
+        let mut one = [card.clone()];
+        data::apply_post_card_translations(&state.db, &mut one, &base.lang).await?;
+        *card = one.into_iter().next().unwrap();
+    }
+
+    // Translate tags and category names for the active locale.
+    if base.lang != "fa" {
+        let rec_trans: Vec<(String, String)> = sqlx::query_as(
+            "SELECT t.slug, tt.name FROM tag_translations tt
+             JOIN tags t ON t.id = tt.tag_id WHERE tt.locale = ?",
+        )
+        .bind(&base.lang)
+        .fetch_all(&state.db)
+        .await?;
+        for tag in &mut tags {
+            if let Some((_, name)) = rec_trans.iter().find(|(slug, _)| *slug == tag.slug) {
+                tag.name = name.clone();
+            }
+        }
+        if let Some((_, slug)) = &category {
+            let cat_name: Option<String> = sqlx::query_scalar(
+                "SELECT ct.name FROM category_translations ct
+                 JOIN categories c ON c.id = ct.category_id WHERE c.slug = ? AND ct.locale = ?",
+            )
+            .bind(slug)
+            .bind(&base.lang)
+            .fetch_optional(&state.db)
+            .await?;
+            if let Some(name) = cat_name {
+                if let Some((n, _)) = category.as_mut() {
+                    *n = name;
+                }
+            }
+        }
+    }
 
     // Apply the active locale's translation, falling back to the base row.
     let translation = data::post_translation(&state.db, post.id, &base.lang).await?;
