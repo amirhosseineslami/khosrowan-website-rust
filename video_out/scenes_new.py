@@ -986,6 +986,71 @@ def m_photo_intro(c, t, k):
 
 
 # --------------------------------------------------------------------------
+# v3.2 — isometric + particle modern effects
+# --------------------------------------------------------------------------
+def _iso_block(c, cx, cy, w, h, d, k, top, lface, rface, blur=0.0):
+    """Draw an isometric 3D block. top/lface/rface colors on the 3 faces."""
+    e = ease_out_back(k)
+    # project isometric (x right-down 30°, y left-down 30°)
+    s = 1.0 * e
+    # top face diamond
+    tx, ty = cx, cy - h * s
+    pts_top = [(tx, ty - d * s), (tx + w * s, ty), (tx, ty + d * s),
+               (tx - w * s, ty)]
+    # left face
+    pts_l = [(tx - w * s, ty), (tx - w * s, ty + h * s), (tx, ty + h * s),
+             (tx, ty + d * s)]
+    # right face
+    pts_r = [(tx + w * s, ty), (tx + w * s, ty + h * s), (tx, ty + h * s),
+             (tx, ty + d * s)]
+    c.poly(pts_l, lface, blur)
+    c.poly(pts_r, rface, blur)
+    c.poly(pts_top, top, blur)
+    return e
+
+
+def m_build_stack(c, t, k):
+    """Isometric rising stack — 'protect / keep building'."""
+    _lead(c, t, "KEEP BUILDING YOURSELF")
+    e = ease_in_out_sine(min(1.0, k * 1.4))
+    cols = [((90, 130, 160), (40, 60, 86), (60, 92, 118)),
+            ((200, 160, 90), (120, 86, 40), (160, 120, 62)),
+            ((90, 170, 140), (40, 90, 70), (60, 130, 100))]
+    for i, (top, lf, rf) in enumerate(cols):
+        if t > 0.3 + i * 0.5:
+            kk = min(1.0, (t - (0.3 + i * 0.5)) / 0.6)
+            h = 70 + (i % 2) * 40
+            _iso_block(c, 960 + (i - 1) * 150, 650, 130, h, 130, kk,
+                       top, lf, rf, blur=3)
+    c.text((W / 2, 880), "stack your wins — shield them", 32, WHITE,
+           kind="reg", alpha=e)
+
+
+def m_particle_field(c, t, k):
+    """Generative particle constellation — 'intel / signals'."""
+    _lead(c, t, "SIGNALS IN THE DARK")
+    e = ease_in_out_sine(min(1.0, k * 1.3))
+    rng = np.random.default_rng(7)
+    nodes = rng.uniform([300, 320], [1620, 820], size=(26, 2))
+    for i in range(12):
+        a = 2 * math.pi * i / 12
+        c.glow(960 + 140 * math.cos(a + t * 0.3),
+                560 + 120 * math.sin(a + t * 0.3),
+                6, 0.5 * e, TEAL)
+    for (x, y) in nodes:
+        pulse = 0.5 + 0.5 * math.sin(t * 1.5 + x * 0.01)
+        c.glow(x, y, 5, (0.25 + 0.45 * pulse) * e, (120, 170, 220))
+    # connecting lines
+    edges = [(0, 4), (4, 9), (9, 14), (14, 19), (19, 25)]
+    for a, b in edges:
+        x1, y1 = nodes[a]; x2, y2 = nodes[b]
+        c.line(int(x1), int(y1), int(x2), int(y2),
+               (60, 110, 160), width=2)
+    c.text((W / 2, 880), "she reads the signals you emit", 32, WHITE,
+           kind="reg", alpha=e)
+
+
+# --------------------------------------------------------------------------
 # Section definitions: (mood, [(sentence, motif_fn), ...])
 # --------------------------------------------------------------------------
 SECTIONS = {
@@ -1039,7 +1104,7 @@ SECTIONS = {
         ("It's too fast. It looks performative. She knows it's not real.", m_read),
         ("The correct move is radio silence.", m_radar_silence),
         ("No posts. No information. In military terms, you go dark.", m_radar_silence),
-        ("When she has no information, she will eventually reach out to gather intel.", m_read),
+        ("When she has no information, she will eventually reach out to gather intel.", m_particle_field),
         ("The wrong play is to answer and start talking.", m_read),
         ("She recalculates and decides she still doesn't want you.", m_recat),
         ("The correct play is to leave the message on read.", m_read),
@@ -1085,7 +1150,7 @@ SECTIONS = {
         ("People rarely change in the ways we hope.", m_rare_change),
         ("Most people, male or female, stay roughly who they are.", m_rare_change),
         ("The few who genuinely improve are the exception, not the rule.", m_exception),
-        ("If you are already building yourself, protect that work.", m_protect),
+        ("If you are already building yourself, protect that work.", m_build_stack),
         ("Do not let someone with unresolved issues walk in and dismantle it.", m_protect),
     ]),
     "s08": ("amber", [
