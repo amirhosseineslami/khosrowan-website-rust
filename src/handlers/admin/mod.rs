@@ -14,6 +14,7 @@ pub mod profile_content;
 pub mod projects;
 pub mod redirects;
 pub mod settings;
+pub mod socials;
 pub mod subscribers;
 pub mod taxonomy;
 pub mod users;
@@ -159,6 +160,10 @@ pub fn router() -> Router<AppState> {
         // Settings
         .route("/settings", get(settings::index))
         .route("/settings", post(settings::update))
+        // Social links
+        .route("/socials", get(socials::index))
+        .route("/socials/save", post(socials::store))
+        .route("/socials/{id}/delete", post(socials::destroy))
         // Redirects
         .route("/redirects", get(redirects::index))
         .route("/redirects", post(redirects::store))

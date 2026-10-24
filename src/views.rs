@@ -26,6 +26,10 @@ pub struct SiteInfo {
     pub person_name: String,
     /// The real person's (English) name, e.g. "Amirhossein Eslami".
     pub person_name_en: String,
+    /// English brand title (e.g. "Khosrowan").
+    pub title_en: String,
+    /// English logo mark (e.g. "K").
+    pub logo_text_en: String,
 }
 
 #[derive(Debug, Clone)]
@@ -708,6 +712,8 @@ pub struct HomeView {
     pub hero_title: String,
     pub hero_highlight: String,
     pub hero_subtitle: String,
+    pub hero_headline: String,
+    pub hero_subheadline: String,
     pub hero_words: Vec<String>,
     pub availability_note: String,
     pub stats: Vec<StatView>,
@@ -1272,4 +1278,22 @@ pub struct AdminProfileContentView {
     pub services: Vec<AdminServiceRow>,
     pub skills: Vec<AdminSkillRow>,
     pub flash: FlashView,
+}
+
+/// An editable social link row for the admin panel.
+#[derive(Debug, Clone)]
+pub struct AdminSocialRow {
+    pub id: i64,
+    pub platform: String,
+    pub url: String,
+    pub label: String,
+    pub sort_order: i64,
+}
+
+#[derive(Debug, Clone)]
+pub struct AdminSocialsView {
+    pub ctx: AdminContext,
+    pub base: BaseContext,
+    pub csrf_token: String,
+    pub socials: Vec<AdminSocialRow>,
 }

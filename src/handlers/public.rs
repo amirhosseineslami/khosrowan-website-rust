@@ -82,10 +82,33 @@ pub async fn home(
         ]
     };
 
+    let settings = state.settings.snapshot();
+    let (hero_headline, hero_subheadline) = if base.lang == "en" {
+        (
+            if settings.hero_headline_en.is_empty() {
+                "Research in robotics & intelligent systems.".to_string()
+            } else {
+                settings.hero_headline_en.clone()
+            },
+            settings.hero_subheadline_en.clone(),
+        )
+    } else {
+        (
+            if settings.hero_headline.is_empty() {
+                "پژوهش در رباتیک و سیستم‌های هوشمند.".to_string()
+            } else {
+                settings.hero_headline.clone()
+            },
+            settings.hero_subheadline.clone(),
+        )
+    };
+
     let view = HomeView {
         hero_title: base.site.title.clone(),
         hero_highlight: base.site.subtitle.clone(),
         hero_subtitle: base.site.tagline.clone(),
+        hero_headline,
+        hero_subheadline,
         hero_words,
         availability_note: base.site.availability_note.clone(),
         stats,

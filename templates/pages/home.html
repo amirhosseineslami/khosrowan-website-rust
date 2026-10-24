@@ -15,11 +15,7 @@
       <div class="hero-grid">
         <div>
           <h1 class="hero-title">
-            {% if view.base.lang == "fa" %}
-            پژوهش در <span class="gradient-text">رباتیک و سیستم‌های هوشمند</span>.
-            {% else %}
-            Research in <span class="gradient-text">robotics &amp; intelligent systems</span>.
-            {% endif %}
+            {{ view.hero_headline }}
           </h1>
 
           <p class="hero-lede">
@@ -27,9 +23,15 @@
             <span class="rotator" data-rotator data-words="{% for word in view.hero_words %}{{ word }}{% if !loop.last %}|{% endif %}{% endfor %}"><span class="word" data-rotator-text>{{ view.hero_words.first().cloned().unwrap_or_default() }}</span></span>
           </p>
 
+          {% if !view.hero_subheadline.is_empty() %}
+          <p class="text-muted" style="max-width:52ch;margin-top:1rem;">
+            {{ view.hero_subheadline }}
+          </p>
+          {% else %}
           <p class="text-muted" style="max-width:52ch;margin-top:1rem;">
             {{ view.hero_subtitle }}
           </p>
+          {% endif %}
         </div>
       </div>
     </div>

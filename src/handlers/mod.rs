@@ -256,6 +256,8 @@ async fn fallback(
                         cv_file: String::new(),
                         person_name: String::new(),
                         person_name_en: String::new(),
+                        title_en: String::new(),
+                        logo_text_en: String::new(),
                     },
                     lang: "fa".into(),
                     dir: "rtl".into(),

@@ -12,6 +12,9 @@ use crate::config::Config;
 pub const DEFAULT_SETTINGS: &[(&str, &str, &str, &str)] = &[
     // key, value, type, group
     ("site.title", "خسروان", "text", "general"),
+    ("site.title_en", "Khosrowan", "text", "general"),
+    ("site.logo_text", "خ", "text", "general"),
+    ("site.logo_text_en", "K", "text", "general"),
     (
         "site.subtitle",
         "مهندسی برق و کنترل · هوش مصنوعی و رباتیک",
@@ -36,6 +39,30 @@ pub const DEFAULT_SETTINGS: &[(&str, &str, &str, &str)] = &[
         "text",
         "general",
     ),
+    (
+        "site.hero_headline",
+        "پژوهش در رباتیک و سیستم‌های هوشمند.",
+        "text",
+        "general",
+    ),
+    (
+        "site.hero_headline_en",
+        "Research in robotics & intelligent systems.",
+        "text",
+        "general",
+    ),
+    (
+        "site.hero_subheadline",
+        "اندازه‌گیری، تنظیم، تکرار — درباره سیستم‌هایی که می‌توانند حس کنند و یاد بگیرند.",
+        "textarea",
+        "general",
+    ),
+    (
+        "site.hero_subheadline_en",
+        "Measure, adjust, repeat — about systems that can sense, learn, adapt and collaborate.",
+        "textarea",
+        "general",
+    ),
     ("site.email", "amirhossein.eslami.ac@gmail.com", "text", "general"),
     ("site.phone", "", "text", "general"),
     (
@@ -51,7 +78,6 @@ pub const DEFAULT_SETTINGS: &[(&str, &str, &str, &str)] = &[
         "text",
         "general",
     ),
-    ("site.logo_text", "خ", "text", "general"),
     ("site.favicon", "/assets/img/favicon.svg", "text", "general"),
     ("site.default_og_image", "/assets/img/og-default.svg", "text", "general"),
     ("site.cv_file", "/assets/files/cv.pdf", "text", "general"),

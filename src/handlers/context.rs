@@ -159,7 +159,11 @@ pub async fn build(
         lang: lang.clone(),
         dir: dir.to_string(),
         site: SiteInfo {
-            title: settings.title.clone(),
+            title: if lang == "en" && !settings.title_en.is_empty() {
+                settings.title_en.clone()
+            } else {
+                settings.title.clone()
+            },
             subtitle: if lang == "en" && !settings.subtitle_en.is_empty() {
                 settings.subtitle_en.clone()
             } else {
@@ -188,11 +192,17 @@ pub async fn build(
             } else {
                 settings.availability_note.clone()
             },
-            logo_text: settings.logo_text.clone(),
+            logo_text: if lang == "en" && !settings.logo_text_en.is_empty() {
+                settings.logo_text_en.clone()
+            } else {
+                settings.logo_text.clone()
+            },
             favicon: settings.favicon.clone(),
             cv_file: settings.cv_file.clone(),
             person_name: settings.seo_person_name.clone(),
             person_name_en: settings.seo_person_name_en.clone(),
+            title_en: settings.title_en.clone(),
+            logo_text_en: settings.logo_text_en.clone(),
         },
         nav,
         socials,

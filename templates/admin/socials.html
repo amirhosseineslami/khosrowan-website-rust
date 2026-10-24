@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="{{ view.base.lang }}" dir="{{ view.base.dir }}" data-theme="{{ view.base.default_theme }}">
+<head>
+{% include "admin/partials/head.html" %}
+</head>
+<body>
+<div class="admin-body">
+  {% include "admin/partials/sidebar.html" %}
+
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <div>
+        <h1>Social links</h1>
+        <p>Manage the links shown in the site footer and contact page.</p>
+      </div>
+    </header>
+
+    <div class="admin-content">
+      <section class="card">
+        <h2 style="font-size:var(--step-1);margin-bottom:1rem;">Add a link</h2>
+        <form method="post" action="/admin/socials/save" class="form">
+          <input type="hidden" name="csrf_token" value="{{ view.csrf_token }}">
+          <div class="form-row">
+            <div class="field">
+              <label for="platform">Platform</label>
+              <input id="platform" type="text" name="platform" required placeholder="github">
+            </div>
+            <div class="field">
+              <label for="url">URL</label>
+              <input id="url" type="text" name="url" required placeholder="https://github.com/...">
+            </div>
+            <div class="field">
+              <label for="label">Label</label>
+              <input id="label" type="text" name="label" placeholder="GitHub">
+            </div>
+            <div class="field">
+              <label for="sort_order">Order</label>
+              <input id="sort_order" type="number" name="sort_order" value="0">
+            </div>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-primary btn-sm" type="submit">Add</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="card" style="margin-top:var(--space-l);">
+        <h2 style="font-size:var(--step-1);margin-bottom:1rem;">Existing links</h2>
+        <div class="stack">
+          {% for s in view.socials %}
+          <form method="post" action="/admin/socials/save" class="form" style="border:1px solid var(--border);border-radius:var(--radius);padding:1rem;">
+            <input type="hidden" name="csrf_token" value="{{ view.csrf_token }}">
+            <input type="hidden" name="id" value="{{ s.id }}">
+            <div class="form-row">
+              <div class="field">
+                <label>Platform</label>
+                <input type="text" name="platform" value="{{ s.platform }}" required>
+              </div>
+              <div class="field">
+                <label>URL</label>
+                <input type="text" name="url" value="{{ s.url }}" required>
+              </div>
+              <div class="field">
+                <label>Label</label>
+                <input type="text" name="label" value="{{ s.label }}">
+              </div>
+              <div class="field">
+                <label>Order</label>
+                <input type="number" name="sort_order" value="{{ s.sort_order }}">
+              </div>
+            </div>
+            <div class="form-actions">
+              <button class="btn btn-primary btn-sm" type="submit">Save</button>
+              <button class="btn btn-sm btn-ghost" type="submit" formaction="/admin/socials/{{ s.id }}/delete" formmethod="post" onclick="return confirm('Delete this link?')">Delete</button>
+            </div>
+          </form>
+          {% endfor %}
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+</body>
+</html>
