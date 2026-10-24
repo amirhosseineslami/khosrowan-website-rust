@@ -98,27 +98,25 @@ pub async fn index(
         .collect();
 
     // Traffic for the last 14 days.
-    let traffic: Vec<ChartPoint> = sqlx::query_as::<_, (String, i64)>(
-        "SELECT day, COUNT(*) FROM page_views
-         WHERE day >= date('now', '-13 days') GROUP BY day ORDER BY day ASC",
-    )
-    .fetch_all(&state.db)
-    .await
-    .unwrap_or_default()
-    .into_iter()
-    .map(|(label, value)| ChartPoint { label, value })
-    .collect();
+    let traffic: Vec<ChartPoint> = normalize_chart(
+        sqlx::query_as::<_, (String, i64)>(
+            "SELECT day, COUNT(*) FROM page_views
+             WHERE day >= date('now', '-13 days') GROUP BY day ORDER BY day ASC",
+        )
+        .fetch_all(&state.db)
+        .await
+        .unwrap_or_default(),
+    );
 
     // Most visited pages.
-    let top_paths: Vec<ChartPoint> = sqlx::query_as::<_, (String, i64)>(
-        "SELECT path, COUNT(*) FROM page_views GROUP BY path ORDER BY COUNT(*) DESC LIMIT 8",
-    )
-    .fetch_all(&state.db)
-    .await
-    .unwrap_or_default()
-    .into_iter()
-    .map(|(label, value)| ChartPoint { label, value })
-    .collect();
+    let top_paths: Vec<ChartPoint> = normalize_chart(
+        sqlx::query_as::<_, (String, i64)>(
+            "SELECT path, COUNT(*) FROM page_views GROUP BY path ORDER BY COUNT(*) DESC LIMIT 8",
+        )
+        .fetch_all(&state.db)
+        .await
+        .unwrap_or_default(),
+    );
 
     // Top posts by views.
     let top_posts: Vec<AdminPostRow> = sqlx::query_as::<_, crate::models::db::Post>(
@@ -159,10 +157,7 @@ pub async fn index(
     .fetch_all(&state.db)
     .await
     .unwrap_or_default();
-    let browser_stats: Vec<ChartPoint> = browser_rows
-        .into_iter()
-        .map(|(label, value)| ChartPoint { label, value })
-        .collect();
+    let browser_stats: Vec<ChartPoint> = normalize_chart(browser_rows);
 
     let view = DashboardView {
         ctx,
@@ -178,6 +173,22 @@ pub async fn index(
     };
 
     Ok(crate::templates::Html(DashboardTemplate { view }).into_response())
+}
+
+/// Convert raw counts into chart points with a normalized percentage (0–100)
+/// of the series maximum, so bars never overflow their track.
+fn normalize_chart(rows: Vec<(String, i64)>) -> Vec<ChartPoint> {
+    let max = rows.iter().map(|(_, v)| *v).max().unwrap_or(0);
+    rows.into_iter()
+        .map(|(label, value)| {
+            let pct = if max > 0 {
+                ((value as f64 / max as f64) * 100.0).round() as i64
+            } else {
+                0
+            };
+            ChartPoint { label, value, pct }
+        })
+        .collect()
 }
 
 /// Load the aggregated statistics shown on the dashboard.

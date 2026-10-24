@@ -156,11 +156,16 @@ pub async fn store(
         return Err(AppError::validation("A title is required."));
     }
 
-    let slug = util::slugify(if form.slug.trim().is_empty() {
-        &title
-    } else {
-        form.slug.trim()
-    });
+    let slug = unique_page_slug(
+        &state,
+        util::slugify(if form.slug.trim().is_empty() {
+            &title
+        } else {
+            form.slug.trim()
+        }),
+        None,
+    )
+    .await?;
 
     let html = markdown::to_html(&form.content);
     let status = if form.status == "published" {
@@ -215,11 +220,24 @@ pub async fn update(
         return Err(AppError::validation("A title is required."));
     }
 
-    let slug = util::slugify(if form.slug.trim().is_empty() {
-        &title
-    } else {
-        form.slug.trim()
-    });
+    let slug = unique_page_slug(
+        &state,
+        util::slugify(if form.slug.trim().is_empty() {
+            &title
+        } else {
+            form.slug.trim()
+        }),
+        Some(id),
+    )
+    .await?;
+    let exists: Option<i64> = sqlx::query_scalar("SELECT id FROM pages WHERE id = ?")
+        .bind(id)
+        .fetch_optional(&state.db)
+        .await?;
+    if exists.is_none() {
+        return Err(AppError::not_found("That page does not exist."));
+    }
+
     let html = markdown::to_html(&form.content);
     let status = if form.status == "published" {
         "published".to_string()
@@ -303,4 +321,38 @@ fn non_empty(value: &str) -> Option<String> {
 /// Keep the status label helpers in scope for the templates.
 pub fn _unused(status: &str) -> &'static str {
     status_label(status)
+}
+
+/// Build a page slug that does not collide with an existing page.
+async fn unique_page_slug(
+    state: &AppState,
+    base: String,
+    exclude_id: Option<i64>,
+) -> AppResult<String> {
+    let mut candidate = base.clone();
+    let mut counter = 2;
+
+    loop {
+        let existing: Option<i64> = sqlx::query_scalar("SELECT id FROM pages WHERE slug = ?")
+            .bind(&candidate)
+            .fetch_optional(&state.db)
+            .await?;
+
+        let collision = match (existing, exclude_id) {
+            (Some(id), Some(exclude)) => id != exclude,
+            (Some(_), None) => true,
+            (None, _) => false,
+        };
+
+        if !collision {
+            return Ok(candidate);
+        }
+
+        candidate = format!("{base}-{counter}");
+        counter += 1;
+
+        if counter > 500 {
+            return Err(AppError::internal("could not generate a unique slug"));
+        }
+    }
 }

@@ -112,18 +112,12 @@ pub async fn enforce(State(state): State<AppState>, request: Request, next: Next
         return next.run(request).await;
     };
 
-    let ip = request
-        .headers()
-        .get("x-forwarded-for")
-        .and_then(|v| v.to_str().ok())
-        .map(|v| v.split(',').next().unwrap_or(v).trim().to_string())
-        .or_else(|| {
-            request
-                .extensions()
-                .get::<ConnectInfo<std::net::SocketAddr>>()
-                .map(|info| info.0.ip().to_string())
-        })
+    let peer = request
+        .extensions()
+        .get::<ConnectInfo<std::net::SocketAddr>>()
+        .map(|info| info.0.ip().to_string())
         .unwrap_or_else(|| "unknown".to_string());
+    let ip = util::effective_client_ip(request.headers(), &peer).unwrap_or(peer);
 
     let key = format!("{}:{}", limit.scope, ip);
 

@@ -21,7 +21,7 @@
 
         {% for group in view.groups %}
         <section class="card" style="margin-bottom:var(--space-l);">
-          <h2 style="font-size:var(--step-1);margin-bottom:1.1rem;">{{ group.label }}</h2>
+          <h2 style="font-size:var(--step-1);margin-bottom:1.1rem;"><span data-lang-key data-lang-en="{{ group.label }}" data-lang-fa="{{ group.label_fa }}">{{ group.label }}</span></h2>
 
           <div class="form">
             {% for field in group.fields %}
@@ -29,22 +29,22 @@
               {% if field.value_type == "bool" %}
               <label class="checkbox">
                 <input type="checkbox" name="{{ field.key }}" value="on" {% if field.value == "true" %}checked{% endif %}>
-                {{ field.label }}
+                <span data-lang-key data-lang-en="{{ field.label_en }}" data-lang-fa="{{ field.label_fa }}">{{ field.label }}</span>
               </label>
               {% else if field.value_type == "textarea" %}
-              <label for="{{ field.key }}">{{ field.label }}</label>
+              <label for="{{ field.key }}"><span data-lang-key data-lang-en="{{ field.label_en }}" data-lang-fa="{{ field.label_fa }}">{{ field.label }}</span></label>
               <textarea id="{{ field.key }}" name="{{ field.key }}" rows="4">{{ field.value }}</textarea>
               {% else if field.value_type == "color" %}
-              <label for="{{ field.key }}">{{ field.label }}</label>
+              <label for="{{ field.key }}"><span data-lang-key data-lang-en="{{ field.label_en }}" data-lang-fa="{{ field.label_fa }}">{{ field.label }}</span></label>
               <div class="flex" style="gap:.5rem;">
                 <input id="{{ field.key }}" type="text" name="{{ field.key }}" value="{{ field.value }}" style="max-width:140px;">
                 <span class="pill pill-plain">{{ field.value }}</span>
               </div>
               {% else if field.value_type == "number" %}
-              <label for="{{ field.key }}">{{ field.label }}</label>
+              <label for="{{ field.key }}"><span data-lang-key data-lang-en="{{ field.label_en }}" data-lang-fa="{{ field.label_fa }}">{{ field.label }}</span></label>
               <input id="{{ field.key }}" type="number" name="{{ field.key }}" value="{{ field.value }}" style="max-width:140px;">
               {% else %}
-              <label for="{{ field.key }}">{{ field.label }}</label>
+              <label for="{{ field.key }}"><span data-lang-key data-lang-en="{{ field.label_en }}" data-lang-fa="{{ field.label_fa }}">{{ field.label }}</span></label>
               <input id="{{ field.key }}" type="text" name="{{ field.key }}" value="{{ field.value }}">
               {% endif %}
               {% if !field.help_text.is_empty() %}

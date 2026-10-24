@@ -107,22 +107,6 @@ pub async fn login_submit(
         .await?);
     }
 
-    // Respect a temporary lockout.
-    if let Some(locked_until) = user.locked_until {
-        if locked_until > chrono::Utc::now() {
-            let minutes = (locked_until - chrono::Utc::now()).num_minutes() + 1;
-            return Ok(render_login_error(
-                &state,
-                &headers,
-                format!("Too many failed attempts. Try again in {minutes} minute(s)."),
-                &username,
-                &next,
-                false,
-            )
-            .await?);
-        }
-    }
-
     if !password::verify_password(&form.password, &user.password_hash) {
         let failed = user.failed_logins + 1;
         let locked_until = if failed >= crate::auth::MAX_FAILED_LOGINS {
@@ -147,6 +131,24 @@ pub async fn login_submit(
             false,
         )
         .await?);
+    }
+
+    // Respect a temporary lockout. Checked only after a correct password so a
+    // wrong-password attempt can never reveal that an account exists or is
+    // locked (the generic message above is identical for both).
+    if let Some(locked_until) = user.locked_until {
+        if locked_until > chrono::Utc::now() {
+            let minutes = (locked_until - chrono::Utc::now()).num_minutes() + 1;
+            return Ok(render_login_error(
+                &state,
+                &headers,
+                format!("Too many failed attempts. Try again in {minutes} minute(s)."),
+                &username,
+                &next,
+                false,
+            )
+            .await?);
+        }
     }
 
     if user.totp_enabled && user.totp_secret.is_some() {

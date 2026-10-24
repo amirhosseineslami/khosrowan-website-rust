@@ -68,6 +68,10 @@ pub async fn upload(
     let mut saved = 0usize;
     let mut errors: Vec<String> = Vec::new();
 
+    // Buffer every submitted field first so we can verify the CSRF token
+    // before any file is written to disk or recorded in the database.
+    let mut pending: Vec<(String, String, Vec<u8>)> = Vec::new();
+
     let media_dir = state.config.media_dir.clone();
     std::fs::create_dir_all(&media_dir)?;
 
@@ -101,8 +105,18 @@ pub async fn upload(
             .await
             .map_err(|e| AppError::bad_request(format!("could not read upload: {e}")))?;
 
+        pending.push((filename, content_type, bytes.to_vec()));
+    }
+
+    if !csrf_token.is_empty() {
+        verify_csrf(&auth.0, &csrf_token)?;
+    } else {
+        return Err(AppError::forbidden("Missing CSRF token."));
+    }
+
+    for (filename, content_type, bytes) in pending {
         if bytes.is_empty() {
-            errors.push("The uploaded file was empty.".into());
+            errors.push(format!("`{filename}` was empty."));
             continue;
         }
         if bytes.len() > state.config.max_upload_size {
@@ -113,21 +127,46 @@ pub async fn upload(
             continue;
         }
 
-        // Only allow a conservative set of media types.
-        let allowed = content_type.starts_with("image/")
-            || content_type == "application/pdf"
-            || content_type.starts_with("text/")
-            || content_type == "application/zip";
-        if !allowed {
+        // Only allow a conservative set of media types. SVG and arbitrary text/
+        // types are excluded because they are served inline from the same origin
+        // and can carry scripts that would run in the admin context.
+        let is_image = content_type.starts_with("image/") && content_type != "image/svg+xml";
+        let is_pdf = content_type == "application/pdf";
+        let is_zip = content_type == "application/zip";
+        if !is_image && !is_pdf && !is_zip {
             errors.push(format!("`{filename}` has an unsupported content type."));
             continue;
         }
 
-        let extension = std::path::Path::new(&filename)
-            .extension()
-            .and_then(|e| e.to_str())
-            .unwrap_or("bin")
-            .to_ascii_lowercase();
+        // The stored extension and MIME must match the actual file content, not
+        // the client-supplied filename or Content-Type. For images we decode the
+        // bytes (which also validates them); for PDF/ZIP we pin the extension to
+        // the declared type. This blocks the stored-XSS trick of naming a file
+        // `x.html` while declaring `image/png`.
+        let (extension, width, height) = if is_image {
+            match image::load_from_memory(&bytes) {
+                Ok(img) => {
+                    let ext = match image::guess_format(&bytes) {
+                        Ok(image::ImageFormat::Jpeg) => "jpg",
+                        Ok(image::ImageFormat::Gif) => "gif",
+                        Ok(image::ImageFormat::WebP) => "webp",
+                        Ok(image::ImageFormat::Bmp) => "bmp",
+                        Ok(image::ImageFormat::Tiff) => "tiff",
+                        Ok(image::ImageFormat::Png) | Ok(_) => "png",
+                        Err(_) => "png",
+                    };
+                    (ext.to_string(), Some(img.width() as i64), Some(img.height() as i64))
+                }
+                Err(_) => {
+                    errors.push(format!("`{filename}` is not a valid image."));
+                    continue;
+                }
+            }
+        } else if is_pdf {
+            ("pdf".to_string(), None, None)
+        } else {
+            ("zip".to_string(), None, None)
+        };
 
         let base = util::sanitize_filename(
             std::path::Path::new(&filename)
@@ -143,17 +182,14 @@ pub async fn upload(
 
         std::fs::write(&target, &bytes)?;
 
-        // Record the dimensions for images.
-        let (width, height) = if content_type.starts_with("image/") {
-            match image::load_from_memory(&bytes) {
-                Ok(img) => (Some(img.width() as i64), Some(img.height() as i64)),
-                Err(_) => (None, None),
-            }
-        } else {
-            (None, None)
-        };
-
         let public_path = format!("/media/{stored_name}");
+        let mime = if is_pdf {
+            "application/pdf"
+        } else if is_zip {
+            "application/zip"
+        } else {
+            "image/*"
+        };
 
         sqlx::query(
             "INSERT INTO media (filename, stored_name, path, mime, size, width, height, uploaded_by, created_at)
@@ -162,7 +198,7 @@ pub async fn upload(
         .bind(&filename)
         .bind(&stored_name)
         .bind(&public_path)
-        .bind(&content_type)
+        .bind(mime)
         .bind(bytes.len() as i64)
         .bind(width)
         .bind(height)
@@ -172,12 +208,6 @@ pub async fn upload(
         .await?;
 
         saved += 1;
-    }
-
-    if !csrf_token.is_empty() {
-        verify_csrf(&auth.0, &csrf_token)?;
-    } else {
-        return Err(AppError::forbidden("Missing CSRF token."));
     }
 
     if saved > 0 {

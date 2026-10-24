@@ -35,8 +35,13 @@
 
   function initLang() {
     setAdminLang(adminLang());
+    // Bind the toggle listener once per button. initLang() also runs after
+    // each smooth navigation, and the sidebar button is not re-created, so
+    // without this guard duplicate listeners would double-toggle (no-op).
     var toggles = document.querySelectorAll("[data-admin-lang-toggle]");
     toggles.forEach(function (btn) {
+      if (btn.dataset.langBound) return;
+      btn.dataset.langBound = "1";
       btn.addEventListener("click", function (e) {
         e.preventDefault();
         setAdminLang(adminLang() === "fa" ? "en" : "fa");
@@ -122,7 +127,7 @@
         }
         // Re-run any inline initializers for the new content.
         initLang();
-        document.querySelectorAll("[data-preview-toggle]").forEach(function (b) { /* noop */ });
+        document.dispatchEvent(new CustomEvent("ps:admin-content-swapped"));
         window.scrollTo({ top: 0, behavior: "smooth" });
       })
       .catch(function () {

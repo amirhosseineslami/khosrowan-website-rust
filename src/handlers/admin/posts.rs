@@ -433,6 +433,14 @@ pub async fn update(
     )
     .await?;
 
+    let exists: Option<i64> = sqlx::query_scalar("SELECT id FROM posts WHERE id = ?")
+        .bind(id)
+        .fetch_optional(&state.db)
+        .await?;
+    if exists.is_none() {
+        return Err(AppError::not_found("That post does not exist."));
+    }
+
     let html = markdown::to_html(&form.content);
     let reading_time = markdown::reading_time(&form.content);
     let status = normalise_status(&form.status);
@@ -518,6 +526,8 @@ pub async fn destroy(
         .execute(&state.db)
         .await?;
 
+    refresh_tag_counts(&state).await?;
+
     crate::audit(
         &state,
         Some(auth.0.user_id),
@@ -549,6 +559,14 @@ pub async fn change_status(
     axum::extract::Form(form): axum::extract::Form<StatusForm>,
 ) -> AppResult<Response> {
     verify_csrf(&auth.0, &form.csrf_token)?;
+
+    let exists: Option<i64> = sqlx::query_scalar("SELECT id FROM posts WHERE id = ?")
+        .bind(id)
+        .fetch_optional(&state.db)
+        .await?;
+    if exists.is_none() {
+        return Err(AppError::not_found("That post does not exist."));
+    }
 
     let status = normalise_status(&form.status);
     let published_at = if status == "published" {

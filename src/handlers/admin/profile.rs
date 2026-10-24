@@ -86,6 +86,19 @@ pub async fn update(
         ));
     }
 
+    // `users.email` is UNIQUE — catch the collision here instead of a 500.
+    let collision: Option<i64> =
+        sqlx::query_scalar("SELECT id FROM users WHERE lower(email) = ? AND id != ?")
+            .bind(&email)
+            .bind(auth.0.user_id)
+            .fetch_optional(&state.db)
+            .await?;
+    if collision.is_some() {
+        return Err(AppError::validation(
+            "That e-mail address is already in use by another account.",
+        ));
+    }
+
     // Changing the password requires the current one.
     if !form.new_password.is_empty() {
         let hash: Option<String> =

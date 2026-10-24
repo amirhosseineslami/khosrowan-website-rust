@@ -64,7 +64,7 @@
           {% else %}
           <div class="chart">
             {% for point in view.traffic %}
-            <div class="chart-bar" style="height:{{ point.value }}%">
+            <div class="chart-bar" style="height:{{ point.pct }}%">
               <span>{{ point.label }} · {{ point.value }}</span>
             </div>
             {% endfor %}
@@ -88,7 +88,7 @@
               <span class="text-sm">{{ point.label }}</span>
               <span class="mono text-faint">{{ point.value }}</span>
               <div class="bar-list-track">
-                <div class="bar-list-fill" style="width:{{ point.value }}%"></div>
+                <div class="bar-list-fill" style="width:{{ point.pct }}%"></div>
               </div>
             </div>
             {% endfor %}
@@ -213,7 +213,7 @@
             <span class="text-sm">{{ point.label }}</span>
             <span class="mono text-faint">{{ point.value }}</span>
             <div class="bar-list-track">
-              <div class="bar-list-fill" style="width:{{ point.value }}%"></div>
+              <div class="bar-list-fill" style="width:{{ point.pct }}%"></div>
             </div>
           </div>
           {% endfor %}

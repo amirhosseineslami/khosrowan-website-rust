@@ -93,6 +93,27 @@ pub fn time_ago(date: impl DateLike) -> String {
     format!("{n} year{} ago", if n == 1 { "" } else { "s" })
 }
 
+/// The effective client IP for rate limiting / audit. Proxy headers are only
+/// trusted when the immediate peer is not a public address (i.e. a reverse
+/// proxy on the same host or private network); otherwise an external client
+/// could spoof them to bypass limits.
+pub fn effective_client_ip(headers: &HeaderMap, peer_ip: &str) -> Option<String> {
+    match peer_ip.parse::<IpAddr>() {
+        Ok(peer) if is_trusted_proxy(&peer) => client_ip(headers),
+        Ok(peer) => Some(peer.to_string()),
+        Err(_) => client_ip(headers),
+    }
+}
+
+/// True when the socket peer is a private/loopback/link-local address, i.e. a
+/// reverse proxy on the same host or a trusted internal network.
+fn is_trusted_proxy(ip: &IpAddr) -> bool {
+    match ip {
+        IpAddr::V4(v4) => v4.is_loopback() || v4.is_private() || v4.is_link_local(),
+        IpAddr::V6(v6) => v6.is_loopback() || v6.is_unique_local(),
+    }
+}
+
 /// Extract the client IP address from proxy headers.
 pub fn client_ip(headers: &HeaderMap) -> Option<String> {
     static FORWARDED: Lazy<Regex> =

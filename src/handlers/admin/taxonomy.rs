@@ -96,16 +96,15 @@ pub async fn store_tag(
         form.slug.trim()
     });
 
-    sqlx::query(
-        "INSERT INTO tags (name, slug, description, color) VALUES (?, ?, ?, ?)
-         ON CONFLICT(slug) DO UPDATE SET name = excluded.name, description = excluded.description, color = excluded.color",
-    )
-    .bind(&name)
-    .bind(&slug)
-    .bind(non_empty(&form.description))
-    .bind(non_empty(&form.color))
-    .execute(&state.db)
-    .await?;
+    ensure_unique(&state, "tags", None, &name, &slug).await?;
+
+    sqlx::query("INSERT INTO tags (name, slug, description, color) VALUES (?, ?, ?, ?)")
+        .bind(&name)
+        .bind(&slug)
+        .bind(non_empty(&form.description))
+        .bind(non_empty(&form.color))
+        .execute(&state.db)
+        .await?;
 
     refresh_tag_counts(&state).await?;
 
@@ -140,6 +139,16 @@ pub async fn update_tag(
         form.slug.trim()
     });
 
+    let exists: Option<i64> = sqlx::query_scalar("SELECT id FROM tags WHERE id = ?")
+        .bind(id)
+        .fetch_optional(&state.db)
+        .await?;
+    if exists.is_none() {
+        return Err(AppError::not_found("That tag does not exist."));
+    }
+
+    ensure_unique(&state, "tags", Some(id), &name, &slug).await?;
+
     sqlx::query("UPDATE tags SET name = ?, slug = ?, description = ?, color = ? WHERE id = ?")
         .bind(&name)
         .bind(&slug)
@@ -172,10 +181,20 @@ pub async fn delete_tag(
 ) -> AppResult<Response> {
     verify_csrf(&auth.0, &form.csrf_token)?;
 
+    let exists: Option<i64> = sqlx::query_scalar("SELECT id FROM tags WHERE id = ?")
+        .bind(id)
+        .fetch_optional(&state.db)
+        .await?;
+    if exists.is_none() {
+        return Err(AppError::not_found("That tag does not exist."));
+    }
+
     sqlx::query("DELETE FROM tags WHERE id = ?")
         .bind(id)
         .execute(&state.db)
         .await?;
+
+    refresh_tag_counts(&state).await?;
 
     crate::audit(
         &state,
@@ -218,15 +237,14 @@ pub async fn store_category(
         form.slug.trim()
     });
 
-    sqlx::query(
-        "INSERT INTO categories (name, slug, description) VALUES (?, ?, ?)
-         ON CONFLICT(slug) DO UPDATE SET name = excluded.name, description = excluded.description",
-    )
-    .bind(&name)
-    .bind(&slug)
-    .bind(non_empty(&form.description))
-    .execute(&state.db)
-    .await?;
+    ensure_unique(&state, "categories", None, &name, &slug).await?;
+
+    sqlx::query("INSERT INTO categories (name, slug, description) VALUES (?, ?, ?)")
+        .bind(&name)
+        .bind(&slug)
+        .bind(non_empty(&form.description))
+        .execute(&state.db)
+        .await?;
 
     refresh_tag_counts(&state).await?;
 
@@ -265,6 +283,16 @@ pub async fn update_category(
         form.slug.trim()
     });
 
+    let exists: Option<i64> = sqlx::query_scalar("SELECT id FROM categories WHERE id = ?")
+        .bind(id)
+        .fetch_optional(&state.db)
+        .await?;
+    if exists.is_none() {
+        return Err(AppError::not_found("That category does not exist."));
+    }
+
+    ensure_unique(&state, "categories", Some(id), &name, &slug).await?;
+
     sqlx::query("UPDATE categories SET name = ?, slug = ?, description = ? WHERE id = ?")
         .bind(&name)
         .bind(&slug)
@@ -300,10 +328,20 @@ pub async fn delete_category(
 ) -> AppResult<Response> {
     verify_csrf(&auth.0, &form.csrf_token)?;
 
+    let exists: Option<i64> = sqlx::query_scalar("SELECT id FROM categories WHERE id = ?")
+        .bind(id)
+        .fetch_optional(&state.db)
+        .await?;
+    if exists.is_none() {
+        return Err(AppError::not_found("That category does not exist."));
+    }
+
     sqlx::query("DELETE FROM categories WHERE id = ?")
         .bind(id)
         .execute(&state.db)
         .await?;
+
+    refresh_tag_counts(&state).await?;
 
     crate::audit(
         &state,
@@ -334,4 +372,30 @@ fn non_empty(value: &str) -> Option<String> {
     } else {
         Some(trimmed.to_string())
     }
+}
+
+/// Reject a new name/slug that collides with another row in the table. The
+/// `name` and `slug` columns are both UNIQUE, so without this check a collision
+/// surfaces as an unhandled SQLite error → HTTP 500.
+async fn ensure_unique(
+    state: &AppState,
+    table: &str,
+    exclude_id: Option<i64>,
+    name: &str,
+    slug: &str,
+) -> AppResult<()> {
+    for (column, value) in [("name", name), ("slug", slug)] {
+        let sql = format!("SELECT id FROM {table} WHERE {column} = ? AND id != ?");
+        let query = sqlx::query_scalar(&sql).bind(value);
+        let id: Option<i64> = match exclude_id {
+            Some(exclude) => query.bind(exclude).fetch_optional(&state.db).await?,
+            None => query.bind(i64::MIN).fetch_optional(&state.db).await?,
+        };
+        if id.is_some() {
+            return Err(AppError::validation(format!(
+                "Another {table} already uses that {column}."
+            )));
+        }
+    }
+    Ok(())
 }

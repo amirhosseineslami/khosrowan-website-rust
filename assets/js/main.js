@@ -6,12 +6,20 @@
 
   /* ---------------------------------------------------------------------
      Theme handling: dark / light, remembered across visits.
+     The admin panel keeps its own preference so toggling it never fights
+     the public site's theme (and vice-versa).
      --------------------------------------------------------------------- */
-  var STORAGE_KEY = "ps-theme";
+  function isAdmin() {
+    return !!(document.querySelector(".admin-body"));
+  }
+
+  function themeKey() {
+    return isAdmin() ? "ps-admin-theme" : "ps-theme";
+  }
 
   function readStoredTheme() {
     try {
-      return window.localStorage.getItem(STORAGE_KEY);
+      return window.localStorage.getItem(themeKey());
     } catch (e) {
       return null;
     }
@@ -19,7 +27,7 @@
 
   function storeTheme(theme) {
     try {
-      window.localStorage.setItem(STORAGE_KEY, theme);
+      window.localStorage.setItem(themeKey(), theme);
     } catch (e) {
       /* storage may be unavailable — ignore */
     }
@@ -393,6 +401,17 @@
     initConfirm();
     initFilter();
   }
+
+  // The admin panel navigates in-page (no full reload), so its content is
+  // swapped in later. Re-bind the initializers that live inside that content.
+  function initAdminContent() {
+    initEditor();
+    initSlug();
+    initConfirm();
+    initFilter();
+    initFlash();
+  }
+  document.addEventListener("ps:admin-content-swapped", initAdminContent);
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", boot);

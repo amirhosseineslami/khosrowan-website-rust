@@ -78,7 +78,7 @@ pub async fn index(
     .await
     .unwrap_or_default()
     .into_iter()
-    .map(|(label, value)| ChartPoint { label, value })
+    .map(|(label, value)| ChartPoint { label, value, pct: 0 })
     .collect();
 
     let view = AdminCommentsView {

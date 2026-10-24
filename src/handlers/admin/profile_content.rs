@@ -213,7 +213,10 @@ pub async fn destroy(
         _ => return Err(AppError::validation("Unknown entity type.")),
     };
     let sql = format!("DELETE FROM {table} WHERE id = ?");
-    sqlx::query(sql.as_str()).bind(id).execute(&state.db).await?;
+    let result = sqlx::query(sql.as_str()).bind(id).execute(&state.db).await?;
+    if result.rows_affected() == 0 {
+        return Err(AppError::not_found("That entry does not exist."));
+    }
     Ok(flash_redirect("/admin/profile-content", "success", "Deleted."))
 }
 
@@ -235,7 +238,7 @@ async fn update_experience(
         Some(form.end_date.trim().to_string())
     };
 
-    sqlx::query(
+    let result = sqlx::query(
         "UPDATE experiences SET title = ?, company = ?, location = ?, start_date = ?, end_date = ?,
                 is_current = ?, description = ?, kind = ?, sort_order = ?
          WHERE id = ?",
@@ -252,6 +255,9 @@ async fn update_experience(
     .bind(form.id)
     .execute(&state.db)
     .await?;
+    if result.rows_affected() == 0 {
+        return Err(AppError::not_found("That experience does not exist."));
+    }
 
     // English translation
     if !form.title_en.is_empty() {
@@ -290,7 +296,7 @@ async fn update_service(
         return Err(AppError::validation("A title is required."));
     }
 
-    sqlx::query(
+    let result = sqlx::query(
         "UPDATE services SET title = ?, description = ?, icon = ?, price_from = ?, features = ?, sort_order = ?
          WHERE id = ?",
     )
@@ -303,6 +309,9 @@ async fn update_service(
     .bind(form.id)
     .execute(&state.db)
     .await?;
+    if result.rows_affected() == 0 {
+        return Err(AppError::not_found("That service does not exist."));
+    }
 
     if !form.title_en.is_empty() {
         sqlx::query(
@@ -340,7 +349,7 @@ async fn update_skill(
     }
     let years = form.years.trim().parse::<f64>().ok();
 
-    sqlx::query(
+    let result = sqlx::query(
         "UPDATE skills SET name = ?, category = ?, level = ?, years = ?, sort_order = ? WHERE id = ?",
     )
     .bind(&name)
@@ -351,6 +360,9 @@ async fn update_skill(
     .bind(form.id)
     .execute(&state.db)
     .await?;
+    if result.rows_affected() == 0 {
+        return Err(AppError::not_found("That skill does not exist."));
+    }
 
     if !form.name_en.is_empty() {
         sqlx::query(

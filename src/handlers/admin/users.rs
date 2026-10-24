@@ -272,6 +272,14 @@ pub async fn update(
     };
     let is_active = form.is_active.is_some();
 
+    // Never allow an owner to deactivate or demote their own account — that
+    // would lock them out of the panel.
+    if id == auth.0.user_id && (!is_active || role != "owner") {
+        return Err(AppError::validation(
+            "You cannot deactivate or demote your own account.",
+        ));
+    }
+
     // Never allow the last owner to be demoted or deactivated.
     let owners: i64 =
         sqlx::query_scalar("SELECT COUNT(*) FROM users WHERE role = 'owner' AND is_active = 1")
@@ -282,7 +290,10 @@ pub async fn update(
         .bind(id)
         .fetch_optional(&state.db)
         .await?;
-    if current_role.as_deref() == Some("owner") && (role != "owner" || !is_active) && owners <= 1 {
+    let Some(current_role) = current_role else {
+        return Err(AppError::not_found("That user does not exist."));
+    };
+    if current_role == "owner" && (role != "owner" || !is_active) && owners <= 1 {
         return Err(AppError::validation(
             "This is the last owner account — promote another user first.",
         ));
@@ -358,6 +369,14 @@ pub async fn destroy(
         return Err(AppError::validation("You cannot delete your own account."));
     }
 
+    let exists: Option<i64> = sqlx::query_scalar("SELECT id FROM users WHERE id = ?")
+        .bind(id)
+        .fetch_optional(&state.db)
+        .await?;
+    if exists.is_none() {
+        return Err(AppError::not_found("That user does not exist."));
+    }
+
     let owners: i64 =
         sqlx::query_scalar("SELECT COUNT(*) FROM users WHERE role = 'owner' AND is_active = 1")
             .fetch_one(&state.db)
@@ -398,6 +417,12 @@ pub async fn revoke_sessions(
     axum::extract::Form(form): axum::extract::Form<CsrfOnly>,
 ) -> AppResult<Response> {
     verify_csrf(&auth.0, &form.csrf_token)?;
+
+    if id == auth.0.user_id {
+        return Err(AppError::validation(
+            "You cannot revoke your own active session.",
+        ));
+    }
 
     session::destroy_user_sessions(&state.db, id).await;
 

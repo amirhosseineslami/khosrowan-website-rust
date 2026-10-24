@@ -202,6 +202,16 @@ pub async fn import(
             if columns.is_empty() {
                 continue;
             }
+            // Reject any column name that is not a plain SQL identifier. The
+            // column names are interpolated into the INSERT statement, so they
+            // must never be attacker-controlled beyond `[a-z0-9_]`.
+            if columns.iter().any(|c| {
+                c.is_empty()
+                    || !c.bytes().all(|b| b.is_ascii_alphanumeric() || b == b'_')
+                    || c.bytes().next().unwrap().is_ascii_digit()
+            }) {
+                return Err(AppError::bad_request("The file contains an invalid column name."));
+            }
             let placeholders = columns.iter().map(|_| "?").collect::<Vec<_>>().join(", ");
 
             let sql = format!(

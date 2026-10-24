@@ -484,6 +484,8 @@ pub struct AdminSettingField {
     pub group_name: String,
     pub group_label: String,
     pub label: String,
+    pub label_en: String,
+    pub label_fa: String,
     pub help_text: String,
 }
 
@@ -491,6 +493,7 @@ pub struct AdminSettingField {
 pub struct AdminSettingGroup {
     pub name: String,
     pub label: String,
+    pub label_fa: String,
     pub fields: Vec<AdminSettingField>,
 }
 
@@ -539,6 +542,8 @@ pub struct AdminCategoryRow {
 pub struct ChartPoint {
     pub label: String,
     pub value: i64,
+    /// Bar height/width as a percentage (0–100) of the series maximum.
+    pub pct: i64,
 }
 
 #[derive(Debug, Clone)]

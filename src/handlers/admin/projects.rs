@@ -183,14 +183,20 @@ pub async fn store(
         return Err(AppError::validation("A title is required."));
     }
 
-    let slug = util::slugify(if form.slug.trim().is_empty() {
-        &title
-    } else {
-        form.slug.trim()
-    });
+    let slug = unique_project_slug(
+        &state,
+        util::slugify(if form.slug.trim().is_empty() {
+            &title
+        } else {
+            form.slug.trim()
+        }),
+        None,
+    )
+    .await?;
     let html = markdown::to_html(&form.description);
     let tech = serde_json::to_string(&util::split_list(&form.tech_stack))
         .unwrap_or_else(|_| "[]".to_string());
+    let status = normalise_status(&form.status);
 
     sqlx::query(
         "INSERT INTO projects (slug, title, summary, description_md, description_html, cover_image,
@@ -207,7 +213,7 @@ pub async fn store(
     .bind(non_empty(&form.repo_url))
     .bind(non_empty(&form.live_url))
     .bind(non_empty(&form.client))
-    .bind(&form.status)
+    .bind(&status)
     .bind(form.is_featured.is_some())
     .bind(form.sort_order.trim().parse::<i64>().unwrap_or(0))
     .bind(&tech)
@@ -248,17 +254,32 @@ pub async fn update(
         return Err(AppError::validation("A title is required."));
     }
 
-    let slug = util::slugify(if form.slug.trim().is_empty() {
-        &title
-    } else {
-        form.slug.trim()
-    });
+    let slug = unique_project_slug(
+        &state,
+        util::slugify(if form.slug.trim().is_empty() {
+            &title
+        } else {
+            form.slug.trim()
+        }),
+        Some(id),
+    )
+    .await?;
+    let exists: Option<i64> = sqlx::query_scalar("SELECT id FROM projects WHERE id = ?")
+        .bind(id)
+        .fetch_optional(&state.db)
+        .await?;
+    if exists.is_none() {
+        return Err(AppError::not_found("That project does not exist."));
+    }
+
     let html = markdown::to_html(&form.description);
     let tech = serde_json::to_string(&util::split_list(&form.tech_stack))
         .unwrap_or_else(|_| "[]".to_string());
+    let status = normalise_status(&form.status);
 
     sqlx::query(
         "UPDATE projects SET slug = ?, title = ?, summary = ?, description_md = ?, description_html = ?,
+
                 cover_image = ?, repo_url = ?, live_url = ?, client = ?, status = ?, is_featured = ?,
                 sort_order = ?, tech_stack = ?, meta_title = ?, meta_description = ?, updated_at = ?
          WHERE id = ?",
@@ -272,7 +293,7 @@ pub async fn update(
     .bind(non_empty(&form.repo_url))
     .bind(non_empty(&form.live_url))
     .bind(non_empty(&form.client))
-    .bind(&form.status)
+    .bind(&status)
     .bind(form.is_featured.is_some())
     .bind(form.sort_order.trim().parse::<i64>().unwrap_or(0))
     .bind(&tech)
@@ -341,5 +362,46 @@ fn non_empty(value: &str) -> Option<String> {
         None
     } else {
         Some(trimmed.to_string())
+    }
+}
+
+fn normalise_status(status: &str) -> String {
+    match status {
+        "active" | "draft" | "archived" => status.to_string(),
+        _ => "draft".to_string(),
+    }
+}
+
+/// Build a project slug that does not collide with an existing project.
+async fn unique_project_slug(
+    state: &AppState,
+    base: String,
+    exclude_id: Option<i64>,
+) -> AppResult<String> {
+    let mut candidate = base.clone();
+    let mut counter = 2;
+
+    loop {
+        let existing: Option<i64> = sqlx::query_scalar("SELECT id FROM projects WHERE slug = ?")
+            .bind(&candidate)
+            .fetch_optional(&state.db)
+            .await?;
+
+        let collision = match (existing, exclude_id) {
+            (Some(id), Some(exclude)) => id != exclude,
+            (Some(_), None) => true,
+            (None, _) => false,
+        };
+
+        if !collision {
+            return Ok(candidate);
+        }
+
+        candidate = format!("{base}-{counter}");
+        counter += 1;
+
+        if counter > 500 {
+            return Err(AppError::internal("could not generate a unique slug"));
+        }
     }
 }
