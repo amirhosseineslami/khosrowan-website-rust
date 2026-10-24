@@ -132,7 +132,7 @@ pub async fn build(
 ) -> AppResult<BaseContext> {
     let settings: Settings = state.settings.snapshot();
 
-    let lang = resolve_locale(headers, &settings.default_locale);
+    let lang = resolve_locale(headers, &settings.default_locale, current_path);
     let dir = if lang == "fa" { "rtl" } else { "ltr" };
 
     let mut nav = primary_nav(current_path, &lang);
@@ -210,9 +210,10 @@ pub async fn build(
         flash,
         current_path: current_path.to_string(),
         canonical_url: format!(
-            "{}{}",
+            "{}{}{}",
             state.config.base_url.trim_end_matches('/'),
-            current_path
+            if lang == "en" { "/en" } else { "" },
+            if current_path == "/" { "" } else { current_path }
         ),
         page_title: settings.title.clone(),
         meta_description: settings.seo_meta_description.clone(),
@@ -238,9 +239,24 @@ pub async fn build(
     })
 }
 
-/// Resolve the active locale from the `lang` cookie (or query param), falling
-/// back to the site default. Only `fa` and `en` are recognised.
-fn resolve_locale(headers: &HeaderMap, default: &str) -> String {
+/// Resolve the active locale from, in priority order:
+///   1. the `/en/` or `/fa/` URL prefix,
+///   2. the `lang` cookie / `?lang=` query param,
+///   3. the site default.
+fn resolve_locale(headers: &HeaderMap, default: &str, current_path: &str) -> String {
+    // URL prefix wins (canonical per-language address), set by middleware.
+    if let Some(v) = headers.get("x-locale").and_then(|v| v.to_str().ok()) {
+        if v == "en" || v == "fa" {
+            return v.to_string();
+        }
+    }
+    if current_path.starts_with("/en/") || current_path == "/en" {
+        return "en".into();
+    }
+    if current_path.starts_with("/fa/") || current_path == "/fa" {
+        return "fa".into();
+    }
+
     let requested = headers
         .get(axum::http::header::COOKIE)
         .and_then(|v| v.to_str().ok())

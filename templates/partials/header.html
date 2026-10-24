@@ -18,11 +18,11 @@
       <div class="nav-actions">
         <div class="lang-switch" role="group" aria-label="Language">
           {% if view.base.lang == "fa" %}
-          <a href="/lang/en?next={{ view.base.current_path }}" hreflang="en" title="English">EN</a>
+          <a href="/en{{ view.base.current_path }}" hreflang="en" title="English">EN</a>
           <span class="lang-current">فا</span>
           {% else %}
           <span class="lang-current">EN</span>
-          <a href="/lang/fa?next={{ view.base.current_path }}" hreflang="fa" title="فارسی">فا</a>
+          <a href="/fa{{ view.base.current_path }}" hreflang="fa" title="فارسی">فا</a>
           {% endif %}
         </div>
 

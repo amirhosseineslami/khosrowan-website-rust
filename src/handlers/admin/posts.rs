@@ -210,6 +210,14 @@ pub async fn edit(
         return Err(AppError::not_found("That post does not exist."));
     };
 
+    // Load the English translation, if present.
+    let translation: Option<crate::models::db::PostTranslation> = sqlx::query_as(
+        "SELECT * FROM post_translations WHERE post_id = ? AND locale = 'en'",
+    )
+    .bind(id)
+    .fetch_optional(&state.db)
+    .await?;
+
     let post = AdminPostEdit {
         id: row.id,
         title: row.title.clone(),
@@ -238,6 +246,14 @@ pub async fn edit(
         view_count: row.view_count,
         created_at: util::format_datetime(row.created_at),
         updated_at: util::format_datetime(row.updated_at),
+        title_en: translation.as_ref().map(|t| t.title.clone()).unwrap_or_default(),
+        excerpt_en: translation.as_ref().map(|t| t.excerpt.clone()).unwrap_or_default(),
+        content_md_en: translation.as_ref().map(|t| t.content_md.clone()).unwrap_or_default(),
+        meta_title_en: translation.as_ref().and_then(|t| t.meta_title.clone()).unwrap_or_default(),
+        meta_description_en: translation
+            .as_ref()
+            .and_then(|t| t.meta_description.clone())
+            .unwrap_or_default(),
     };
 
     let view = AdminPostFormView {
@@ -285,6 +301,16 @@ pub struct PostForm {
     pub published_at: String,
     #[serde(default)]
     pub scheduled_for: String,
+    #[serde(default)]
+    pub title_en: String,
+    #[serde(default)]
+    pub excerpt_en: String,
+    #[serde(default)]
+    pub content_en: String,
+    #[serde(default)]
+    pub meta_title_en: String,
+    #[serde(default)]
+    pub meta_description_en: String,
     #[serde(default)]
     pub csrf_token: String,
 }

@@ -11,6 +11,25 @@ use crate::auth::session;
 use crate::state::AppState;
 use crate::util;
 
+/// Detect a canonical language prefix (`/en/` or `/fa/`) in the URL and record
+/// it on a custom header so `context::build` can force that locale.
+pub async fn resolve_locale_prefix(mut request: Request, next: Next) -> Response {
+    let path = request.uri().path();
+    let locale = if path.starts_with("/en/") || path == "/en" {
+        Some("en")
+    } else if path.starts_with("/fa/") || path == "/fa" {
+        Some("fa")
+    } else {
+        None
+    };
+    if let Some(locale) = locale {
+        if let Ok(value) = axum::http::HeaderValue::from_str(locale) {
+            request.headers_mut().insert("x-locale", value);
+        }
+    }
+    next.run(request).await
+}
+
 /// Load the session (if any) and attach it to the request extensions.
 pub async fn load_session(
     State(state): State<AppState>,

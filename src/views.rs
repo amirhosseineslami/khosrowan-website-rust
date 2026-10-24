@@ -1001,6 +1001,12 @@ pub struct AdminPostEdit {
     pub view_count: i64,
     pub created_at: String,
     pub updated_at: String,
+    // English translation fields (may be empty).
+    pub title_en: String,
+    pub excerpt_en: String,
+    pub content_md_en: String,
+    pub meta_title_en: String,
+    pub meta_description_en: String,
 }
 
 #[derive(Debug, Clone)]

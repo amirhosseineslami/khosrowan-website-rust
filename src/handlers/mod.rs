@@ -28,8 +28,68 @@ use crate::state::AppState;
 
 /// Build the complete application router.
 pub fn router(state: AppState) -> Router {
-    // Routes that anybody can reach.
-    let public = Router::new()
+    // Routes that anybody can reach. Mounted at the root (default locale) and
+    // again under `/en` and `/fa` for canonical per-language addresses.
+    let public = public_routes();
+
+    // Admin routes that do not require a session.
+    let admin_public = Router::new()
+        .route("/login", get(auth::login_form).post(auth::login_submit))
+        .route("/logout", get(auth::logout).post(auth::logout))
+        .route(
+            "/forgot-password",
+            get(auth::forgot_form).post(auth::forgot_submit),
+        )
+        .route(
+            "/reset-password",
+            get(auth::reset_form).post(auth::reset_submit),
+        )
+        .route("/reset-password/{token}", get(auth::reset_form));
+
+    // Admin routes that require a session.
+    let admin_protected = admin::router().layer(axum::middleware::from_fn_with_state(
+        state.clone(),
+        require_admin,
+    ));
+
+    let admin = Router::new().merge(admin_public).merge(admin_protected);
+
+    // Uploaded media lives on disk; static assets are embedded in the binary.
+    let media = ServeDir::new(&state.config.media_dir);
+
+    Router::new()
+        .merge(public)
+        .nest("/en", public_routes())
+        .nest("/fa", public_routes())
+        .nest("/admin", admin)
+        .nest_service("/assets", get(serve_asset))
+        .nest_service("/media", media)
+        .fallback(fallback)
+        .layer(axum::middleware::from_fn(middleware::resolve_locale_prefix))
+        .layer(axum::middleware::from_fn_with_state(
+            state.clone(),
+            middleware::load_session,
+        ))
+        .layer(axum::middleware::from_fn_with_state(
+            state.clone(),
+            middleware::track_view,
+        ))
+        .layer(axum::middleware::from_fn_with_state(
+            state.clone(),
+            middleware::security::headers_middleware,
+        ))
+        .layer(axum::middleware::from_fn_with_state(
+            state.clone(),
+            middleware::ratelimit::enforce,
+        ))
+        .layer(tower_http::compression::CompressionLayer::new().gzip(true))
+        .layer(tower_http::trace::TraceLayer::new_for_http())
+        .with_state(state)
+}
+
+/// The public (non-admin) route set. Mounted at `/`, `/en` and `/fa`.
+fn public_routes() -> Router<AppState> {
+    Router::new()
         .route("/", get(public::home))
         .route("/about", get(public::about))
         .route("/projects", get(public::projects))
@@ -60,58 +120,7 @@ pub fn router(state: AppState) -> Router {
         .route("/sitemap.xml", get(feeds::sitemap))
         .route("/robots.txt", get(feeds::robots))
         .route("/manifest.webmanifest", get(feeds::manifest))
-        .route("/.well-known/security.txt", get(feeds::security_txt));
-
-    // Admin routes that do not require a session.
-    let admin_public = Router::new()
-        .route("/login", get(auth::login_form).post(auth::login_submit))
-        .route("/logout", get(auth::logout).post(auth::logout))
-        .route(
-            "/forgot-password",
-            get(auth::forgot_form).post(auth::forgot_submit),
-        )
-        .route(
-            "/reset-password",
-            get(auth::reset_form).post(auth::reset_submit),
-        )
-        .route("/reset-password/{token}", get(auth::reset_form));
-
-    // Admin routes that require a session.
-    let admin_protected = admin::router().layer(axum::middleware::from_fn_with_state(
-        state.clone(),
-        require_admin,
-    ));
-
-    let admin = Router::new().merge(admin_public).merge(admin_protected);
-
-    // Uploaded media lives on disk; static assets are embedded in the binary.
-    let media = ServeDir::new(&state.config.media_dir);
-
-    Router::new()
-        .merge(public)
-        .nest("/admin", admin)
-        .nest_service("/assets", get(serve_asset))
-        .nest_service("/media", media)
-        .fallback(fallback)
-        .layer(axum::middleware::from_fn_with_state(
-            state.clone(),
-            middleware::load_session,
-        ))
-        .layer(axum::middleware::from_fn_with_state(
-            state.clone(),
-            middleware::track_view,
-        ))
-        .layer(axum::middleware::from_fn_with_state(
-            state.clone(),
-            middleware::security::headers_middleware,
-        ))
-        .layer(axum::middleware::from_fn_with_state(
-            state.clone(),
-            middleware::ratelimit::enforce,
-        ))
-        .layer(tower_http::compression::CompressionLayer::new().gzip(true))
-        .layer(tower_http::trace::TraceLayer::new_for_http())
-        .with_state(state)
+        .route("/.well-known/security.txt", get(feeds::security_txt))
 }
 
 /// Serve a file from the embedded asset bundle.
@@ -172,7 +181,17 @@ async fn fallback(
     auth: crate::extract::MaybeAuth,
     uri: Uri,
 ) -> Response {
-    let path = uri.path().trim_start_matches('/').to_string();
+    let raw_path = uri.path();
+
+    // Normalise the canonical language root (`/en/` → `/en`, `/fa/` → `/fa`).
+    if raw_path == "/en/" {
+        return Redirect::to("/en").into_response();
+    }
+    if raw_path == "/fa/" {
+        return Redirect::to("/fa").into_response();
+    }
+
+    let path = raw_path.trim_start_matches('/').to_string();
 
     if !path.is_empty() && !path.contains('/') {
         // A managed redirect?

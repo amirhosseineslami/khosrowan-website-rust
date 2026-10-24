@@ -148,6 +148,14 @@ pub async fn apply_post_card_translations(
     .fetch_all(pool)
     .await?;
 
+    // The author byline shows the brand, which is locale-aware.
+    let brand: Option<String> = sqlx::query_scalar(
+        "SELECT value FROM settings WHERE key = 'site.title_en'",
+    )
+    .fetch_optional(pool)
+    .await?;
+    let brand = brand.filter(|v| !v.is_empty()).unwrap_or_else(|| "Khosrowan".into());
+
     for card in cards.iter_mut() {
         if let Some(t) = trans.iter().find(|t| t.post_id == card.id) {
             card.title = t.title.clone();
@@ -161,6 +169,8 @@ pub async fn apply_post_card_translations(
                 tag.name = name.clone();
             }
         }
+        card.author = brand.clone();
+        card.author_initials = util::initials(&brand);
     }
     Ok(())
 }
