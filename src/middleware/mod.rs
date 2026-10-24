@@ -5,7 +5,7 @@ pub mod security;
 
 use axum::extract::{Request, State};
 use axum::middleware::Next;
-use axum::response::Response;
+use axum::response::{IntoResponse, Response};
 
 use crate::auth::session;
 use crate::state::AppState;
@@ -25,6 +25,35 @@ pub async fn resolve_locale_prefix(mut request: Request, next: Next) -> Response
     if let Some(locale) = locale {
         if let Ok(value) = axum::http::HeaderValue::from_str(locale) {
             request.headers_mut().insert("x-locale", value);
+        }
+    }
+    next.run(request).await
+}
+
+/// Restrict the admin panel to a designated host.
+///
+/// When `ADMIN_HOST` is configured (e.g. `admin.example.com`), requests to
+/// `/admin*` on any other host get a 404, hiding the panel behind its own
+/// subdomain. Localhost is always allowed so local development is unaffected.
+pub async fn gate_admin_host(
+    State(state): State<AppState>,
+    request: Request,
+    next: Next,
+) -> Response {
+    if let Some(expected) = &state.config.admin_host {
+        let host = request
+            .headers()
+            .get(axum::http::header::HOST)
+            .and_then(|v| v.to_str().ok())
+            .map(|h| h.split(':').next().unwrap_or(h).to_ascii_lowercase());
+        let allowed = host.is_none()
+            || matches!(
+                host.as_deref(),
+                Some("localhost") | Some("127.0.0.1") | Some("::1")
+            )
+            || host.as_deref() == Some(expected.as_str());
+        if !allowed {
+            return axum::http::StatusCode::NOT_FOUND.into_response();
         }
     }
     next.run(request).await

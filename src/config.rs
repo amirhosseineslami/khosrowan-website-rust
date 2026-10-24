@@ -39,6 +39,10 @@ pub struct Config {
     pub max_upload_size: usize,
     /// Whether the contact form should be accepted at all.
     pub contact_enabled: bool,
+    /// Optional host that may serve the admin panel (e.g. `admin.example.com`).
+    /// When set, `/admin*` requests arriving on any other host return 404.
+    /// Localhost is always allowed so local development keeps working.
+    pub admin_host: Option<String>,
     /// Whether the public site should be visible to anonymous visitors.
     pub site_visible: bool,
 }
@@ -140,6 +144,7 @@ impl Config {
             contact_enabled: env("CONTACT_ENABLED")
                 .map(|v| v == "1" || v.eq_ignore_ascii_case("true"))
                 .unwrap_or(true),
+            admin_host: env("ADMIN_HOST").map(|h| h.trim().to_ascii_lowercase()),
             site_visible: env("SITE_VISIBLE")
                 .map(|v| v == "1" || v.eq_ignore_ascii_case("true"))
                 .unwrap_or(true),

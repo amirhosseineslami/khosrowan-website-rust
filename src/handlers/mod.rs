@@ -61,7 +61,15 @@ pub fn router(state: AppState) -> Router {
         .merge(public)
         .nest("/en", public_routes())
         .nest("/fa", public_routes())
-        .nest("/admin", admin)
+        .nest(
+            "/admin",
+            Router::new()
+                .merge(admin)
+                .layer(axum::middleware::from_fn_with_state(
+                    state.clone(),
+                    middleware::gate_admin_host,
+                )),
+        )
         .nest_service("/assets", get(serve_asset))
         .nest_service("/media", media)
         .fallback(fallback)
