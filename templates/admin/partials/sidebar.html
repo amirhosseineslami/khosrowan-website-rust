@@ -3,102 +3,104 @@
     <span class="brand-mark">{{ view.base.site.logo_text }}</span>
     <span class="admin-brand-text">
       {{ view.base.site.title }}
-      <small>Admin panel</small>
+      <small data-lang-key data-lang-en="Admin panel" data-lang-fa="پنل مدیریت">Admin panel</small>
     </span>
+    <button class="icon-btn" type="button" data-admin-lang-toggle title="Switch language / تغییر زبان" style="width:32px;height:32px;border-radius:9px;font-size:.72rem;font-weight:700;">
+      <span data-lang-key data-lang-en="EN" data-lang-fa="فا">EN</span>
+    </button>
   </div>
 
   <nav class="admin-nav">
     <a href="/admin" class="{% if view.ctx.active == "dashboard" %}active{% endif %}">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
-      Dashboard
+      <span data-lang-key data-lang-en="Dashboard" data-lang-fa="داشبورد">Dashboard</span>
     </a>
 
-    <div class="admin-nav-label">Content</div>
+    <div class="admin-nav-label" data-lang-key data-lang-en="Content" data-lang-fa="محتوا">Content</div>
     <a href="/admin/posts" class="{% if view.ctx.active == "posts" %}active{% endif %}">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>
-      Posts
+      <span data-lang-key data-lang-en="Posts" data-lang-fa="پست‌ها">Posts</span>
       {% if view.ctx.draft_posts > 0 %}<span class="count muted">{{ view.ctx.draft_posts }}</span>{% endif %}
     </a>
     <a href="/admin/pages" class="{% if view.ctx.active == "pages" %}active{% endif %}">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>
-      Pages
+      <span data-lang-key data-lang-en="Pages" data-lang-fa="صفحات">Pages</span>
     </a>
     <a href="/admin/projects" class="{% if view.ctx.active == "projects" %}active{% endif %}">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-      Projects
-    </a>
-    <a href="/admin/taxonomy" class="{% if view.ctx.active == "taxonomy" %}active{% endif %}">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4 12 22l-9-9V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.2"/></svg>
-      Tags &amp; categories
-    </a>
-    <a href="/admin/media" class="{% if view.ctx.active == "media" %}active{% endif %}">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2.5"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
-      Media
+      <span data-lang-key data-lang-en="Projects" data-lang-fa="پروژه‌ها">Projects</span>
     </a>
     <a href="/admin/profile-content" class="{% if view.ctx.active == "profile-content" %}active{% endif %}">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
-      Profile content
+      <span data-lang-key data-lang-en="Profile content" data-lang-fa="محتوای پروفایل">Profile content</span>
+    </a>
+    <a href="/admin/taxonomy" class="{% if view.ctx.active == "taxonomy" %}active{% endif %}">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4 12 22l-9-9V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.2"/></svg>
+      <span data-lang-key data-lang-en="Tags & categories" data-lang-fa="برچسب‌ها و دسته‌ها">Tags &amp; categories</span>
+    </a>
+    <a href="/admin/media" class="{% if view.ctx.active == "media" %}active{% endif %}">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2.5"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+      <span data-lang-key data-lang-en="Media" data-lang-fa="رسانه">Media</span>
     </a>
 
-    <div class="admin-nav-label">Community</div>
+    <div class="admin-nav-label" data-lang-key data-lang-en="Community" data-lang-fa="جامعه">Community</div>
     <a href="/admin/comments" class="{% if view.ctx.active == "comments" %}active{% endif %}">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-8 8H7l-4 3V12a8 8 0 0 1 8-8h2a8 8 0 0 1 8 8z"/></svg>
-      Comments
+      <span data-lang-key data-lang-en="Comments" data-lang-fa="نظرها">Comments</span>
       {% if view.ctx.pending_comments > 0 %}<span class="count">{{ view.ctx.pending_comments }}</span>{% endif %}
     </a>
     <a href="/admin/messages" class="{% if view.ctx.active == "messages" %}active{% endif %}">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="m3 7 9 6 9-6"/></svg>
-      Messages
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16v12H4z"/><path d="m4 7 8 6 8-6"/></svg>
+      <span data-lang-key data-lang-en="Messages" data-lang-fa="پیام‌ها">Messages</span>
       {% if view.ctx.unread_messages > 0 %}<span class="count">{{ view.ctx.unread_messages }}</span>{% endif %}
     </a>
     <a href="/admin/subscribers" class="{% if view.ctx.active == "subscribers" %}active{% endif %}">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13A4 4 0 0 1 16 11"/></svg>
-      Subscribers
-      <span class="count muted">{{ view.ctx.subscriber_count }}</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a4 4 0 0 1 4 4v3a4 4 0 0 1-8 0V6a4 4 0 0 1 4-4z"/><path d="M4 10a8 8 0 0 0 16 0"/></svg>
+      <span data-lang-key data-lang-en="Subscribers" data-lang-fa="مشترک‌ها">Subscribers</span>
     </a>
     <a href="/admin/newsletter" class="{% if view.ctx.active == "newsletter" %}active{% endif %}">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="m4 6 8 6 8-6"/></svg>
-      Newsletter
+      <span data-lang-key data-lang-en="Newsletter" data-lang-fa="خبرنامه">Newsletter</span>
     </a>
 
-    <div class="admin-nav-label">Configuration</div>
+    <div class="admin-nav-label" data-lang-key data-lang-en="Configuration" data-lang-fa="پیکربندی">Configuration</div>
     <a href="/admin/settings" class="{% if view.ctx.active == "settings" %}active{% endif %}">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2V21a2 2 0 1 1-4 0v-.1A1.7 1.7 0 0 0 7 19.4a1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0-1.2-2.9H1a2 2 0 1 1 0-4h.1A1.7 1.7 0 0 0 2.6 7a1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H7a1.7 1.7 0 0 0 1-1.5V1a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V7a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
-      Settings
+      <span data-lang-key data-lang-en="Settings" data-lang-fa="تنظیمات">Settings</span>
     </a>
     <a href="/admin/socials" class="{% if view.ctx.active == "socials" %}active{% endif %}">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path d="M6 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path d="M18 22a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg>
-      Social links
+      <span data-lang-key data-lang-en="Social links" data-lang-fa="پیوندهای اجتماعی">Social links</span>
     </a>
     <a href="/admin/redirects" class="{% if view.ctx.active == "redirects" %}active{% endif %}">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h11a4 4 0 0 1 0 8H9"/><path d="m7 5-3 3 3 3"/></svg>
-      Redirects
+      <span data-lang-key data-lang-en="Redirects" data-lang-fa="انتقال‌ها">Redirects</span>
     </a>
     <a href="/admin/users" class="{% if view.ctx.active == "users" %}active{% endif %}">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
-      Users
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M3 20a6 6 0 0 1 12 0"/><path d="M17 9a3 3 0 0 1 0 6M17 14a4 4 0 0 1 4 4"/></svg>
+      <span data-lang-key data-lang-en="Users" data-lang-fa="کاربران">Users</span>
     </a>
     <a href="/admin/logs" class="{% if view.ctx.active == "logs" %}active{% endif %}">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="M8 9h8M8 13h5"/></svg>
-      Activity log
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+      <span data-lang-key data-lang-en="Logs" data-lang-fa="گزارش‌ها">Logs</span>
     </a>
     <a href="/admin/backup" class="{% if view.ctx.active == "backup" %}active{% endif %}">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5M12 15V3"/></svg>
-      Backup
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 9 9"/><path d="M21 3v6h-6"/></svg>
+      <span data-lang-key data-lang-en="Backup" data-lang-fa="پشتیبان‌گیری">Backup</span>
     </a>
   </nav>
 
-  <div class="admin-sidebar-footer">
-    <div class="flex-between">
-      <span>v{{ view.ctx.version }}</span>
-      <span>up {{ view.ctx.uptime }}</span>
-    </div>
-    <div class="flex-between">
-      <a href="/">View site ↗</a>
-      <a href="/admin/profile">Profile</a>
-    </div>
+  <div class="admin-nav" style="margin-top:auto;">
+    <a href="/admin/profile" class="{% if view.ctx.active == "profile" %}active{% endif %}">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+      <span data-lang-key data-lang-en="Profile" data-lang-fa="پروفایل">Profile</span>
+    </a>
     <form method="post" action="/admin/logout">
-      <button class="btn btn-sm btn-ghost btn-block" type="submit" style="margin-top:.4rem;">Sign out</button>
+      <input type="hidden" name="csrf_token" value="{{ view.base.csrf_token }}">
+      <button class="admin-logout" type="submit">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg>
+        <span data-lang-key data-lang-en="Sign out" data-lang-fa="خروج">Sign out</span>
+      </button>
     </form>
   </div>
 </aside>

@@ -575,3 +575,31 @@
     grid-column: 1 / -1;
   }
 }
+
+/* Admin language toggle + brand layout */
+.admin-brand {
+  position: relative;
+}
+.admin-brand .icon-btn {
+  margin-inline-start: auto;
+  flex: none;
+}
+
+/* RTL support for the admin panel when Persian is selected */
+[data-admin-lang="fa"] .admin-body {
+  direction: rtl;
+  text-align: right;
+}
+[data-admin-lang="fa"] .admin-sidebar {
+  border-right: none;
+  border-left: 1px solid var(--border);
+}
+[data-admin-lang="fa"] .admin-nav a {
+  text-align: right;
+}
+[data-admin-lang="fa"] .admin-topbar,
+[data-admin-lang="fa"] .admin-content,
+[data-admin-lang="fa"] .form-row,
+[data-admin-lang="fa"] .form-actions {
+  direction: rtl;
+}
