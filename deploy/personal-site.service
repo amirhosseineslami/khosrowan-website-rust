@@ -1,0 +1,33 @@
+[Unit]
+Description=personal-site CMS
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/personal-site
+ExecStart=/opt/personal-site/deploy/start.sh
+
+# Environment — adjust these for the server.
+Environment=APP_ENV=production
+Environment=SERVER_PORT=8788
+Environment=DATABASE_URL=sqlite://data/personal-site.db?mode=rwc
+Environment=BASE_URL=https://example.com
+# Must be a fresh random string >= 32 chars; never the dev default.
+Environment=APP_SECRET=replace-with-a-long-random-secret-at-least-32-chars
+Environment=ADMIN_USERNAME=admin
+Environment=ADMIN_EMAIL=admin@example.com
+Environment=ADMIN_PASSWORD=admin12345
+
+Restart=always
+RestartSec=3
+User=personal-site
+Group=personal-site
+
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=full
+ReadWritePaths=/opt/personal-site
+
+[Install]
+WantedBy=multi-user.target
