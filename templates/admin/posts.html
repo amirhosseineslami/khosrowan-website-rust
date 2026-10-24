@@ -10,32 +10,32 @@
   <div class="admin-main">
     <header class="admin-topbar">
       <div>
-        <h1>Posts</h1>
+        <h1 data-lang-key data-lang-en="Posts" data-lang-fa="پستها">Posts</h1>
         <p>{{ view.total }} post(s) · {{ view.pagination.total }} total</p>
       </div>
       <div class="flex">
-        <a class="btn btn-sm btn-primary" href="/admin/posts/new">New post</a>
+        <a class="btn btn-sm btn-primary" href="/admin/posts/new" data-lang-key data-lang-en="New post" data-lang-fa="پست جدید">New post</a>
       </div>
     </header>
 
     <div class="admin-content">
       <div class="admin-tabs">
-        <a href="/admin/posts" class="{% if view.status_filter.is_empty() %}active{% endif %}">All</a>
-        <a href="/admin/posts?status=published" class="{% if view.status_filter == "published" %}active{% endif %}">Published</a>
-        <a href="/admin/posts?status=draft" class="{% if view.status_filter == "draft" %}active{% endif %}">Drafts</a>
-        <a href="/admin/posts?status=scheduled" class="{% if view.status_filter == "scheduled" %}active{% endif %}">Scheduled</a>
-        <a href="/admin/posts?status=archived" class="{% if view.status_filter == "archived" %}active{% endif %}">Archived</a>
+        <a href="/admin/posts" class="{% if view.status_filter.is_empty() %}active{% endif %}" data-lang-key data-lang-en="All" data-lang-fa="همه">All</a>
+        <a href="/admin/posts?status=published" class="{% if view.status_filter == "published" %}active{% endif %}" data-lang-key data-lang-en="Published" data-lang-fa="منتشرشده">Published</a>
+        <a href="/admin/posts?status=draft" class="{% if view.status_filter == "draft" %}active{% endif %}" data-lang-key data-lang-en="Drafts" data-lang-fa="پیشنویسها">Drafts</a>
+        <a href="/admin/posts?status=scheduled" class="{% if view.status_filter == "scheduled" %}active{% endif %}" data-lang-key data-lang-en="Scheduled" data-lang-fa="زمانبندیشده">Scheduled</a>
+        <a href="/admin/posts?status=archived" class="{% if view.status_filter == "archived" %}active{% endif %}" data-lang-key data-lang-en="Archived" data-lang-fa="بایگانیشده">Archived</a>
       </div>
 
       <form class="card" method="get" action="/admin/posts" style="padding:.9rem 1.1rem;">
         <div class="flex">
-          <input type="search" name="q" value="{{ view.query }}" placeholder="Search posts by title or slug…" style="max-width:320px;">
+          <input type="search" name="q" value="{{ view.query }}" placeholder="Search posts by title or slug…" style="max-width:320px;" data-lang-key data-lang-en="Search posts by title or slug…" data-lang-fa="جستجوی پستها بر اساس عنوان یا اسلاگ…">
           {% if !view.status_filter.is_empty() %}
           <input type="hidden" name="status" value="{{ view.status_filter }}">
           {% endif %}
-          <button class="btn btn-sm" type="submit">Search</button>
+          <button class="btn btn-sm" type="submit" data-lang-key data-lang-en="Search" data-lang-fa="جستجو">Search</button>
           {% if !view.query.is_empty() %}
-          <a class="btn btn-sm btn-ghost" href="/admin/posts">Clear</a>
+          <a class="btn btn-sm btn-ghost" href="/admin/posts" data-lang-key data-lang-en="Clear" data-lang-fa="پاک کردن">Clear</a>
           {% endif %}
         </div>
       </form>
@@ -43,20 +43,20 @@
       <div class="table-wrap">
         {% if view.posts.is_empty() %}
         <div class="empty-state" style="border:none;">
-          <strong>No posts found.</strong>
-          Create your first article to get started.
+          <strong data-lang-key data-lang-en="No posts found." data-lang-fa="پستی یافت نشد.">No posts found.</strong>
+          <span data-lang-key data-lang-en="Create your first article to get started." data-lang-fa="برای شروع، نخستین مقاله را بسازید.">Create your first article to get started.</span>
         </div>
         {% else %}
         <table class="data">
           <thead>
             <tr>
-              <th>Title</th>
-              <th>Status</th>
-              <th>Category</th>
-              <th>Views</th>
-              <th>Comments</th>
-              <th>Updated</th>
-              <th style="text-align:right;">Actions</th>
+              <th data-lang-key data-lang-en="Title" data-lang-fa="عنوان">Title</th>
+              <th data-lang-key data-lang-en="Status" data-lang-fa="وضعیت">Status</th>
+              <th data-lang-key data-lang-en="Category" data-lang-fa="دسته">Category</th>
+              <th data-lang-key data-lang-en="Views" data-lang-fa="بازدید">Views</th>
+              <th data-lang-key data-lang-en="Comments" data-lang-fa="نظرها">Comments</th>
+              <th data-lang-key data-lang-en="Updated" data-lang-fa="بهروزرسانی">Updated</th>
+              <th style="text-align:right;" data-lang-key data-lang-en="Actions" data-lang-fa="عملیات">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -65,7 +65,7 @@
               <td>
                 <a href="/admin/posts/{{ post.id }}/edit" style="font-weight:560;">{{ post.title }}</a>
                 {% if post.is_featured %}
-                <span class="pill" style="margin-left:.4rem;font-size:.62rem;">Featured</span>
+                <span class="pill" style="margin-left:.4rem;font-size:.62rem;" data-lang-key data-lang-en="Featured" data-lang-fa="ویژه">Featured</span>
                 {% endif %}
                 <div class="text-faint text-sm mono">/{{ post.slug }}</div>
               </td>
@@ -82,9 +82,9 @@
               <td>
                 <div class="row-actions">
                   {% if post.status == "published" %}
-                  <a class="btn btn-sm btn-ghost" href="/blog/{{ post.slug }}" target="_blank" rel="noopener">View</a>
+                  <a class="btn btn-sm btn-ghost" href="/blog/{{ post.slug }}" target="_blank" rel="noopener" data-lang-key data-lang-en="View" data-lang-fa="مشاهده">View</a>
                   {% endif %}
-                  <a class="btn btn-sm" href="/admin/posts/{{ post.id }}/edit">Edit</a>
+                  <a class="btn btn-sm" href="/admin/posts/{{ post.id }}/edit" data-lang-key data-lang-en="Edit" data-lang-fa="ویرایش">Edit</a>
                   <form method="post" action="/admin/posts/{{ post.id }}/delete" data-confirm="Delete “{{ post.title }}” permanently?">
                     <input type="hidden" name="csrf_token" value="{{ view.base.csrf_token }}">
                     <button class="btn btn-sm btn-ghost" type="submit" title="Delete">✕</button>

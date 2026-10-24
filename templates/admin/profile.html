@@ -10,8 +10,8 @@
   <div class="admin-main">
     <header class="admin-topbar">
       <div>
-        <h1>My profile</h1>
-        <p>Your account details</p>
+        <h1 data-lang-key data-lang-en="My profile" data-lang-fa="پروفایل من">My profile</h1>
+        <p data-lang-key data-lang-en="Your account details" data-lang-fa="جزئیات حساب شما">Your account details</p>
       </div>
     </header>
 
@@ -20,7 +20,7 @@
       <div class="alert alert-error"><span>{{ view.error }}</span></div>
       {% endif %}
       {% if view.success %}
-      <div class="alert alert-success"><span>Your profile has been updated.</span></div>
+      <div class="alert alert-success"><span data-lang-key data-lang-en="Your profile has been updated." data-lang-fa="پروفایل شما بهروزرسانی شد.">Your profile has been updated.</span></div>
       {% endif %}
 
       <form method="post" action="/admin/profile">
@@ -28,53 +28,53 @@
 
         <div class="admin-grid-2" style="align-items:start;">
           <section class="card">
-            <h2 style="font-size:var(--step-1);margin-bottom:1rem;">Details</h2>
+            <h2 style="font-size:var(--step-1);margin-bottom:1rem;" data-lang-key data-lang-en="Details" data-lang-fa="جزئیات">Details</h2>
             <div class="form">
               <div class="field">
-                <label for="username">Username</label>
+                <label for="username" data-lang-key data-lang-en="Username" data-lang-fa="نام کاربری">Username</label>
                 <input id="username" type="text" value="{{ view.username }}" disabled>
-                <span class="hint">Usernames cannot be changed.</span>
+                <span class="hint" data-lang-key data-lang-en="Usernames cannot be changed." data-lang-fa="نام کاربری قابل تغییر نیست.">Usernames cannot be changed.</span>
               </div>
               <div class="field">
-                <label for="display_name">Display name</label>
+                <label for="display_name" data-lang-key data-lang-en="Display name" data-lang-fa="نام نمایشی">Display name</label>
                 <input id="display_name" type="text" name="display_name" value="{{ view.display_name }}">
               </div>
               <div class="field">
-                <label for="email">E-mail</label>
+                <label for="email" data-lang-key data-lang-en="E-mail" data-lang-fa="ایمیل">E-mail</label>
                 <input id="email" type="email" name="email" value="{{ view.email }}" required>
               </div>
               <div class="field">
-                <label for="bio">Bio</label>
+                <label for="bio" data-lang-key data-lang-en="Bio" data-lang-fa="بیو">Bio</label>
                 <textarea id="bio" name="bio" style="min-height:120px;">{{ view.bio }}</textarea>
-                <span class="hint">Shown at the bottom of every article.</span>
+                <span class="hint" data-lang-key data-lang-en="Shown at the bottom of every article." data-lang-fa="در پایین هر مقاله نمایش داده میشود.">Shown at the bottom of every article.</span>
               </div>
               <div class="field">
-                <label for="avatar">Avatar URL</label>
+                <label for="avatar" data-lang-key data-lang-en="Avatar URL" data-lang-fa="نشانی آواتار">Avatar URL</label>
                 <input id="avatar" type="text" name="avatar" value="{{ view.avatar }}" placeholder="/media/me.jpg">
               </div>
             </div>
           </section>
 
           <section class="card">
-            <h2 style="font-size:var(--step-1);margin-bottom:1rem;">Change password</h2>
+            <h2 style="font-size:var(--step-1);margin-bottom:1rem;" data-lang-key data-lang-en="Change password" data-lang-fa="تغییر رمز عبور">Change password</h2>
             <div class="form">
               <div class="field">
-                <label for="current_password">Current password</label>
+                <label for="current_password" data-lang-key data-lang-en="Current password" data-lang-fa="رمز عبور فعلی">Current password</label>
                 <input id="current_password" type="password" name="current_password" autocomplete="current-password">
               </div>
               <div class="field">
-                <label for="new_password">New password</label>
+                <label for="new_password" data-lang-key data-lang-en="New password" data-lang-fa="رمز عبور جدید">New password</label>
                 <input id="new_password" type="password" name="new_password" autocomplete="new-password">
-                <span class="hint">At least 10 characters, mixing cases, digits and symbols.</span>
+                <span class="hint" data-lang-key data-lang-en="At least 10 characters, mixing cases, digits and symbols." data-lang-fa="حداقل ۱۰ کاراکتر، ترکیبی از حروف بزرگ و کوچک، اعداد و نمادها.">At least 10 characters, mixing cases, digits and symbols.</span>
               </div>
               <div class="field">
-                <label for="new_password_confirmation">Confirm new password</label>
+                <label for="new_password_confirmation" data-lang-key data-lang-en="Confirm new password" data-lang-fa="تأیید رمز عبور جدید">Confirm new password</label>
                 <input id="new_password_confirmation" type="password" name="new_password_confirmation" autocomplete="new-password">
               </div>
             </div>
 
             <div class="form-actions" style="margin-top:1.4rem;">
-              <button class="btn btn-primary" type="submit">Save profile</button>
+              <button class="btn btn-primary" type="submit" data-lang-key data-lang-en="Save profile" data-lang-fa="ذخیره پروفایل">Save profile</button>
             </div>
           </section>
         </div>

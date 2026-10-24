@@ -10,28 +10,28 @@
   <div class="admin-main">
     <header class="admin-topbar">
       <div>
-        <h1>Projects</h1>
-        <p>Case studies, open-source work and side projects</p>
+        <h1 data-lang-key data-lang-en="Projects" data-lang-fa="پروژهها">Projects</h1>
+        <p data-lang-key data-lang-en="Case studies, open-source work and side projects" data-lang-fa="مطالعات موردی، کارهای متنباز و پروژههای جانبی">Case studies, open-source work and side projects</p>
       </div>
       <div class="flex">
-        <a class="btn btn-sm btn-primary" href="/admin/projects/new">New project</a>
+        <a class="btn btn-sm btn-primary" href="/admin/projects/new" data-lang-key data-lang-en="New project" data-lang-fa="پروژه جدید">New project</a>
       </div>
     </header>
 
     <div class="admin-content">
       <div class="table-wrap">
         {% if view.projects.is_empty() %}
-        <div class="empty-state" style="border:none;"><strong>No projects yet.</strong></div>
+        <div class="empty-state" style="border:none;"><strong data-lang-key data-lang-en="No projects yet." data-lang-fa="هنوز پروژهای وجود ندارد.">No projects yet.</strong></div>
         {% else %}
         <table class="data">
           <thead>
             <tr>
-              <th>Title</th>
-              <th>Stack</th>
-              <th>Status</th>
-              <th>Order</th>
-              <th>Updated</th>
-              <th style="text-align:right;">Actions</th>
+              <th data-lang-key data-lang-en="Title" data-lang-fa="عنوان">Title</th>
+              <th data-lang-key data-lang-en="Stack" data-lang-fa="پشته فناوری">Stack</th>
+              <th data-lang-key data-lang-en="Status" data-lang-fa="وضعیت">Status</th>
+              <th data-lang-key data-lang-en="Order" data-lang-fa="ترتیب">Order</th>
+              <th data-lang-key data-lang-en="Updated" data-lang-fa="بهروزرسانی">Updated</th>
+              <th style="text-align:right;" data-lang-key data-lang-en="Actions" data-lang-fa="عملیات">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -40,7 +40,7 @@
               <td>
                 <a href="/admin/projects/{{ project.id }}/edit" style="font-weight:560;">{{ project.title }}</a>
                 {% if project.is_featured %}
-                <span class="pill" style="margin-left:.4rem;font-size:.62rem;">Featured</span>
+                <span class="pill" style="margin-left:.4rem;font-size:.62rem;" data-lang-key data-lang-en="Featured" data-lang-fa="ویژه">Featured</span>
                 {% endif %}
                 <div class="text-faint text-sm mono">/{{ project.slug }}</div>
               </td>
@@ -56,8 +56,8 @@
               <td class="text-sm text-muted">{{ project.updated_at }}</td>
               <td>
                 <div class="row-actions">
-                  <a class="btn btn-sm btn-ghost" href="/projects/{{ project.slug }}" target="_blank" rel="noopener">View</a>
-                  <a class="btn btn-sm" href="/admin/projects/{{ project.id }}/edit">Edit</a>
+                  <a class="btn btn-sm btn-ghost" href="/projects/{{ project.slug }}" target="_blank" rel="noopener" data-lang-key data-lang-en="View" data-lang-fa="مشاهده">View</a>
+                  <a class="btn btn-sm" href="/admin/projects/{{ project.id }}/edit" data-lang-key data-lang-en="Edit" data-lang-fa="ویرایش">Edit</a>
                   <form method="post" action="/admin/projects/{{ project.id }}/delete" data-confirm="Delete “{{ project.title }}”?">
                     <input type="hidden" name="csrf_token" value="{{ view.base.csrf_token }}">
                     <button class="btn btn-sm btn-ghost" type="submit" title="Delete">✕</button>

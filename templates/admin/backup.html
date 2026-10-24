@@ -10,73 +10,70 @@
   <div class="admin-main">
     <header class="admin-topbar">
       <div>
-        <h1>Backup &amp; restore</h1>
-        <p>Export your content, or restore it from a previous export</p>
+        <h1 data-lang-key data-lang-en="Backup &amp; restore" data-lang-fa="پشتیبانگیری و بازیابی">Backup &amp; restore</h1>
+        <p data-lang-key data-lang-en="Export your content, or restore it from a previous export" data-lang-fa="از محتوای خود خروجی بگیرید، یا آن را از خروجی قبلی بازیابی کنید">Export your content, or restore it from a previous export</p>
       </div>
     </header>
 
     <div class="admin-content">
       <div class="admin-grid-3">
         <div class="kpi">
-          <div class="kpi-label">Posts</div>
+          <div class="kpi-label" data-lang-key data-lang-en="Posts" data-lang-fa="پستها">Posts</div>
           <div class="kpi-value">{{ view.stats.posts_total }}</div>
-          <div class="kpi-hint">{{ view.stats.posts_published }} published</div>
+          <div class="kpi-hint">{{ view.stats.posts_published }} <span data-lang-key data-lang-en="published" data-lang-fa="منتشرشده">published</span></div>
         </div>
         <div class="kpi">
-          <div class="kpi-label">Projects</div>
+          <div class="kpi-label" data-lang-key data-lang-en="Projects" data-lang-fa="پروژهها">Projects</div>
           <div class="kpi-value">{{ view.stats.projects_total }}</div>
-          <div class="kpi-hint">{{ view.stats.pages_total }} pages</div>
+          <div class="kpi-hint">{{ view.stats.pages_total }} <span data-lang-key data-lang-en="pages" data-lang-fa="صفحه">pages</span></div>
         </div>
         <div class="kpi">
-          <div class="kpi-label">Media</div>
+          <div class="kpi-label" data-lang-key data-lang-en="Media" data-lang-fa="رسانه">Media</div>
           <div class="kpi-value">{{ view.stats.media_count }}</div>
-          <div class="kpi-hint">files in the library</div>
+          <div class="kpi-hint" data-lang-key data-lang-en="files in the library" data-lang-fa="فایل در کتابخانه">files in the library</div>
         </div>
       </div>
 
       <section class="card">
-        <h2 style="font-size:var(--step-1);margin-bottom:.6rem;">Export everything</h2>
-        <p class="text-muted text-sm" style="margin-bottom:1.2rem;">
-          Download every content table as a single JSON document. Keep it somewhere safe —
+        <h2 style="font-size:var(--step-1);margin-bottom:.6rem;" data-lang-key data-lang-en="Export everything" data-lang-fa="خروجی گرفتن از همهچیز">Export everything</h2>
+        <p class="text-muted text-sm" style="margin-bottom:1.2rem;" data-lang-key data-lang-en="Download every content table as a single JSON document. Keep it somewhere safe — it is the fastest way to move to another host." data-lang-fa="همه جداول محتوا را بهعنوان یک سند JSON دانلود کنید. آن را در جایی امن نگه دارید — این سریعترین راه انتقال به میزبان دیگر است.">Download every content table as a single JSON document. Keep it somewhere safe —
           it is the fastest way to move to another host.
         </p>
         <div class="flex">
-          <a class="btn btn-primary" href="/admin/backup/export">Download JSON export</a>
+          <a class="btn btn-primary" href="/admin/backup/export" data-lang-key data-lang-en="Download JSON export" data-lang-fa="دانلود خروجی JSON">Download JSON export</a>
         </div>
       </section>
 
       <section class="card">
-        <h2 style="font-size:var(--step-1);margin-bottom:.6rem;">Import an export</h2>
-        <p class="text-muted text-sm" style="margin-bottom:1.2rem;">
-          Paste a previously exported JSON document. Existing rows with the same primary key
+        <h2 style="font-size:var(--step-1);margin-bottom:.6rem;" data-lang-key data-lang-en="Import an export" data-lang-fa="وارد کردن یک خروجی">Import an export</h2>
+        <p class="text-muted text-sm" style="margin-bottom:1.2rem;" data-lang-key data-lang-en="Paste a previously exported JSON document. Existing rows with the same primary key are replaced; everything else is inserted." data-lang-fa="یک سند JSON خروجیگرفتهشده را جایگذاری کنید. ردیفهای موجود با کلید اصلی یکسان جایگزین میشوند؛ بقیه درج میشوند.">Paste a previously exported JSON document. Existing rows with the same primary key
           are replaced; everything else is inserted.
         </p>
         <form method="post" action="/admin/backup/import" class="form">
           <input type="hidden" name="csrf_token" value="{{ view.csrf_token }}">
           <div class="field">
-            <label for="payload">JSON document</label>
+            <label for="payload" data-lang-key data-lang-en="JSON document" data-lang-fa="سند JSON">JSON document</label>
             <textarea id="payload" name="payload" class="mono" style="min-height:220px;" placeholder="{ &quot;posts&quot;: [ … ] }" required></textarea>
           </div>
           <div class="form-actions">
-            <button class="btn btn-primary" type="submit">Import</button>
+            <button class="btn btn-primary" type="submit" data-lang-key data-lang-en="Import" data-lang-fa="وارد کردن">Import</button>
           </div>
         </form>
       </section>
 
       <section class="card" style="border-color:rgba(239,68,68,.35);">
-        <h2 style="font-size:var(--step-1);margin-bottom:.6rem;color:#f87171;">Danger zone</h2>
-        <p class="text-muted text-sm" style="margin-bottom:1.2rem;">
-          This permanently deletes every post, page, comment, message and view record.
+        <h2 style="font-size:var(--step-1);margin-bottom:.6rem;color:#f87171;" data-lang-key data-lang-en="Danger zone" data-lang-fa="منطقه خطر">Danger zone</h2>
+        <p class="text-muted text-sm" style="margin-bottom:1.2rem;" data-lang-key data-lang-en="This permanently deletes every post, page, comment, message and view record. Users, settings and media are left untouched. Export first." data-lang-fa="این کار همه پستها، صفحهها، نظرها، پیامها و رکوردهای بازدید را برای همیشه حذف میکند. کاربران، تنظیمات و رسانه دستنخورده باقی میمانند. ابتدا خروجی بگیرید.">This permanently deletes every post, page, comment, message and view record.
           Users, settings and media are left untouched. Export first.
         </p>
         <form method="post" action="/admin/backup/reset" class="form" data-confirm="This permanently deletes all content. Continue?">
           <input type="hidden" name="csrf_token" value="{{ view.csrf_token }}">
           <div class="field" style="max-width:340px;">
-            <label for="confirmation">Type DELETE to confirm</label>
+            <label for="confirmation" data-lang-key data-lang-en="Type DELETE to confirm" data-lang-fa="برای تأیید DELETE را تایپ کنید">Type DELETE to confirm</label>
             <input id="confirmation" type="text" name="confirmation" placeholder="DELETE" required autocomplete="off">
           </div>
           <div class="form-actions">
-            <button class="btn btn-ghost" type="submit" style="border-color:rgba(239,68,68,.4);color:#f87171;">Delete all content</button>
+            <button class="btn btn-ghost" type="submit" style="border-color:rgba(239,68,68,.4);color:#f87171;" data-lang-key data-lang-en="Delete all content" data-lang-fa="حذف همه محتوا">Delete all content</button>
           </div>
         </form>
       </section>

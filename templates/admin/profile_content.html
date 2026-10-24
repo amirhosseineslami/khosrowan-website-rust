@@ -10,14 +10,14 @@
   <div class="admin-main">
     <header class="admin-topbar">
       <div>
-        <h1>Profile content</h1>
-        <p>Edit experiences, services and skills — in Persian and English.</p>
+        <h1 data-lang-key data-lang-en="Profile content" data-lang-fa="محتوای پروفایل">Profile content</h1>
+        <p data-lang-key data-lang-en="Edit experiences, services and skills — in Persian and English." data-lang-fa="تجربهها، خدمات و مهارتها را ویرایش کنید — به فارسی و انگلیسی.">Edit experiences, services and skills — in Persian and English.</p>
       </div>
     </header>
 
     <div class="admin-content">
       <section class="card">
-        <h2 style="font-size:var(--step-1);margin-bottom:1rem;">Experiences</h2>
+        <h2 style="font-size:var(--step-1);margin-bottom:1rem;"><span data-lang-key data-lang-en="Experiences" data-lang-fa="تجربهها">Experiences</span></h2>
         <div class="stack">
           {% for e in view.experiences %}
           <form method="post" action="/admin/profile-content/save" class="form" style="border:1px solid var(--border);border-radius:var(--radius);padding:1rem;">
@@ -27,56 +27,56 @@
             <input type="hidden" name="kind" value="{{ e.kind }}">
             <div class="form-row">
               <div class="field">
-                <label>Title (فارسی)</label>
+                <label data-lang-key data-lang-en="Title (Persian)" data-lang-fa="عنوان (فارسی)">Title (Persian)</label>
                 <input type="text" name="title" value="{{ e.title }}" required>
               </div>
               <div class="field">
-                <label>Title (English)</label>
+                <label data-lang-key data-lang-en="Title (English)" data-lang-fa="عنوان (انگلیسی)">Title (English)</label>
                 <input type="text" name="title_en" value="{{ e.title_en }}">
               </div>
             </div>
             <div class="form-row">
               <div class="field">
-                <label>Company</label>
+                <label data-lang-key data-lang-en="Company" data-lang-fa="شرکت">Company</label>
                 <input type="text" name="company" value="{{ e.company }}">
               </div>
               <div class="field">
-                <label>Company (English)</label>
+                <label data-lang-key data-lang-en="Company (English)" data-lang-fa="شرکت (انگلیسی)">Company (English)</label>
                 <input type="text" name="company_en" value="{{ e.company_en }}">
               </div>
               <div class="field">
-                <label>Location</label>
+                <label data-lang-key data-lang-en="Location" data-lang-fa="مکان">Location</label>
                 <input type="text" name="location" value="{{ e.location }}">
               </div>
             </div>
             <div class="form-row">
               <div class="field">
-                <label>Start</label>
+                <label data-lang-key data-lang-en="Start" data-lang-fa="شروع">Start</label>
                 <input type="text" name="start_date" value="{{ e.start_date }}" placeholder="2021">
               </div>
               <div class="field">
-                <label>End</label>
+                <label data-lang-key data-lang-en="End" data-lang-fa="پایان">End</label>
                 <input type="text" name="end_date" value="{{ e.end_date }}" placeholder="2024">
               </div>
               <div class="field">
-                <label class="checkbox"><input type="checkbox" name="is_current" value="on" {% if e.is_current %}checked{% endif %}> Current</label>
+                <label class="checkbox"><input type="checkbox" name="is_current" value="on" {% if e.is_current %}checked{% endif %}> <span data-lang-key data-lang-en="Current" data-lang-fa="فعلی">Current</span></label>
               </div>
               <div class="field">
-                <label>Sort</label>
+                <label data-lang-key data-lang-en="Sort" data-lang-fa="ترتیب">Sort</label>
                 <input type="number" name="sort_order" value="{{ e.sort_order }}">
               </div>
             </div>
             <div class="field">
-              <label>Description (فارسی)</label>
+              <label data-lang-key data-lang-en="Description (Persian)" data-lang-fa="توضیحات (فارسی)">Description (Persian)</label>
               <textarea name="description" style="min-height:70px;">{{ e.description }}</textarea>
             </div>
             <div class="field">
-              <label>Description (English)</label>
+              <label data-lang-key data-lang-en="Description (English)" data-lang-fa="توضیحات (انگلیسی)">Description (English)</label>
               <textarea name="description_en" style="min-height:70px;">{{ e.description_en }}</textarea>
             </div>
             <div class="form-actions">
-              <button class="btn btn-primary btn-sm" type="submit">Save</button>
-              <button class="btn btn-sm btn-ghost" type="submit" formaction="/admin/profile-content/experience/{{ e.id }}/delete" formmethod="post" onclick="return confirm('Delete this experience?')">Delete</button>
+              <button class="btn btn-primary btn-sm" type="submit"><span data-lang-key data-lang-en="Save" data-lang-fa="ذخیره">Save</span></button>
+              <button class="btn btn-sm btn-ghost" type="submit" formaction="/admin/profile-content/experience/{{ e.id }}/delete" formmethod="post" onclick="return confirm('Delete this experience?')"><span data-lang-key data-lang-en="Delete" data-lang-fa="حذف">Delete</span></button>
             </div>
           </form>
           {% endfor %}
@@ -84,7 +84,7 @@
       </section>
 
       <section class="card" style="margin-top:var(--space-l);">
-        <h2 style="font-size:var(--step-1);margin-bottom:1rem;">Services</h2>
+        <h2 style="font-size:var(--step-1);margin-bottom:1rem;"><span data-lang-key data-lang-en="Services" data-lang-fa="خدمات">Services</span></h2>
         <div class="stack">
           {% for s in view.services %}
           <form method="post" action="/admin/profile-content/save" class="form" style="border:1px solid var(--border);border-radius:var(--radius);padding:1rem;">
@@ -93,49 +93,49 @@
             <input type="hidden" name="id" value="{{ s.id }}">
             <div class="form-row">
               <div class="field">
-                <label>Title (فارسی)</label>
+                <label data-lang-key data-lang-en="Title (Persian)" data-lang-fa="عنوان (فارسی)">Title (Persian)</label>
                 <input type="text" name="title" value="{{ s.title }}" required>
               </div>
               <div class="field">
-                <label>Title (English)</label>
+                <label data-lang-key data-lang-en="Title (English)" data-lang-fa="عنوان (انگلیسی)">Title (English)</label>
                 <input type="text" name="title_en" value="{{ s.title_en }}">
               </div>
             </div>
             <div class="form-row">
               <div class="field">
-                <label>Icon</label>
+                <label data-lang-key data-lang-en="Icon" data-lang-fa="آیکن">Icon</label>
                 <input type="text" name="icon" value="{{ s.icon }}">
               </div>
               <div class="field">
-                <label>Price</label>
+                <label data-lang-key data-lang-en="Price" data-lang-fa="قیمت">Price</label>
                 <input type="text" name="price_from" value="{{ s.price_from }}">
               </div>
               <div class="field">
-                <label>Sort</label>
+                <label data-lang-key data-lang-en="Sort" data-lang-fa="ترتیب">Sort</label>
                 <input type="number" name="sort_order" value="{{ s.sort_order }}">
               </div>
             </div>
             <div class="field">
-              <label>Description (فارسی)</label>
+              <label data-lang-key data-lang-en="Description (Persian)" data-lang-fa="توضیحات (فارسی)">Description (Persian)</label>
               <textarea name="description" style="min-height:70px;">{{ s.description }}</textarea>
             </div>
             <div class="field">
-              <label>Description (English)</label>
+              <label data-lang-key data-lang-en="Description (English)" data-lang-fa="توضیحات (انگلیسی)">Description (English)</label>
               <textarea name="description_en" style="min-height:70px;">{{ s.description_en }}</textarea>
             </div>
             <div class="form-row">
               <div class="field">
-                <label>Features JSON (فارسی)</label>
+                <label data-lang-key data-lang-en="Features JSON (Persian)" data-lang-fa="ویژگیها JSON (فارسی)">Features JSON (Persian)</label>
                 <textarea name="features" style="min-height:50px;">{{ s.features }}</textarea>
               </div>
               <div class="field">
-                <label>Features JSON (English)</label>
+                <label data-lang-key data-lang-en="Features JSON (English)" data-lang-fa="ویژگیها JSON (انگلیسی)">Features JSON (English)</label>
                 <textarea name="features_en" style="min-height:50px;">{{ s.features_en }}</textarea>
               </div>
             </div>
             <div class="form-actions">
-              <button class="btn btn-primary btn-sm" type="submit">Save</button>
-              <button class="btn btn-sm btn-ghost" type="submit" formaction="/admin/profile-content/service/{{ s.id }}/delete" formmethod="post" onclick="return confirm('Delete this service?')">Delete</button>
+              <button class="btn btn-primary btn-sm" type="submit"><span data-lang-key data-lang-en="Save" data-lang-fa="ذخیره">Save</span></button>
+              <button class="btn btn-sm btn-ghost" type="submit" formaction="/admin/profile-content/service/{{ s.id }}/delete" formmethod="post" onclick="return confirm('Delete this service?')"><span data-lang-key data-lang-en="Delete" data-lang-fa="حذف">Delete</span></button>
             </div>
           </form>
           {% endfor %}
@@ -143,7 +143,7 @@
       </section>
 
       <section class="card" style="margin-top:var(--space-l);">
-        <h2 style="font-size:var(--step-1);margin-bottom:1rem;">Skills</h2>
+        <h2 style="font-size:var(--step-1);margin-bottom:1rem;"><span data-lang-key data-lang-en="Skills" data-lang-fa="مهارتها">Skills</span></h2>
         <div class="stack">
           {% for k in view.skills %}
           <form method="post" action="/admin/profile-content/save" class="form" style="border:1px solid var(--border);border-radius:var(--radius);padding:1rem;">
@@ -152,39 +152,39 @@
             <input type="hidden" name="id" value="{{ k.id }}">
             <div class="form-row">
               <div class="field">
-                <label>Name (فارسی)</label>
+                <label data-lang-key data-lang-en="Name (Persian)" data-lang-fa="نام (فارسی)">Name (Persian)</label>
                 <input type="text" name="name" value="{{ k.name }}" required>
               </div>
               <div class="field">
-                <label>Name (English)</label>
+                <label data-lang-key data-lang-en="Name (English)" data-lang-fa="نام (انگلیسی)">Name (English)</label>
                 <input type="text" name="name_en" value="{{ k.name_en }}">
               </div>
               <div class="field">
-                <label>Category (فارسی)</label>
+                <label data-lang-key data-lang-en="Category (Persian)" data-lang-fa="دسته (فارسی)">Category (Persian)</label>
                 <input type="text" name="category" value="{{ k.category }}">
               </div>
               <div class="field">
-                <label>Category (English)</label>
+                <label data-lang-key data-lang-en="Category (English)" data-lang-fa="دسته (انگلیسی)">Category (English)</label>
                 <input type="text" name="category_en" value="{{ k.category_en }}">
               </div>
             </div>
             <div class="form-row">
               <div class="field">
-                <label>Level (0-100)</label>
+                <label data-lang-key data-lang-en="Level (0-100)" data-lang-fa="سطح (۰-۱۰۰)">Level (0-100)</label>
                 <input type="number" name="level" value="{{ k.level }}" min="0" max="100">
               </div>
               <div class="field">
-                <label>Years</label>
+                <label data-lang-key data-lang-en="Years" data-lang-fa="سالها">Years</label>
                 <input type="text" name="years" value="{{ k.years }}">
               </div>
               <div class="field">
-                <label>Sort</label>
+                <label data-lang-key data-lang-en="Sort" data-lang-fa="ترتیب">Sort</label>
                 <input type="number" name="sort_order" value="{{ k.sort_order }}">
               </div>
             </div>
             <div class="form-actions">
-              <button class="btn btn-primary btn-sm" type="submit">Save</button>
-              <button class="btn btn-sm btn-ghost" type="submit" formaction="/admin/profile-content/skill/{{ k.id }}/delete" formmethod="post" onclick="return confirm('Delete this skill?')">Delete</button>
+              <button class="btn btn-primary btn-sm" type="submit"><span data-lang-key data-lang-en="Save" data-lang-fa="ذخیره">Save</span></button>
+              <button class="btn btn-sm btn-ghost" type="submit" formaction="/admin/profile-content/skill/{{ k.id }}/delete" formmethod="post" onclick="return confirm('Delete this skill?')"><span data-lang-key data-lang-en="Delete" data-lang-fa="حذف">Delete</span></button>
             </div>
           </form>
           {% endfor %}

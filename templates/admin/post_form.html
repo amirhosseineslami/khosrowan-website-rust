@@ -10,20 +10,20 @@
   <div class="admin-main">
     <header class="admin-topbar">
       <div>
-        <h1>{% if view.is_new %}New post{% else %}Edit post{% endif %}</h1>
+        <h1>{% if view.is_new %}<span data-lang-key data-lang-en="New post" data-lang-fa="پست جدید">New post</span>{% else %}<span data-lang-key data-lang-en="Edit post" data-lang-fa="ویرایش پست">Edit post</span>{% endif %}</h1>
         <p>
           {% if view.is_new %}
-          Write something worth reading.
+          <span data-lang-key data-lang-en="Write something worth reading." data-lang-fa="چیزی ارزش خواندن بنویسید.">Write something worth reading.</span>
           {% else %}
-          Last updated {{ view.post.as_ref().unwrap().updated_at }} · {{ view.post.as_ref().unwrap().view_count }} views
+          <span data-lang-key data-lang-en="Last updated" data-lang-fa="آخرین بهروزرسانی">Last updated</span> {{ view.post.as_ref().unwrap().updated_at }} · {{ view.post.as_ref().unwrap().view_count }} <span data-lang-key data-lang-en="views" data-lang-fa="بازدید">views</span>
           {% endif %}
         </p>
       </div>
       <div class="flex">
         {% if !view.is_new %}
-        <a class="btn btn-sm btn-ghost" href="/blog/{{ view.post.as_ref().unwrap().slug }}" target="_blank" rel="noopener">Preview</a>
+        <a class="btn btn-sm btn-ghost" href="/blog/{{ view.post.as_ref().unwrap().slug }}" target="_blank" rel="noopener" data-lang-key data-lang-en="Preview" data-lang-fa="پیشنمایش">Preview</a>
         {% endif %}
-        <a class="btn btn-sm btn-ghost" href="/admin/posts">Cancel</a>
+        <a class="btn btn-sm btn-ghost" href="/admin/posts" data-lang-key data-lang-en="Cancel" data-lang-fa="لغو">Cancel</a>
       </div>
     </header>
 
@@ -40,41 +40,41 @@
             <section class="card">
               <div class="form">
                 <div class="field">
-                  <label for="title">Title</label>
-                  <input id="title" type="text" name="title" required data-slug-source
+                  <label for="title" data-lang-key data-lang-en="Title" data-lang-fa="عنوان">Title</label>
+                  <input id="title" type="text" name="title" required data-slug-source data-lang-key data-lang-en="A title that earns the click" data-lang-fa="عنوانی که شایسته کلیک است"
                          value="{% if !view.is_new %}{{ view.post.as_ref().unwrap().title }}{% endif %}"
                          placeholder="A title that earns the click">
                 </div>
 
                 <div class="field">
-                  <label for="slug">Slug</label>
-                  <input id="slug" type="text" name="slug" data-slug-target
+                  <label for="slug" data-lang-key data-lang-en="Slug" data-lang-fa="اسلاگ">Slug</label>
+                  <input id="slug" type="text" name="slug" data-slug-target data-lang-key data-lang-en="auto-generated-from-title" data-lang-fa="بهطور خودکار از عنوان ساخته میشود"
                          value="{% if !view.is_new %}{{ view.post.as_ref().unwrap().slug }}{% endif %}"
                          placeholder="auto-generated-from-title">
-                  <span class="hint">Leave blank to generate it from the title.</span>
+                  <span class="hint" data-lang-key data-lang-en="Leave blank to generate it from the title." data-lang-fa="برای ایجاد آن از روی عنوان، خالی بگذارید.">Leave blank to generate it from the title.</span>
                 </div>
 
                 <div class="field">
-                  <label for="excerpt">Excerpt</label>
-                  <textarea id="excerpt" name="excerpt" style="min-height:90px;"
+                  <label for="excerpt" data-lang-key data-lang-en="Excerpt" data-lang-fa="خلاصه">Excerpt</label>
+                  <textarea id="excerpt" name="excerpt" style="min-height:90px;" data-lang-key data-lang-en="A short summary used on cards and in search results." data-lang-fa="خلاصهای کوتاه برای کارتها و نتایج جستجو."
                             placeholder="A short summary used on cards and in search results.">{% if !view.is_new %}{{ view.post.as_ref().unwrap().excerpt }}{% endif %}</textarea>
                 </div>
 
                 <div class="field">
-                  <label for="content">Content (Markdown)</label>
+                  <label for="content" data-lang-key data-lang-en="Content (Markdown)" data-lang-fa="محتوا (مارکداون)">Content (Markdown)</label>
                   <div class="editor-toolbar">
                     <button type="button" data-md="## ">H2</button>
                     <button type="button" data-md="### ">H3</button>
                     <button type="button" data-md="**bold**">B</button>
                     <button type="button" data-md="_italic_">I</button>
-                    <button type="button" data-md="`code`">Code</button>
-                    <button type="button" data-md="> ">Quote</button>
-                    <button type="button" data-md="- ">List</button>
-                    <button type="button" data-md="[link](https://)">Link</button>
-                    <button type="button" data-md="![alt](https://)">Image</button>
-                    <button type="button" data-preview-toggle>Preview</button>
+                    <button type="button" data-md="`code`" data-lang-key data-lang-en="Code" data-lang-fa="کد">Code</button>
+                    <button type="button" data-md="> " data-lang-key data-lang-en="Quote" data-lang-fa="نقلقول">Quote</button>
+                    <button type="button" data-md="- " data-lang-key data-lang-en="List" data-lang-fa="فهرست">List</button>
+                    <button type="button" data-md="[link](https://)" data-lang-key data-lang-en="Link" data-lang-fa="پیوند">Link</button>
+                    <button type="button" data-md="![alt](https://)" data-lang-key data-lang-en="Image" data-lang-fa="تصویر">Image</button>
+                    <button type="button" data-preview-toggle data-lang-key data-lang-en="Preview" data-lang-fa="پیشنمایش">Preview</button>
                   </div>
-                  <textarea id="content" name="content" class="editor-area" data-editor
+                  <textarea id="content" name="content" class="editor-area" data-editor data-lang-key data-lang-en="Write in Markdown…" data-lang-fa="با مارکداون بنویسید…"
                             placeholder="Write in Markdown…">{% if !view.is_new %}{{ view.post.as_ref().unwrap().content_md }}{% endif %}</textarea>
                   <span class="hint" data-editor-stats>0 words · 1 min read</span>
                 </div>
@@ -84,22 +84,22 @@
 
           <div class="stack">
             <section class="card">
-              <h2 style="font-size:var(--step-1);margin-bottom:1rem;">Publishing</h2>
+              <h2 style="font-size:var(--step-1);margin-bottom:1rem;" data-lang-key data-lang-en="Publishing" data-lang-fa="انتشار">Publishing</h2>
               <div class="form">
                 <div class="field">
-                  <label for="status">Status</label>
+                  <label for="status" data-lang-key data-lang-en="Status" data-lang-fa="وضعیت">Status</label>
                   <select id="status" name="status">
-                    <option value="draft" {% if !view.is_new && view.post.as_ref().unwrap().status == "draft" %}selected{% endif %}>Draft</option>
-                    <option value="published" {% if !view.is_new && view.post.as_ref().unwrap().status == "published" %}selected{% endif %}>Published</option>
-                    <option value="scheduled" {% if !view.is_new && view.post.as_ref().unwrap().status == "scheduled" %}selected{% endif %}>Scheduled</option>
-                    <option value="archived" {% if !view.is_new && view.post.as_ref().unwrap().status == "archived" %}selected{% endif %}>Archived</option>
+                    <option value="draft" data-lang-key data-lang-en="Draft" data-lang-fa="پیشنویس" {% if !view.is_new && view.post.as_ref().unwrap().status == "draft" %}selected{% endif %}>Draft</option>
+                    <option value="published" data-lang-key data-lang-en="Published" data-lang-fa="منتشرشده" {% if !view.is_new && view.post.as_ref().unwrap().status == "published" %}selected{% endif %}>Published</option>
+                    <option value="scheduled" data-lang-key data-lang-en="Scheduled" data-lang-fa="زمانبندیشده" {% if !view.is_new && view.post.as_ref().unwrap().status == "scheduled" %}selected{% endif %}>Scheduled</option>
+                    <option value="archived" data-lang-key data-lang-en="Archived" data-lang-fa="بایگانیشده" {% if !view.is_new && view.post.as_ref().unwrap().status == "archived" %}selected{% endif %}>Archived</option>
                   </select>
                 </div>
 
                 <div class="field">
-                  <label for="category_id">Category</label>
+                  <label for="category_id" data-lang-key data-lang-en="Category" data-lang-fa="دسته">Category</label>
                   <select id="category_id" name="category_id">
-                    <option value="">— none —</option>
+                    <option value="" data-lang-key data-lang-en="— none —" data-lang-fa="— هیچ —">— none —</option>
                     {% for category in view.categories %}
                     <option value="{{ category.id }}" {% if !view.is_new && view.post.as_ref().unwrap().category_id_str == category.id.to_string() %}selected{% endif %}>{{ category.name }}</option>
                     {% endfor %}
@@ -107,56 +107,56 @@
                 </div>
 
                 <div class="field">
-                  <label for="tags">Tags</label>
-                  <input id="tags" type="text" name="tags"
+                  <label for="tags" data-lang-key data-lang-en="Tags" data-lang-fa="برچسبها">Tags</label>
+                  <input id="tags" type="text" name="tags" data-lang-key data-lang-en="rust, performance, databases" data-lang-fa="Rust، کارایی، پایگاهداده"
                          value="{% if !view.is_new %}{{ view.all_tags }}{% endif %}"
                          placeholder="rust, performance, databases">
-                  <span class="hint">Comma separated. Existing tags are reused.</span>
+                  <span class="hint" data-lang-key data-lang-en="Comma separated. Existing tags are reused." data-lang-fa="با ویرگول جدا کنید. برچسبهای موجود دوباره استفاده میشوند.">Comma separated. Existing tags are reused.</span>
                 </div>
 
                 <div class="field">
-                  <label for="published_at">Published at</label>
+                  <label for="published_at" data-lang-key data-lang-en="Published at" data-lang-fa="زمان انتشار">Published at</label>
                   <input id="published_at" type="datetime-local" name="published_at"
                          value="{% if !view.is_new %}{{ view.post.as_ref().unwrap().published_at }}{% endif %}">
                 </div>
 
                 <div class="field">
-                  <label for="scheduled_for">Schedule for</label>
+                  <label for="scheduled_for" data-lang-key data-lang-en="Schedule for" data-lang-fa="زمانبندی برای">Schedule for</label>
                   <input id="scheduled_for" type="datetime-local" name="scheduled_for"
                          value="{% if !view.is_new %}{{ view.post.as_ref().unwrap().scheduled_for }}{% endif %}">
-                  <span class="hint">When set with the “Scheduled” status, the post goes live automatically.</span>
+                  <span class="hint" data-lang-key data-lang-en="When set with the “Scheduled” status, the post goes live automatically." data-lang-fa="وقتی همراه با وضعیت «زمانبندیشده» تنظیم شود، پست بهطور خودکار منتشر میشود.">When set with the “Scheduled” status, the post goes live automatically.</span>
                 </div>
 
                 <label class="checkbox">
                   <input type="checkbox" name="is_featured" value="on" {% if !view.is_new && view.post.as_ref().unwrap().is_featured %}checked{% endif %}>
-                  Feature this post on the home page
+                  <span data-lang-key data-lang-en="Feature this post on the home page" data-lang-fa="ویژه کردن این پست در صفحه اصلی">Feature this post on the home page</span>
                 </label>
 
                 <label class="checkbox">
                   <input type="checkbox" name="allow_comments" value="on" {% if view.is_new || view.post.as_ref().unwrap().allow_comments %}checked{% endif %}>
-                  Allow comments
+                  <span data-lang-key data-lang-en="Allow comments" data-lang-fa="اجازه دادن به نظرات">Allow comments</span>
                 </label>
               </div>
             </section>
 
             <section class="card">
-              <h2 style="font-size:var(--step-1);margin-bottom:1rem;">SEO &amp; media</h2>
+              <h2 style="font-size:var(--step-1);margin-bottom:1rem;" data-lang-key data-lang-en="SEO &amp; media" data-lang-fa="سئو و رسانه">SEO &amp; media</h2>
               <div class="form">
                 <div class="field">
-                  <label for="cover_image">Cover image</label>
-                  <input id="cover_image" type="text" name="cover_image"
+                  <label for="cover_image" data-lang-key data-lang-en="Cover image" data-lang-fa="تصویر جلد">Cover image</label>
+                  <input id="cover_image" type="text" name="cover_image" data-lang-key data-lang-en="/media/cover.png" data-lang-fa="/media/cover.png"
                          value="{% if !view.is_new %}{{ view.post.as_ref().unwrap().cover_image }}{% endif %}"
                          placeholder="/media/cover.png">
                 </div>
                 <div class="field">
-                  <label for="meta_title">Meta title</label>
-                  <input id="meta_title" type="text" name="meta_title"
+                  <label for="meta_title" data-lang-key data-lang-en="Meta title" data-lang-fa="عنوان متا">Meta title</label>
+                  <input id="meta_title" type="text" name="meta_title" data-lang-key data-lang-en="Defaults to the post title" data-lang-fa="پیشفرض: عنوان پست"
                          value="{% if !view.is_new %}{{ view.post.as_ref().unwrap().meta_title }}{% endif %}"
                          placeholder="Defaults to the post title">
                 </div>
                 <div class="field">
-                  <label for="meta_description">Meta description</label>
-                  <textarea id="meta_description" name="meta_description" style="min-height:80px;"
+                  <label for="meta_description" data-lang-key data-lang-en="Meta description" data-lang-fa="توضیحات متا">Meta description</label>
+                  <textarea id="meta_description" name="meta_description" style="min-height:80px;" data-lang-key data-lang-en="Defaults to the excerpt" data-lang-fa="پیشفرض: خلاصه"
                             placeholder="Defaults to the excerpt">{% if !view.is_new %}{{ view.post.as_ref().unwrap().meta_description }}{% endif %}</textarea>
                 </div>
               </div>
@@ -164,8 +164,8 @@
 
             <section class="card">
               <div class="form-actions">
-                <button class="btn btn-primary" type="submit">{% if view.is_new %}Create post{% else %}Save changes{% endif %}</button>
-                <a class="btn btn-ghost" href="/admin/posts">Cancel</a>
+                <button class="btn btn-primary" type="submit">{% if view.is_new %}<span data-lang-key data-lang-en="Create post" data-lang-fa="ایجاد پست">Create post</span>{% else %}<span data-lang-key data-lang-en="Save changes" data-lang-fa="ذخیره تغییرات">Save changes</span>{% endif %}</button>
+                <a class="btn btn-ghost" href="/admin/posts" data-lang-key data-lang-en="Cancel" data-lang-fa="لغو">Cancel</a>
               </div>
             </section>
           </div>
@@ -175,37 +175,37 @@
       <div class="admin-grid-2" style="align-items:start;">
         <section class="card" data-preview-wrap hidden>
           <div class="flex-between" style="margin-bottom:1rem;">
-            <h2 style="font-size:var(--step-1);">Live preview</h2>
-            <span class="pill pill-plain">Rendered Markdown</span>
+            <h2 style="font-size:var(--step-1);" data-lang-key data-lang-en="Live preview" data-lang-fa="پیشنمایش زنده">Live preview</h2>
+            <span class="pill pill-plain" data-lang-key data-lang-en="Rendered Markdown" data-lang-fa="مارکداون رندر شده">Rendered Markdown</span>
           </div>
           <div class="prose" data-preview></div>
         </section>
 
         {% if !view.is_new %}
         <section class="card">
-          <h2 style="font-size:var(--step-1);margin-bottom:1rem;">Quick actions</h2>
+          <h2 style="font-size:var(--step-1);margin-bottom:1rem;" data-lang-key data-lang-en="Quick actions" data-lang-fa="اقدامات سریع">Quick actions</h2>
           <div class="stack" style="--space-s:.6rem;">
             <form method="post" action="/admin/posts/{{ view.post.as_ref().unwrap().id }}/status">
               <input type="hidden" name="csrf_token" value="{{ view.csrf_token }}">
               <input type="hidden" name="status" value="published">
-              <button class="btn btn-sm btn-block" type="submit">Publish now</button>
+              <button class="btn btn-sm btn-block" type="submit" data-lang-key data-lang-en="Publish now" data-lang-fa="انتشار اکنون">Publish now</button>
             </form>
             <form method="post" action="/admin/posts/{{ view.post.as_ref().unwrap().id }}/status">
               <input type="hidden" name="csrf_token" value="{{ view.csrf_token }}">
               <input type="hidden" name="status" value="draft">
-              <button class="btn btn-sm btn-block btn-ghost" type="submit">Move to drafts</button>
+              <button class="btn btn-sm btn-block btn-ghost" type="submit" data-lang-key data-lang-en="Move to drafts" data-lang-fa="انتقال به پیشنویسها">Move to drafts</button>
             </form>
             <form method="post" action="/admin/posts/{{ view.post.as_ref().unwrap().id }}/delete" data-confirm="Delete this post permanently?">
               <input type="hidden" name="csrf_token" value="{{ view.csrf_token }}">
-              <button class="btn btn-sm btn-block btn-ghost" type="submit">Delete permanently</button>
+              <button class="btn btn-sm btn-block btn-ghost" type="submit" data-lang-key data-lang-en="Delete permanently" data-lang-fa="حذف دائمی">Delete permanently</button>
             </form>
           </div>
 
           <div class="stack" style="--space-s:.35rem;margin-top:1.2rem;font-size:.85rem;">
-            <div class="flex-between"><span class="text-muted">Created</span><span>{{ view.post.as_ref().unwrap().created_at }}</span></div>
-            <div class="flex-between"><span class="text-muted">Words</span><span>{{ view.post.as_ref().unwrap().word_count }}</span></div>
-            <div class="flex-between"><span class="text-muted">Reading time</span><span>{{ view.post.as_ref().unwrap().reading_time }} min</span></div>
-            <div class="flex-between"><span class="text-muted">Views</span><span>{{ view.post.as_ref().unwrap().view_count }}</span></div>
+            <div class="flex-between"><span class="text-muted" data-lang-key data-lang-en="Created" data-lang-fa="ساختهشده">Created</span><span>{{ view.post.as_ref().unwrap().created_at }}</span></div>
+            <div class="flex-between"><span class="text-muted" data-lang-key data-lang-en="Words" data-lang-fa="واژهها">Words</span><span>{{ view.post.as_ref().unwrap().word_count }}</span></div>
+            <div class="flex-between"><span class="text-muted" data-lang-key data-lang-en="Reading time" data-lang-fa="زمان مطالعه">Reading time</span><span>{{ view.post.as_ref().unwrap().reading_time }} <span data-lang-key data-lang-en="min" data-lang-fa="دقیقه">min</span></span></div>
+            <div class="flex-between"><span class="text-muted" data-lang-key data-lang-en="Views" data-lang-fa="بازدید">Views</span><span>{{ view.post.as_ref().unwrap().view_count }}</span></div>
           </div>
         </section>
         {% endif %}

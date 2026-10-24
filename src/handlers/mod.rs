@@ -198,6 +198,9 @@ async fn fallback(
     if raw_path == "/fa/" {
         return Redirect::to("/fa").into_response();
     }
+    if raw_path == "/admin/" {
+        return Redirect::to("/admin").into_response();
+    }
 
     let path = raw_path.trim_start_matches('/').to_string();
 

@@ -10,57 +10,57 @@
   <div class="admin-main">
     <header class="admin-topbar">
       <div>
-        <h1>Dashboard</h1>
-        <p>Welcome back, {{ view.base.user.as_ref().unwrap().display_name }}.</p>
+        <h1 data-lang-key data-lang-en="Dashboard" data-lang-fa="داشبورد">Dashboard</h1>
+        <p><span data-lang-key data-lang-en="Welcome back," data-lang-fa="خوش آمدید،">Welcome back,</span> {{ view.base.user.as_ref().unwrap().display_name }}.</p>
       </div>
       <div class="flex">
-        <a class="btn btn-sm" href="/" target="_blank" rel="noopener">View site</a>
-        <a class="btn btn-sm btn-primary" href="/admin/posts/new">New post</a>
+        <a class="btn btn-sm" href="/" target="_blank" rel="noopener" data-lang-key data-lang-en="View site" data-lang-fa="مشاهده سایت">View site</a>
+        <a class="btn btn-sm btn-primary" href="/admin/posts/new" data-lang-key data-lang-en="New post" data-lang-fa="پست جدید">New post</a>
       </div>
     </header>
 
     <div class="admin-content">
       <div class="admin-grid-3">
         <div class="kpi">
-          <div class="kpi-label">Published posts</div>
+          <div class="kpi-label" data-lang-key data-lang-en="Published posts" data-lang-fa="پستهای منتشرشده">Published posts</div>
           <div class="kpi-value">{{ view.stats.posts_published }}</div>
-          <div class="kpi-hint">{{ view.stats.posts_draft }} draft(s), {{ view.stats.posts_scheduled }} scheduled</div>
+          <div class="kpi-hint">{{ view.stats.posts_draft }} <span data-lang-key data-lang-en="draft(s)," data-lang-fa="پیشنویس،">draft(s),</span> {{ view.stats.posts_scheduled }} <span data-lang-key data-lang-en="scheduled" data-lang-fa="زمانبندیشده">scheduled</span></div>
         </div>
         <div class="kpi">
-          <div class="kpi-label">Page views</div>
+          <div class="kpi-label" data-lang-key data-lang-en="Page views" data-lang-fa="بازدید صفحه">Page views</div>
           <div class="kpi-value">{{ view.stats.views_total }}</div>
-          <div class="kpi-hint">{{ view.stats.views_week }} in the last 7 days</div>
+          <div class="kpi-hint">{{ view.stats.views_week }} <span data-lang-key data-lang-en="in the last 7 days" data-lang-fa="در ۷ روز اخیر">in the last 7 days</span></div>
         </div>
         <div class="kpi">
-          <div class="kpi-label">Pending comments</div>
+          <div class="kpi-label" data-lang-key data-lang-en="Pending comments" data-lang-fa="نظرهای در انتظار">Pending comments</div>
           <div class="kpi-value">{{ view.stats.comments_pending }}</div>
-          <div class="kpi-hint">{{ view.stats.comments_total }} in total</div>
+          <div class="kpi-hint">{{ view.stats.comments_total }} <span data-lang-key data-lang-en="in total" data-lang-fa="در مجموع">in total</span></div>
         </div>
         <div class="kpi">
-          <div class="kpi-label">Unread messages</div>
+          <div class="kpi-label" data-lang-key data-lang-en="Unread messages" data-lang-fa="پیامهای خواندهنشده">Unread messages</div>
           <div class="kpi-value">{{ view.stats.messages_new }}</div>
-          <div class="kpi-hint">{{ view.stats.messages_total }} in the inbox</div>
+          <div class="kpi-hint">{{ view.stats.messages_total }} <span data-lang-key data-lang-en="in the inbox" data-lang-fa="در صندوق ورودی">in the inbox</span></div>
         </div>
         <div class="kpi">
-          <div class="kpi-label">Subscribers</div>
+          <div class="kpi-label" data-lang-key data-lang-en="Subscribers" data-lang-fa="مشترکها">Subscribers</div>
           <div class="kpi-value">{{ view.stats.subscribers }}</div>
-          <div class="kpi-hint">Active newsletter readers</div>
+          <div class="kpi-hint" data-lang-key data-lang-en="Active newsletter readers" data-lang-fa="خوانندگان فعال خبرنامه">Active newsletter readers</div>
         </div>
         <div class="kpi">
-          <div class="kpi-label">Projects</div>
+          <div class="kpi-label" data-lang-key data-lang-en="Projects" data-lang-fa="پروژهها">Projects</div>
           <div class="kpi-value">{{ view.stats.projects_total }}</div>
-          <div class="kpi-hint">{{ view.stats.pages_total }} pages · {{ view.stats.media_count }} files</div>
+          <div class="kpi-hint">{{ view.stats.pages_total }} <span data-lang-key data-lang-en="pages" data-lang-fa="صفحه">pages</span> · {{ view.stats.media_count }} <span data-lang-key data-lang-en="files" data-lang-fa="فایل">files</span></div>
         </div>
       </div>
 
       <div class="admin-grid-2">
         <section class="card">
           <div class="flex-between" style="margin-bottom:1rem;">
-            <h2 style="font-size:var(--step-1);">Traffic · last 14 days</h2>
-            <span class="pill pill-plain">{{ view.stats.views_week }} this week</span>
+            <h2 style="font-size:var(--step-1);" data-lang-key data-lang-en="Traffic · last 14 days" data-lang-fa="ترافیک · ۱۴ روز اخیر">Traffic · last 14 days</h2>
+            <span class="pill pill-plain">{{ view.stats.views_week }} <span data-lang-key data-lang-en="this week" data-lang-fa="این هفته">this week</span></span>
           </div>
           {% if view.traffic.is_empty() %}
-          <div class="empty-state"><strong>No traffic recorded yet.</strong></div>
+          <div class="empty-state"><strong data-lang-key data-lang-en="No traffic recorded yet." data-lang-fa="هنوز ترافیکی ثبت نشده است">No traffic recorded yet.</strong></div>
           {% else %}
           <div class="chart">
             {% for point in view.traffic %}
@@ -78,9 +78,9 @@
         </section>
 
         <section class="card">
-          <h2 style="font-size:var(--step-1);margin-bottom:1rem;">Most visited pages</h2>
+          <h2 style="font-size:var(--step-1);margin-bottom:1rem;" data-lang-key data-lang-en="Most visited pages" data-lang-fa="پر بازدیدترین صفحات">Most visited pages</h2>
           {% if view.top_paths.is_empty() %}
-          <div class="empty-state"><strong>Nothing yet.</strong></div>
+          <div class="empty-state"><strong data-lang-key data-lang-en="Nothing yet." data-lang-fa="هنوز چیزی نیست">Nothing yet.</strong></div>
           {% else %}
           <div class="bar-list">
             {% for point in view.top_paths %}
@@ -100,11 +100,11 @@
       <div class="admin-grid-2">
         <section class="card">
           <div class="flex-between" style="margin-bottom:1rem;">
-            <h2 style="font-size:var(--step-1);">Recent posts</h2>
-            <a class="link-arrow text-sm" href="/admin/posts">All</a>
+            <h2 style="font-size:var(--step-1);" data-lang-key data-lang-en="Recent posts" data-lang-fa="پستهای اخیر">Recent posts</h2>
+            <a class="link-arrow text-sm" href="/admin/posts" data-lang-key data-lang-en="All" data-lang-fa="همه">All</a>
           </div>
           {% if view.recent_posts.is_empty() %}
-          <div class="empty-state"><strong>No posts yet.</strong></div>
+          <div class="empty-state"><strong data-lang-key data-lang-en="No posts yet." data-lang-fa="هنوز پستی نیست">No posts yet.</strong></div>
           {% else %}
           <div class="table-wrap" style="border:none;">
             <table class="data" style="min-width:0;">
@@ -113,7 +113,7 @@
                 <tr>
                   <td>
                     <a href="/admin/posts/{{ post.id }}/edit" style="font-weight:560;">{{ post.title }}</a>
-                    <div class="text-faint text-sm">Updated {{ post.updated_at }}</div>
+                    <div class="text-faint text-sm"><span data-lang-key data-lang-en="Updated" data-lang-fa="بهروزرسانی">Updated</span> {{ post.updated_at }}</div>
                   </td>
                   <td style="text-align:right;">
                     <span class="badge badge-{{ post.status_class }}">{{ post.status_label }}</span>
@@ -128,11 +128,11 @@
 
         <section class="card">
           <div class="flex-between" style="margin-bottom:1rem;">
-            <h2 style="font-size:var(--step-1);">Top articles</h2>
-            <a class="link-arrow text-sm" href="/admin/posts">All</a>
+            <h2 style="font-size:var(--step-1);" data-lang-key data-lang-en="Top articles" data-lang-fa="پرخوانندهترین مقالهها">Top articles</h2>
+            <a class="link-arrow text-sm" href="/admin/posts" data-lang-key data-lang-en="All" data-lang-fa="همه">All</a>
           </div>
           {% if view.top_posts.is_empty() %}
-          <div class="empty-state"><strong>Nothing published yet.</strong></div>
+          <div class="empty-state"><strong data-lang-key data-lang-en="Nothing published yet." data-lang-fa="هنوز چیزی منتشر نشده است">Nothing published yet.</strong></div>
           {% else %}
           <div class="table-wrap" style="border:none;">
             <table class="data" style="min-width:0;">
@@ -142,7 +142,7 @@
                   <td>
                     <a href="/blog/{{ post.slug }}" target="_blank" rel="noopener">{{ post.title }}</a>
                   </td>
-                  <td style="text-align:right;" class="mono text-faint">{{ post.views }} views</td>
+                  <td style="text-align:right;" class="mono text-faint">{{ post.views }} <span data-lang-key data-lang-en="views" data-lang-fa="بازدید">views</span></td>
                 </tr>
                 {% endfor %}
               </tbody>
@@ -155,24 +155,24 @@
       <div class="admin-grid-2">
         <section class="card">
           <div class="flex-between" style="margin-bottom:1rem;">
-            <h2 style="font-size:var(--step-1);">Comments awaiting moderation</h2>
-            <a class="link-arrow text-sm" href="/admin/comments">Moderate</a>
+            <h2 style="font-size:var(--step-1);" data-lang-key data-lang-en="Comments awaiting moderation" data-lang-fa="نظرهای در انتظار بررسی">Comments awaiting moderation</h2>
+            <a class="link-arrow text-sm" href="/admin/comments" data-lang-key data-lang-en="Moderate" data-lang-fa="مدیریت نظرها">Moderate</a>
           </div>
           {% if view.pending_comments.is_empty() %}
-          <div class="empty-state"><strong>Inbox zero.</strong> No comments waiting.</div>
+          <div class="empty-state"><strong data-lang-key data-lang-en="Inbox zero." data-lang-fa="صندوق خالی است.">Inbox zero.</strong> <span data-lang-key data-lang-en="No comments waiting" data-lang-fa="نظری در انتظار نیست">No comments waiting</span>.</div>
           {% else %}
           <div class="stack">
             {% for comment in view.pending_comments %}
             <div style="padding-bottom:.8rem;border-bottom:1px solid var(--border);">
               <div class="flex" style="gap:.5rem;">
                 <strong style="font-size:.92rem;">{{ comment.author_name }}</strong>
-                <span class="text-faint text-sm">on {{ comment.post_title }}</span>
+                <span class="text-faint text-sm"><span data-lang-key data-lang-en="on" data-lang-fa="درباره">on</span> {{ comment.post_title }}</span>
               </div>
               <p class="text-muted text-sm" style="margin-top:.3rem;">{{ comment.body }}</p>
               <form method="post" action="/admin/comments/{{ comment.id }}/status" style="margin-top:.5rem;">
                 <input type="hidden" name="csrf_token" value="{{ view.base.csrf_token }}">
                 <input type="hidden" name="status" value="approved">
-                <button class="btn btn-sm" type="submit">Approve</button>
+                <button class="btn btn-sm" type="submit" data-lang-key data-lang-en="Approve" data-lang-fa="تأیید">Approve</button>
               </form>
             </div>
             {% endfor %}
@@ -182,11 +182,11 @@
 
         <section class="card">
           <div class="flex-between" style="margin-bottom:1rem;">
-            <h2 style="font-size:var(--step-1);">New messages</h2>
-            <a class="link-arrow text-sm" href="/admin/messages">Inbox</a>
+            <h2 style="font-size:var(--step-1);" data-lang-key data-lang-en="New messages" data-lang-fa="پیامهای جدید">New messages</h2>
+            <a class="link-arrow text-sm" href="/admin/messages" data-lang-key data-lang-en="Inbox" data-lang-fa="صندوق ورودی">Inbox</a>
           </div>
           {% if view.new_messages.is_empty() %}
-          <div class="empty-state"><strong>No messages.</strong></div>
+          <div class="empty-state"><strong data-lang-key data-lang-en="No messages." data-lang-fa="پیامی نیست">No messages.</strong></div>
           {% else %}
           <div class="stack">
             {% for message in view.new_messages %}
@@ -206,7 +206,7 @@
 
       {% if !view.browser_stats.is_empty() %}
       <section class="card">
-        <h2 style="font-size:var(--step-1);margin-bottom:1rem;">Clients</h2>
+        <h2 style="font-size:var(--step-1);margin-bottom:1rem;" data-lang-key data-lang-en="Clients" data-lang-fa="مرورگرها">Clients</h2>
         <div class="bar-list">
           {% for point in view.browser_stats %}
           <div class="bar-list-item">

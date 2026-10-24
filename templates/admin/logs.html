@@ -10,25 +10,25 @@
   <div class="admin-main">
     <header class="admin-topbar">
       <div>
-        <h1>Activity log</h1>
-        <p>Every administrative action, recorded</p>
+        <h1 data-lang-key data-lang-en="Activity log" data-lang-fa="گزارش فعالیت">Activity log</h1>
+        <p data-lang-key data-lang-en="Every administrative action, recorded" data-lang-fa="تمام اقدامات مدیریتی، ثبتشده">Every administrative action, recorded</p>
       </div>
     </header>
 
     <div class="admin-content">
       <div class="table-wrap">
         {% if view.entries.is_empty() %}
-        <div class="empty-state" style="border:none;"><strong>No activity recorded yet.</strong></div>
+        <div class="empty-state" style="border:none;"><strong data-lang-key data-lang-en="No activity recorded yet." data-lang-fa="هنوز فعالیتی ثبت نشده است.">No activity recorded yet.</strong></div>
         {% else %}
         <table class="data">
           <thead>
             <tr>
-              <th>When</th>
-              <th>User</th>
-              <th>Action</th>
-              <th>Entity</th>
-              <th>Details</th>
-              <th>IP</th>
+              <th data-lang-key data-lang-en="When" data-lang-fa="زمان">When</th>
+              <th data-lang-key data-lang-en="User" data-lang-fa="کاربر">User</th>
+              <th data-lang-key data-lang-en="Action" data-lang-fa="اقدام">Action</th>
+              <th data-lang-key data-lang-en="Entity" data-lang-fa="موجودیت">Entity</th>
+              <th data-lang-key data-lang-en="Details" data-lang-fa="جزئیات">Details</th>
+              <th data-lang-key data-lang-en="IP" data-lang-fa="نشانی IP">IP</th>
             </tr>
           </thead>
           <tbody>

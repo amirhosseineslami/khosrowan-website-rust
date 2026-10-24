@@ -24,7 +24,12 @@
     links.forEach(function (el) {
       var fa = el.getAttribute("data-lang-fa");
       var en = el.getAttribute("data-lang-en");
-      el.textContent = lang === "fa" && fa ? fa : (en || el.textContent);
+      var text = lang === "fa" && fa ? fa : (en || el.textContent);
+      if (el.hasAttribute("placeholder")) {
+        el.setAttribute("placeholder", text);
+      } else {
+        el.textContent = text;
+      }
     });
   }
 
@@ -81,6 +86,21 @@
     });
   }
 
+  // Highlight the sidebar link matching the current path. The dashboard link
+  // (`/admin`) is a prefix of every other admin route, so only it matches
+  // exactly; other links match on a path-segment prefix.
+  function setActiveNav(path) {
+    var clean = path.split("?")[0];
+    document.querySelectorAll(".admin-nav a").forEach(function (a) {
+      var href = (a.getAttribute("href") || "").split("?")[0];
+      var active = false;
+      if (href && clean.indexOf(href) === 0) {
+        active = href === "/admin" ? clean === "/admin" : clean.length === href.length || clean.charAt(href.length) === "/";
+      }
+      a.classList.toggle("active", active);
+    });
+  }
+
   function loadInto(container, path, fromHistory) {
     // Keep the sidebar visible; only the main content area swaps.
     fetch(path, { headers: { "Accept": "text/html" } })
@@ -95,6 +115,10 @@
         container.innerHTML = newMain.innerHTML;
         if (!fromHistory) {
           window.history.pushState({}, "", path);
+        }
+        setActiveNav(path);
+        if (doc.title) {
+          document.title = doc.title;
         }
         // Re-run any inline initializers for the new content.
         initLang();

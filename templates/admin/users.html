@@ -10,11 +10,11 @@
   <div class="admin-main">
     <header class="admin-topbar">
       <div>
-        <h1>Users</h1>
-        <p>Accounts with access to this panel</p>
+        <h1 data-lang-key data-lang-en="Users" data-lang-fa="کاربران">Users</h1>
+        <p data-lang-key data-lang-en="Accounts with access to this panel" data-lang-fa="حسابهایی که به این پنل دسترسی دارند">Accounts with access to this panel</p>
       </div>
       <div class="flex">
-        <a class="btn btn-sm btn-primary" href="/admin/users/new">New user</a>
+        <a class="btn btn-sm btn-primary" href="/admin/users/new" data-lang-key data-lang-en="New user" data-lang-fa="کاربر جدید">New user</a>
       </div>
     </header>
 
@@ -23,13 +23,13 @@
         <table class="data">
           <thead>
             <tr>
-              <th>User</th>
-              <th>E-mail</th>
-              <th>Role</th>
-              <th>Status</th>
-              <th>2FA</th>
-              <th>Last login</th>
-              <th style="text-align:right;">Actions</th>
+              <th data-lang-key data-lang-en="User" data-lang-fa="کاربر">User</th>
+              <th data-lang-key data-lang-en="E-mail" data-lang-fa="ایمیل">E-mail</th>
+              <th data-lang-key data-lang-en="Role" data-lang-fa="نقش">Role</th>
+              <th data-lang-key data-lang-en="Status" data-lang-fa="وضعیت">Status</th>
+              <th data-lang-key data-lang-en="2FA" data-lang-fa="2FA">2FA</th>
+              <th data-lang-key data-lang-en="Last login" data-lang-fa="آخرین ورود">Last login</th>
+              <th style="text-align:right;" data-lang-key data-lang-en="Actions" data-lang-fa="عملیات">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -43,16 +43,16 @@
               <td><span class="badge badge-{{ user.role_class }}">{{ user.role }}</span></td>
               <td>
                 {% if user.is_active %}
-                <span class="badge badge-success">active</span>
+                <span class="badge badge-success" data-lang-key data-lang-en="active" data-lang-fa="فعال">active</span>
                 {% else %}
-                <span class="badge badge-danger">disabled</span>
+                <span class="badge badge-danger" data-lang-key data-lang-en="disabled" data-lang-fa="غیرفعال">disabled</span>
                 {% endif %}
               </td>
-              <td>{% if user.totp_enabled %}<span class="badge badge-info">on</span>{% else %}<span class="text-faint text-sm">off</span>{% endif %}</td>
+              <td>{% if user.totp_enabled %}<span class="badge badge-info" data-lang-key data-lang-en="on" data-lang-fa="روشن">on</span>{% else %}<span class="text-faint text-sm" data-lang-key data-lang-en="off" data-lang-fa="خاموش">off</span>{% endif %}</td>
               <td class="text-sm text-muted">{{ user.last_login_at }}</td>
               <td>
                 <div class="row-actions">
-                  <a class="btn btn-sm" href="/admin/users/{{ user.id }}/edit">Edit</a>
+                  <a class="btn btn-sm" href="/admin/users/{{ user.id }}/edit" data-lang-key data-lang-en="Edit" data-lang-fa="ویرایش">Edit</a>
                   <form method="post" action="/admin/users/{{ user.id }}/sessions">
                     <input type="hidden" name="csrf_token" value="{{ view.base.csrf_token }}">
                     <button class="btn btn-sm btn-ghost" type="submit" title="Revoke sessions">↻</button>
@@ -70,21 +70,21 @@
       </div>
 
       <section class="card">
-        <h2 style="font-size:var(--step-1);margin-bottom:1rem;">Active sessions</h2>
+        <h2 style="font-size:var(--step-1);margin-bottom:1rem;" data-lang-key data-lang-en="Active sessions" data-lang-fa="نشستهای فعال">Active sessions</h2>
         {% if view.sessions.is_empty() %}
-        <div class="empty-state" style="border:none;"><strong>No active sessions.</strong></div>
+        <div class="empty-state" style="border:none;"><strong data-lang-key data-lang-en="No active sessions." data-lang-fa="هیچ نشست فعالی وجود ندارد.">No active sessions.</strong></div>
         {% else %}
         <div class="table-wrap" style="border:none;">
           <table class="data" style="min-width:0;">
             <thead>
-              <tr><th>User</th><th>IP</th><th>Started</th><th>Expires</th></tr>
+              <tr><th data-lang-key data-lang-en="User" data-lang-fa="کاربر">User</th><th data-lang-key data-lang-en="IP" data-lang-fa="IP">IP</th><th data-lang-key data-lang-en="Started" data-lang-fa="شروع">Started</th><th data-lang-key data-lang-en="Expires" data-lang-fa="انقضا">Expires</th></tr>
             </thead>
             <tbody>
               {% for session in view.sessions %}
               <tr>
                 <td>
                   {{ session.username }}
-                  {% if session.is_current %}<span class="pill" style="font-size:.6rem;margin-left:.35rem;">this device</span>{% endif %}
+                  {% if session.is_current %}<span class="pill" style="font-size:.6rem;margin-left:.35rem;" data-lang-key data-lang-en="this device" data-lang-fa="این دستگاه">this device</span>{% endif %}
                 </td>
                 <td class="mono text-sm">{{ session.ip }}</td>
                 <td class="text-sm text-muted">{{ session.created_at }}</td>

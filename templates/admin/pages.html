@@ -10,28 +10,28 @@
   <div class="admin-main">
     <header class="admin-topbar">
       <div>
-        <h1>Pages</h1>
-        <p>Standalone pages managed from the CMS</p>
+        <h1 data-lang-key data-lang-en="Pages" data-lang-fa="صفحات">Pages</h1>
+        <p data-lang-key data-lang-en="Standalone pages managed from the CMS" data-lang-fa="صفحات مستقل که از مدیریت محتوا مدیریت میشوند">Standalone pages managed from the CMS</p>
       </div>
       <div class="flex">
-        <a class="btn btn-sm btn-primary" href="/admin/pages/new">New page</a>
+        <a class="btn btn-sm btn-primary" href="/admin/pages/new" data-lang-key data-lang-en="New page" data-lang-fa="صفحه جدید">New page</a>
       </div>
     </header>
 
     <div class="admin-content">
       <div class="table-wrap">
         {% if view.pages.is_empty() %}
-        <div class="empty-state" style="border:none;"><strong>No pages yet.</strong></div>
+        <div class="empty-state" style="border:none;"><strong data-lang-key data-lang-en="No pages yet." data-lang-fa="هنوز صفحهای وجود ندارد.">No pages yet.</strong></div>
         {% else %}
         <table class="data">
           <thead>
             <tr>
-              <th>Title</th>
-              <th>Status</th>
-              <th>In menu</th>
-              <th>Order</th>
-              <th>Updated</th>
-              <th style="text-align:right;">Actions</th>
+              <th data-lang-key data-lang-en="Title" data-lang-fa="عنوان">Title</th>
+              <th data-lang-key data-lang-en="Status" data-lang-fa="وضعیت">Status</th>
+              <th data-lang-key data-lang-en="In menu" data-lang-fa="در منو">In menu</th>
+              <th data-lang-key data-lang-en="Order" data-lang-fa="ترتیب">Order</th>
+              <th data-lang-key data-lang-en="Updated" data-lang-fa="بهروزرسانی">Updated</th>
+              <th style="text-align:right;" data-lang-key data-lang-en="Actions" data-lang-fa="عملیات">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -42,13 +42,13 @@
                 <div class="text-faint text-sm mono">/{{ page.slug }}</div>
               </td>
               <td><span class="badge badge-{{ page.status_class }}">{{ page.status }}</span></td>
-              <td>{% if page.show_in_nav %}<span class="badge badge-success">visible</span>{% else %}<span class="text-faint text-sm">hidden</span>{% endif %}</td>
+              <td>{% if page.show_in_nav %}<span class="badge badge-success" data-lang-key data-lang-en="visible" data-lang-fa="قابل مشاهده">visible</span>{% else %}<span class="text-faint text-sm" data-lang-key data-lang-en="hidden" data-lang-fa="مخفی">hidden</span>{% endif %}</td>
               <td class="mono text-sm">{{ page.nav_order }}</td>
               <td class="text-sm text-muted">{{ page.updated_at }}</td>
               <td>
                 <div class="row-actions">
-                  <a class="btn btn-sm btn-ghost" href="/{{ page.slug }}" target="_blank" rel="noopener">View</a>
-                  <a class="btn btn-sm" href="/admin/pages/{{ page.id }}/edit">Edit</a>
+                  <a class="btn btn-sm btn-ghost" href="/{{ page.slug }}" target="_blank" rel="noopener" data-lang-key data-lang-en="View" data-lang-fa="مشاهده">View</a>
+                  <a class="btn btn-sm" href="/admin/pages/{{ page.id }}/edit" data-lang-key data-lang-en="Edit" data-lang-fa="ویرایش">Edit</a>
                   <form method="post" action="/admin/pages/{{ page.id }}/delete" data-confirm="Delete “{{ page.title }}”?">
                     <input type="hidden" name="csrf_token" value="{{ view.base.csrf_token }}">
                     <button class="btn btn-sm btn-ghost" type="submit" title="Delete">✕</button>

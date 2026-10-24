@@ -10,11 +10,11 @@
   <div class="admin-main">
     <header class="admin-topbar">
       <div>
-        <h1>{% if view.is_new %}New user{% else %}Edit user{% endif %}</h1>
-        <p>{% if view.is_new %}Give a colleague access to the panel.{% else %}{{ view.user.as_ref().unwrap().username }}{% endif %}</p>
+        <h1>{% if view.is_new %}<span data-lang-key data-lang-en="New user" data-lang-fa="کاربر جدید">New user</span>{% else %}<span data-lang-key data-lang-en="Edit user" data-lang-fa="ویرایش کاربر">Edit user</span>{% endif %}</h1>
+        <p>{% if view.is_new %}<span data-lang-key data-lang-en="Give a colleague access to the panel." data-lang-fa="به همکار خود دسترسی به پنل دهید.">Give a colleague access to the panel.</span>{% else %}{{ view.user.as_ref().unwrap().username }}{% endif %}</p>
       </div>
       <div class="flex">
-        <a class="btn btn-sm btn-ghost" href="/admin/users">Cancel</a>
+        <a class="btn btn-sm btn-ghost" href="/admin/users" data-lang-key data-lang-en="Cancel" data-lang-fa="لغو">Cancel</a>
       </div>
     </header>
 
@@ -30,26 +30,26 @@
           <section class="card">
             <div class="form">
               <div class="field">
-                <label for="username">Username</label>
+                <label for="username" data-lang-key data-lang-en="Username" data-lang-fa="نام کاربری">Username</label>
                 <input id="username" type="text" name="username" required
                        value="{% if !view.is_new %}{{ view.user.as_ref().unwrap().username }}{% endif %}">
               </div>
               <div class="field">
-                <label for="email">E-mail</label>
+                <label for="email" data-lang-key data-lang-en="E-mail" data-lang-fa="ایمیل">E-mail</label>
                 <input id="email" type="email" name="email" required
                        value="{% if !view.is_new %}{{ view.user.as_ref().unwrap().email }}{% endif %}">
               </div>
               <div class="field">
-                <label for="display_name">Display name</label>
+                <label for="display_name" data-lang-key data-lang-en="Display name" data-lang-fa="نام نمایشی">Display name</label>
                 <input id="display_name" type="text" name="display_name"
                        value="{% if !view.is_new %}{{ view.user.as_ref().unwrap().display_name }}{% endif %}">
               </div>
               <div class="field">
-                <label for="bio">Bio</label>
+                <label for="bio" data-lang-key data-lang-en="Bio" data-lang-fa="بیو">Bio</label>
                 <textarea id="bio" name="bio" style="min-height:110px;">{% if !view.is_new %}{{ view.user.as_ref().unwrap().bio }}{% endif %}</textarea>
               </div>
               <div class="field">
-                <label for="avatar">Avatar URL</label>
+                <label for="avatar" data-lang-key data-lang-en="Avatar URL" data-lang-fa="نشانی آواتار">Avatar URL</label>
                 <input id="avatar" type="text" name="avatar"
                        value="{% if !view.is_new %}{{ view.user.as_ref().unwrap().avatar }}{% endif %}"
                        placeholder="/media/me.jpg">
@@ -59,53 +59,53 @@
 
           <div class="stack">
             <section class="card">
-              <h2 style="font-size:var(--step-1);margin-bottom:1rem;">Access</h2>
+              <h2 style="font-size:var(--step-1);margin-bottom:1rem;" data-lang-key data-lang-en="Access" data-lang-fa="دسترسی">Access</h2>
               <div class="form">
                 <div class="field">
-                  <label for="role">Role</label>
+                  <label for="role" data-lang-key data-lang-en="Role" data-lang-fa="نقش">Role</label>
                   <select id="role" name="role">
-                    <option value="editor" {% if !view.is_new && view.user.as_ref().unwrap().role == "editor" %}selected{% endif %}>Editor</option>
-                    <option value="owner" {% if !view.is_new && view.user.as_ref().unwrap().role == "owner" %}selected{% endif %}>Owner</option>
+                    <option value="editor" data-lang-key data-lang-en="Editor" data-lang-fa="ویرایشگر" {% if !view.is_new && view.user.as_ref().unwrap().role == "editor" %}selected{% endif %}>Editor</option>
+                    <option value="owner" data-lang-key data-lang-en="Owner" data-lang-fa="مالک" {% if !view.is_new && view.user.as_ref().unwrap().role == "owner" %}selected{% endif %}>Owner</option>
                   </select>
-                  <span class="hint">Owners can manage users, settings and backups.</span>
+                  <span class="hint" data-lang-key data-lang-en="Owners can manage users, settings and backups." data-lang-fa="مالکها میتوانند کاربران، تنظیمات و پشتیبانگیری را مدیریت کنند.">Owners can manage users, settings and backups.</span>
                 </div>
 
                 <div class="field">
-                  <label for="password">{% if view.is_new %}Password{% else %}New password{% endif %}</label>
+                  <label for="password">{% if view.is_new %}<span data-lang-key data-lang-en="Password" data-lang-fa="رمز عبور">Password</span>{% else %}<span data-lang-key data-lang-en="New password" data-lang-fa="رمز عبور جدید">New password</span>{% endif %}</label>
                   <input id="password" type="password" name="password" autocomplete="new-password"
                          {% if view.is_new %}required{% endif %}>
                   <span class="hint">
-                    {% if view.is_new %}At least 10 characters.{% else %}Leave blank to keep the current password.{% endif %}
+                    {% if view.is_new %}<span data-lang-key data-lang-en="At least 10 characters." data-lang-fa="حداقل ۱۰ کاراکتر.">At least 10 characters.</span>{% else %}<span data-lang-key data-lang-en="Leave blank to keep the current password." data-lang-fa="برای حفظ رمز عبور فعلی خالی بگذارید.">Leave blank to keep the current password.</span>{% endif %}
                   </span>
                 </div>
 
                 <label class="checkbox">
                   <input type="checkbox" name="is_active" value="on" {% if view.is_new || view.user.as_ref().unwrap().is_active %}checked{% endif %}>
-                  Account is active
+                  <span data-lang-key data-lang-en="Account is active" data-lang-fa="حساب فعال است">Account is active</span>
                 </label>
 
                 <label class="checkbox">
                   <input type="checkbox" name="enable_totp" value="on" {% if !view.is_new && view.user.as_ref().unwrap().totp_enabled %}checked{% endif %}>
-                  Require a two-factor code at sign-in
+                  <span data-lang-key data-lang-en="Require a two-factor code at sign-in" data-lang-fa="نیازمند کد دومرحلهای هنگام ورود">Require a two-factor code at sign-in</span>
                 </label>
               </div>
             </section>
 
             {% if !view.is_new %}
             <section class="card">
-              <h2 style="font-size:var(--step-1);margin-bottom:1rem;">Account</h2>
+              <h2 style="font-size:var(--step-1);margin-bottom:1rem;" data-lang-key data-lang-en="Account" data-lang-fa="حساب">Account</h2>
               <div class="stack" style="--space-s:.35rem;font-size:.85rem;">
-                <div class="flex-between"><span class="text-muted">Created</span><span>{{ view.user.as_ref().unwrap().created_at }}</span></div>
-                <div class="flex-between"><span class="text-muted">Last login</span><span>{{ view.user.as_ref().unwrap().last_login_at }}</span></div>
-                <div class="flex-between"><span class="text-muted">2FA</span><span>{% if view.user.as_ref().unwrap().totp_enabled %}enabled{% else %}disabled{% endif %}</span></div>
+                <div class="flex-between"><span class="text-muted" data-lang-key data-lang-en="Created" data-lang-fa="تاریخ ایجاد">Created</span><span>{{ view.user.as_ref().unwrap().created_at }}</span></div>
+                <div class="flex-between"><span class="text-muted" data-lang-key data-lang-en="Last login" data-lang-fa="آخرین ورود">Last login</span><span>{{ view.user.as_ref().unwrap().last_login_at }}</span></div>
+                <div class="flex-between"><span class="text-muted" data-lang-key data-lang-en="2FA" data-lang-fa="2FA">2FA</span><span>{% if view.user.as_ref().unwrap().totp_enabled %}<span data-lang-key data-lang-en="enabled" data-lang-fa="فعال">enabled</span>{% else %}<span data-lang-key data-lang-en="disabled" data-lang-fa="غیرفعال">disabled</span>{% endif %}</span></div>
               </div>
             </section>
             {% endif %}
 
             <section class="card">
               <div class="form-actions">
-                <button class="btn btn-primary" type="submit">{% if view.is_new %}Create user{% else %}Save changes{% endif %}</button>
-                <a class="btn btn-ghost" href="/admin/users">Cancel</a>
+                <button class="btn btn-primary" type="submit">{% if view.is_new %}<span data-lang-key data-lang-en="Create user" data-lang-fa="ایجاد کاربر">Create user</span>{% else %}<span data-lang-key data-lang-en="Save changes" data-lang-fa="ذخیره تغییرات">Save changes</span>{% endif %}</button>
+                <a class="btn btn-ghost" href="/admin/users" data-lang-key data-lang-en="Cancel" data-lang-fa="لغو">Cancel</a>
               </div>
             </section>
           </div>

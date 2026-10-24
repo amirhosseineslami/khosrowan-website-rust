@@ -10,11 +10,11 @@
   <div class="admin-main">
     <header class="admin-topbar">
       <div>
-        <h1>{% if view.is_new %}New page{% else %}Edit page{% endif %}</h1>
-        <p>{% if view.is_new %}Add a standalone page to the site.{% else %}Last updated {{ view.page.as_ref().unwrap().updated_at }}{% endif %}</p>
+        <h1>{% if view.is_new %}<span data-lang-key data-lang-en="New page" data-lang-fa="صفحه جدید">New page</span>{% else %}<span data-lang-key data-lang-en="Edit page" data-lang-fa="ویرایش صفحه">Edit page</span>{% endif %}</h1>
+        <p>{% if view.is_new %}<span data-lang-key data-lang-en="Add a standalone page to the site." data-lang-fa="یک صفحه مستقل به سایت اضافه کنید.">Add a standalone page to the site.</span>{% else %}<span data-lang-key data-lang-en="Last updated" data-lang-fa="آخرین بهروزرسانی">Last updated</span> {{ view.page.as_ref().unwrap().updated_at }}{% endif %}</p>
       </div>
       <div class="flex">
-        <a class="btn btn-sm btn-ghost" href="/admin/pages">Cancel</a>
+        <a class="btn btn-sm btn-ghost" href="/admin/pages" data-lang-key data-lang-en="Cancel" data-lang-fa="لغو">Cancel</a>
       </div>
     </header>
 
@@ -30,18 +30,18 @@
           <section class="card">
             <div class="form">
               <div class="field">
-                <label for="title">Title</label>
-                <input id="title" type="text" name="title" required data-slug-source
+                <label for="title" data-lang-key data-lang-en="Title" data-lang-fa="عنوان">Title</label>
+                <input id="title" type="text" name="title" required data-slug-source data-lang-key data-lang-en="Uses" data-lang-fa="کاربردها"
                        value="{% if !view.is_new %}{{ view.page.as_ref().unwrap().title }}{% endif %}"
                        placeholder="Uses">
               </div>
               <div class="field">
-                <label for="slug">Slug</label>
+                <label for="slug" data-lang-key data-lang-en="Slug" data-lang-fa="اسلاگ">Slug</label>
                 <input id="slug" type="text" name="slug" data-slug-target
                        value="{% if !view.is_new %}{{ view.page.as_ref().unwrap().slug }}{% endif %}">
               </div>
               <div class="field">
-                <label for="content">Content (Markdown)</label>
+                <label for="content" data-lang-key data-lang-en="Content (Markdown)" data-lang-fa="محتوا (مارکداون)">Content (Markdown)</label>
                 <textarea id="content" name="content" class="mono" style="min-height:420px;">{% if !view.is_new %}{{ view.page.as_ref().unwrap().content_md }}{% endif %}</textarea>
               </div>
             </div>
@@ -49,41 +49,41 @@
 
           <div class="stack">
             <section class="card">
-              <h2 style="font-size:var(--step-1);margin-bottom:1rem;">Settings</h2>
+              <h2 style="font-size:var(--step-1);margin-bottom:1rem;" data-lang-key data-lang-en="Settings" data-lang-fa="تنظیمات">Settings</h2>
               <div class="form">
                 <div class="field">
-                  <label for="status">Status</label>
+                  <label for="status" data-lang-key data-lang-en="Status" data-lang-fa="وضعیت">Status</label>
                   <select id="status" name="status">
-                    <option value="published" {% if !view.is_new && view.page.as_ref().unwrap().status == "published" %}selected{% endif %}>Published</option>
-                    <option value="draft" {% if !view.is_new && view.page.as_ref().unwrap().status == "draft" %}selected{% endif %}>Draft</option>
+                    <option value="published" data-lang-key data-lang-en="Published" data-lang-fa="منتشرشده" {% if !view.is_new && view.page.as_ref().unwrap().status == "published" %}selected{% endif %}>Published</option>
+                    <option value="draft" data-lang-key data-lang-en="Draft" data-lang-fa="پیشنویس" {% if !view.is_new && view.page.as_ref().unwrap().status == "draft" %}selected{% endif %}>Draft</option>
                   </select>
                 </div>
                 <div class="field">
-                  <label for="nav_order">Menu order</label>
+                  <label for="nav_order" data-lang-key data-lang-en="Menu order" data-lang-fa="ترتیب منو">Menu order</label>
                   <input id="nav_order" type="number" name="nav_order"
                          value="{% if !view.is_new %}{{ view.page.as_ref().unwrap().nav_order }}{% else %}0{% endif %}">
                 </div>
                 <label class="checkbox">
                   <input type="checkbox" name="show_in_nav" value="on" {% if !view.is_new && view.page.as_ref().unwrap().show_in_nav %}checked{% endif %}>
-                  Show in the main menu
+                  <span data-lang-key data-lang-en="Show in the main menu" data-lang-fa="نمایش در منوی اصلی">Show in the main menu</span>
                 </label>
                 <label class="checkbox">
                   <input type="checkbox" name="is_full_width" value="on" {% if !view.is_new && view.page.as_ref().unwrap().is_full_width %}checked{% endif %}>
-                  Narrow reading column
+                  <span data-lang-key data-lang-en="Narrow reading column" data-lang-fa="ستون خواندن باریک">Narrow reading column</span>
                 </label>
               </div>
             </section>
 
             <section class="card">
-              <h2 style="font-size:var(--step-1);margin-bottom:1rem;">SEO</h2>
+              <h2 style="font-size:var(--step-1);margin-bottom:1rem;" data-lang-key data-lang-en="SEO" data-lang-fa="سئو">SEO</h2>
               <div class="form">
                 <div class="field">
-                  <label for="meta_title">Meta title</label>
+                  <label for="meta_title" data-lang-key data-lang-en="Meta title" data-lang-fa="عنوان متا">Meta title</label>
                   <input id="meta_title" type="text" name="meta_title"
                          value="{% if !view.is_new %}{{ view.page.as_ref().unwrap().meta_title }}{% endif %}">
                 </div>
                 <div class="field">
-                  <label for="meta_description">Meta description</label>
+                  <label for="meta_description" data-lang-key data-lang-en="Meta description" data-lang-fa="توضیحات متا">Meta description</label>
                   <textarea id="meta_description" name="meta_description" style="min-height:80px;">{% if !view.is_new %}{{ view.page.as_ref().unwrap().meta_description }}{% endif %}</textarea>
                 </div>
               </div>
@@ -91,8 +91,8 @@
 
             <section class="card">
               <div class="form-actions">
-                <button class="btn btn-primary" type="submit">{% if view.is_new %}Create page{% else %}Save changes{% endif %}</button>
-                <a class="btn btn-ghost" href="/admin/pages">Cancel</a>
+                <button class="btn btn-primary" type="submit">{% if view.is_new %}<span data-lang-key data-lang-en="Create page" data-lang-fa="ایجاد صفحه">Create page</span>{% else %}<span data-lang-key data-lang-en="Save changes" data-lang-fa="ذخیره تغییرات">Save changes</span>{% endif %}</button>
+                <a class="btn btn-ghost" href="/admin/pages" data-lang-key data-lang-en="Cancel" data-lang-fa="لغو">Cancel</a>
               </div>
             </section>
           </div>

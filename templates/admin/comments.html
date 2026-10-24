@@ -10,18 +10,18 @@
   <div class="admin-main">
     <header class="admin-topbar">
       <div>
-        <h1>Comments</h1>
-        <p>Moderate the discussion</p>
+        <h1 data-lang-key data-lang-en="Comments" data-lang-fa="نظرها">Comments</h1>
+        <p data-lang-key data-lang-en="Moderate the discussion" data-lang-fa="مدیریت بحث">Moderate the discussion</p>
       </div>
     </header>
 
     <div class="admin-content">
       <div class="admin-tabs">
-        <a href="/admin/comments" class="{% if view.status_filter.is_empty() %}active{% endif %}">All</a>
-        <a href="/admin/comments?status=pending" class="{% if view.status_filter == "pending" %}active{% endif %}">Pending</a>
-        <a href="/admin/comments?status=approved" class="{% if view.status_filter == "approved" %}active{% endif %}">Approved</a>
-        <a href="/admin/comments?status=spam" class="{% if view.status_filter == "spam" %}active{% endif %}">Spam</a>
-        <a href="/admin/comments?status=trash" class="{% if view.status_filter == "trash" %}active{% endif %}">Trash</a>
+        <a href="/admin/comments" class="{% if view.status_filter.is_empty() %}active{% endif %}" data-lang-key data-lang-en="All" data-lang-fa="همه">All</a>
+        <a href="/admin/comments?status=pending" class="{% if view.status_filter == "pending" %}active{% endif %}" data-lang-key data-lang-en="Pending" data-lang-fa="در انتظار">Pending</a>
+        <a href="/admin/comments?status=approved" class="{% if view.status_filter == "approved" %}active{% endif %}" data-lang-key data-lang-en="Approved" data-lang-fa="تأییدشده">Approved</a>
+        <a href="/admin/comments?status=spam" class="{% if view.status_filter == "spam" %}active{% endif %}" data-lang-key data-lang-en="Spam" data-lang-fa="اسپم">Spam</a>
+        <a href="/admin/comments?status=trash" class="{% if view.status_filter == "trash" %}active{% endif %}" data-lang-key data-lang-en="Trash" data-lang-fa="زباله">Trash</a>
       </div>
 
       {% if !view.counts.is_empty() %}
@@ -36,7 +36,7 @@
 
       <div class="stack">
         {% if view.comments.is_empty() %}
-        <div class="empty-state"><strong>Nothing to moderate.</strong></div>
+        <div class="empty-state"><strong data-lang-key data-lang-en="Nothing to moderate." data-lang-fa="چیزی برای مدیریت نیست.">Nothing to moderate.</strong></div>
         {% else %}
         {% for comment in view.comments %}
         <article class="card">
@@ -47,7 +47,7 @@
                 <span>
                   <strong>{{ comment.author_name }}</strong>
                   <span class="text-faint text-sm"> · {{ comment.author_email }}</span>
-                  <div class="text-faint text-sm">on
+                  <div class="text-faint text-sm"><span data-lang-key data-lang-en="on" data-lang-fa="درباره">on</span>
                     {% if !comment.post_slug.is_empty() %}
                     <a href="/blog/{{ comment.post_slug }}" target="_blank" rel="noopener">{{ comment.post_title }}</a>
                     {% else %}
@@ -70,29 +70,29 @@
             <form method="post" action="/admin/comments/{{ comment.id }}/status">
               <input type="hidden" name="csrf_token" value="{{ view.base.csrf_token }}">
               <input type="hidden" name="status" value="approved">
-              <button class="btn btn-sm btn-primary" type="submit">Approve</button>
+              <button class="btn btn-sm btn-primary" type="submit" data-lang-key data-lang-en="Approve" data-lang-fa="تأیید">Approve</button>
             </form>
             {% else %}
             <form method="post" action="/admin/comments/{{ comment.id }}/status">
               <input type="hidden" name="csrf_token" value="{{ view.base.csrf_token }}">
               <input type="hidden" name="status" value="pending">
-              <button class="btn btn-sm btn-ghost" type="submit">Unapprove</button>
+              <button class="btn btn-sm btn-ghost" type="submit" data-lang-key data-lang-en="Unapprove" data-lang-fa="لغو تأیید">Unapprove</button>
             </form>
             {% endif %}
             {% if comment.status != "spam" %}
             <form method="post" action="/admin/comments/{{ comment.id }}/status">
               <input type="hidden" name="csrf_token" value="{{ view.base.csrf_token }}">
               <input type="hidden" name="status" value="spam">
-              <button class="btn btn-sm btn-ghost" type="submit">Mark as spam</button>
+              <button class="btn btn-sm btn-ghost" type="submit" data-lang-key data-lang-en="Mark as spam" data-lang-fa="علامتگذاری بهعنوان اسپم">Mark as spam</button>
             </form>
             {% endif %}
             <form method="post" action="/admin/comments/{{ comment.id }}/delete" data-confirm="Delete this comment permanently?">
               <input type="hidden" name="csrf_token" value="{{ view.base.csrf_token }}">
               <input type="hidden" name="status" value="trash">
-              <button class="btn btn-sm btn-ghost" type="submit">Delete</button>
+              <button class="btn btn-sm btn-ghost" type="submit" data-lang-key data-lang-en="Delete" data-lang-fa="حذف">Delete</button>
             </form>
             {% if !comment.ip.is_empty() %}
-            <span class="text-faint text-sm" style="margin-left:auto;">IP {{ comment.ip }}</span>
+            <span class="text-faint text-sm" style="margin-left:auto;"><span data-lang-key data-lang-en="IP" data-lang-fa="نشانی IP">IP</span> {{ comment.ip }}</span>
             {% endif %}
           </div>
         </article>

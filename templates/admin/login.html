@@ -12,16 +12,16 @@
       <span class="brand-mark">{{ view.base.site.logo_text }}</span>
       <span class="brand-text">
         {{ view.base.site.title }}
-        <small>Administration</small>
+        <small data-lang-key data-lang-en="Administration" data-lang-fa="مدیریت">Administration</small>
       </span>
     </div>
 
-    <h1 class="auth-title">Sign in</h1>
+    <h1 class="auth-title" data-lang-key data-lang-en="Sign in" data-lang-fa="ورود">Sign in</h1>
     <p class="auth-sub">
       {% if view.totp_required %}
-        Enter the six-digit code from your authenticator app to finish signing in.
+        <span data-lang-key data-lang-en="Enter the six-digit code from your authenticator app to finish signing in." data-lang-fa="کد ششرقمی را از برنامه احراز هویت خود وارد کنید تا ورود کامل شود.">Enter the six-digit code from your authenticator app to finish signing in.</span>
       {% else %}
-        Welcome back. Enter your credentials to manage the site.
+        <span data-lang-key data-lang-en="Welcome back. Enter your credentials to manage the site." data-lang-fa="خوش آمدید. برای مدیریت سایت، اطلاعات ورود خود را وارد کنید.">Welcome back. Enter your credentials to manage the site.</span>
       {% endif %}
     </p>
 
@@ -38,32 +38,32 @@
       <input type="hidden" name="stage" value="totp">
       <input type="hidden" name="username" value="{{ view.username }}">
       <div class="field">
-        <label for="code">Verification code</label>
+        <label for="code" data-lang-key data-lang-en="Verification code" data-lang-fa="کد تأیید">Verification code</label>
         <input id="code" type="text" name="code" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" placeholder="123456" required autofocus>
       </div>
       {% else %}
       <div class="field">
-        <label for="username">Username or e-mail</label>
+        <label for="username" data-lang-key data-lang-en="Username or e-mail" data-lang-fa="نام کاربری یا ایمیل">Username or e-mail</label>
         <input id="username" type="text" name="username" value="{{ view.username }}" autocomplete="username" required autofocus>
       </div>
       <div class="field">
-        <label for="password">Password</label>
+        <label for="password" data-lang-key data-lang-en="Password" data-lang-fa="رمز عبور">Password</label>
         <input id="password" type="password" name="password" autocomplete="current-password" required>
       </div>
       <label class="checkbox">
         <input type="checkbox" name="remember" value="on">
-        Keep me signed in for 30 days
+        <span data-lang-key data-lang-en="Keep me signed in for 30 days" data-lang-fa="مرا به مدت ۳۰ روز وارد نگهدار">Keep me signed in for 30 days</span>
       </label>
       {% endif %}
 
       <button class="btn btn-primary btn-block" type="submit">
-        {% if view.totp_required %}Verify{% else %}Sign in{% endif %}
+        {% if view.totp_required %}<span data-lang-key data-lang-en="Verify" data-lang-fa="تأیید">Verify</span>{% else %}<span data-lang-key data-lang-en="Sign in" data-lang-fa="ورود">Sign in</span>{% endif %}
       </button>
     </form>
 
     <div class="auth-footer">
-      <a href="/admin/forgot-password">Forgot password?</a>
-      <a href="/">← Back to site</a>
+      <a href="/admin/forgot-password" data-lang-key data-lang-en="Forgot password?" data-lang-fa="فراموشی رمز عبور؟">Forgot password?</a>
+      <a href="/" data-lang-key data-lang-en="← Back to site" data-lang-fa="← بازگشت به سایت">← Back to site</a>
     </div>
   </div>
 </div>

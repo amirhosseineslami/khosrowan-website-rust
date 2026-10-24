@@ -10,23 +10,23 @@
   <div class="admin-main">
     <header class="admin-topbar">
       <div>
-        <h1>Messages</h1>
-        <p>Contact form inbox</p>
+        <h1 data-lang-key data-lang-en="Messages" data-lang-fa="پیامها">Messages</h1>
+        <p data-lang-key data-lang-en="Contact form inbox" data-lang-fa="صندوق ورودی فرم تماس">Contact form inbox</p>
       </div>
     </header>
 
     <div class="admin-content">
       <div class="admin-tabs">
-        <a href="/admin/messages" class="{% if view.status_filter.is_empty() %}active{% endif %}">All</a>
-        <a href="/admin/messages?status=new" class="{% if view.status_filter == "new" %}active{% endif %}">New</a>
-        <a href="/admin/messages?status=read" class="{% if view.status_filter == "read" %}active{% endif %}">Read</a>
-        <a href="/admin/messages?status=archived" class="{% if view.status_filter == "archived" %}active{% endif %}">Archived</a>
-        <a href="/admin/messages?status=spam" class="{% if view.status_filter == "spam" %}active{% endif %}">Spam</a>
+        <a href="/admin/messages" class="{% if view.status_filter.is_empty() %}active{% endif %}" data-lang-key data-lang-en="All" data-lang-fa="همه">All</a>
+        <a href="/admin/messages?status=new" class="{% if view.status_filter == "new" %}active{% endif %}" data-lang-key data-lang-en="New" data-lang-fa="جدید">New</a>
+        <a href="/admin/messages?status=read" class="{% if view.status_filter == "read" %}active{% endif %}" data-lang-key data-lang-en="Read" data-lang-fa="خواندهشده">Read</a>
+        <a href="/admin/messages?status=archived" class="{% if view.status_filter == "archived" %}active{% endif %}" data-lang-key data-lang-en="Archived" data-lang-fa="بایگانیشده">Archived</a>
+        <a href="/admin/messages?status=spam" class="{% if view.status_filter == "spam" %}active{% endif %}" data-lang-key data-lang-en="Spam" data-lang-fa="اسپم">Spam</a>
       </div>
 
       <div class="stack">
         {% if view.messages.is_empty() %}
-        <div class="empty-state"><strong>No messages.</strong> The inbox is empty.</div>
+        <div class="empty-state"><strong data-lang-key data-lang-en="No messages." data-lang-fa="پیامی نیست.">No messages.</strong> <span data-lang-key data-lang-en="The inbox is empty." data-lang-fa="صندوق ورودی خالی است.">The inbox is empty.</span></div>
         {% else %}
         {% for message in view.messages %}
         <article class="card">
@@ -38,7 +38,7 @@
                   <strong>{{ message.name }}</strong>
                   <span class="text-faint text-sm"> · {{ message.email }}</span>
                   <div class="text-sm" style="color:var(--accent);margin-top:.15rem;">
-                    {% if !message.subject.is_empty() %}{{ message.subject }}{% else %}(no subject){% endif %}
+                    {% if !message.subject.is_empty() %}{{ message.subject }}{% else %}<span data-lang-key data-lang-en="(no subject)" data-lang-fa="(بدون موضوع)">(no subject)</span>{% endif %}
                   </div>
                 </span>
               </div>
@@ -52,24 +52,24 @@
           <p style="margin-top:.9rem;color:var(--text-muted);white-space:pre-wrap;">{{ message.body }}</p>
 
           <div class="flex" style="margin-top:1rem;">
-            <a class="btn btn-sm" href="mailto:{{ message.email }}?subject=Re: {{ message.subject }}">Reply by e-mail</a>
+            <a class="btn btn-sm" href="mailto:{{ message.email }}?subject=Re: {{ message.subject }}" data-lang-key data-lang-en="Reply by e-mail" data-lang-fa="پاسخ از طریق ایمیل">Reply by e-mail</a>
             <form method="post" action="/admin/messages/{{ message.id }}/status">
               <input type="hidden" name="csrf_token" value="{{ view.base.csrf_token }}">
               <input type="hidden" name="status" value="archived">
-              <button class="btn btn-sm btn-ghost" type="submit">Archive</button>
+              <button class="btn btn-sm btn-ghost" type="submit" data-lang-key data-lang-en="Archive" data-lang-fa="بایگانی">Archive</button>
             </form>
             <form method="post" action="/admin/messages/{{ message.id }}/status">
               <input type="hidden" name="csrf_token" value="{{ view.base.csrf_token }}">
               <input type="hidden" name="status" value="spam">
-              <button class="btn btn-sm btn-ghost" type="submit">Mark as spam</button>
+              <button class="btn btn-sm btn-ghost" type="submit" data-lang-key data-lang-en="Mark as spam" data-lang-fa="علامتگذاری بهعنوان اسپم">Mark as spam</button>
             </form>
             <form method="post" action="/admin/messages/{{ message.id }}/delete" data-confirm="Delete this message permanently?">
               <input type="hidden" name="csrf_token" value="{{ view.base.csrf_token }}">
               <input type="hidden" name="status" value="trash">
-              <button class="btn btn-sm btn-ghost" type="submit">Delete</button>
+              <button class="btn btn-sm btn-ghost" type="submit" data-lang-key data-lang-en="Delete" data-lang-fa="حذف">Delete</button>
             </form>
             {% if !message.ip.is_empty() %}
-            <span class="text-faint text-sm" style="margin-left:auto;">IP {{ message.ip }}</span>
+            <span class="text-faint text-sm" style="margin-left:auto;"><span data-lang-key data-lang-en="IP" data-lang-fa="نشانی IP">IP</span> {{ message.ip }}</span>
             {% endif %}
           </div>
         </article>

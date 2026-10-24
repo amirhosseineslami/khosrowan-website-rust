@@ -10,30 +10,30 @@
   <div class="admin-main">
     <header class="admin-topbar">
       <div>
-        <h1>Media library</h1>
-        <p>{{ view.total_size }} stored</p>
+        <h1 data-lang-key data-lang-en="Media library" data-lang-fa="کتابخانه رسانه">Media library</h1>
+        <p>{{ view.total_size }} <span data-lang-key data-lang-en="stored" data-lang-fa="ذخیرهشده">stored</span></p>
       </div>
     </header>
 
     <div class="admin-content">
       <section class="card">
-        <h2 style="font-size:var(--step-1);margin-bottom:1rem;">Upload a file</h2>
+        <h2 style="font-size:var(--step-1);margin-bottom:1rem;" data-lang-key data-lang-en="Upload a file" data-lang-fa="بارگذاری یک فایل">Upload a file</h2>
         <form method="post" action="/admin/media/upload" enctype="multipart/form-data" class="form">
           <input type="hidden" name="csrf_token" value="{{ view.base.csrf_token }}">
           <div class="field">
-            <label for="file">Choose a file</label>
+            <label for="file" data-lang-key data-lang-en="Choose a file" data-lang-fa="یک فایل انتخاب کنید">Choose a file</label>
             <input id="file" type="file" name="file" required>
-            <span class="hint">Images, PDFs and archives are accepted.</span>
+            <span class="hint" data-lang-key data-lang-en="Images, PDFs and archives are accepted." data-lang-fa="تصاویر، PDF و آرشیو پذیرفته میشوند.">Images, PDFs and archives are accepted.</span>
           </div>
           <div class="form-actions">
-            <button class="btn btn-primary" type="submit">Upload</button>
+            <button class="btn btn-primary" type="submit" data-lang-key data-lang-en="Upload" data-lang-fa="بارگذاری">Upload</button>
           </div>
         </form>
       </section>
 
       <div class="media-grid">
         {% if view.items.is_empty() %}
-        <div class="empty-state" style="grid-column:1/-1;"><strong>No files yet.</strong></div>
+        <div class="empty-state" style="grid-column:1/-1;"><strong data-lang-key data-lang-en="No files yet." data-lang-fa="هنوز فایلی وجود ندارد.">No files yet.</strong></div>
         {% else %}
         {% for item in view.items %}
         <article class="media-card">
@@ -49,14 +49,14 @@
             <div class="media-sub">{{ item.size }}{% if !item.dimensions.is_empty() %} · {{ item.dimensions }}{% endif %}</div>
             <form method="post" action="/admin/media/{{ item.id }}/alt" style="margin-top:.5rem;">
               <input type="hidden" name="csrf_token" value="{{ view.base.csrf_token }}">
-              <input type="text" name="alt_text" value="{{ item.alt_text }}" placeholder="Alt text…" style="padding:.3rem .5rem;font-size:.8rem;">
-              <button class="btn btn-sm btn-ghost" type="submit" title="Save alt text" style="margin-top:.35rem;">Save</button>
+              <input type="text" name="alt_text" value="{{ item.alt_text }}" placeholder="Alt text…" style="padding:.3rem .5rem;font-size:.8rem;" data-lang-key data-lang-en="Alt text…" data-lang-fa="متن جایگزین…">
+              <button class="btn btn-sm btn-ghost" type="submit" title="Save alt text" style="margin-top:.35rem;" data-lang-key data-lang-en="Save" data-lang-fa="ذخیره">Save</button>
             </form>
             <div class="flex" style="margin-top:.5rem;gap:.35rem;">
-              <a class="btn btn-sm btn-ghost" href="{{ item.url }}" target="_blank" rel="noopener">Open</a>
+              <a class="btn btn-sm btn-ghost" href="{{ item.url }}" target="_blank" rel="noopener" data-lang-key data-lang-en="Open" data-lang-fa="باز کردن">Open</a>
               <form method="post" action="/admin/media/{{ item.id }}/delete" data-confirm="Delete “{{ item.filename }}”?">
                 <input type="hidden" name="csrf_token" value="{{ view.base.csrf_token }}">
-                <button class="btn btn-sm btn-ghost" type="submit">Delete</button>
+                <button class="btn btn-sm btn-ghost" type="submit" data-lang-key data-lang-en="Delete" data-lang-fa="حذف">Delete</button>
               </form>
             </div>
           </div>

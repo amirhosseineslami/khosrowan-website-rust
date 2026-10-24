@@ -10,54 +10,54 @@
   <div class="admin-main">
     <header class="admin-topbar">
       <div>
-        <h1>Redirects</h1>
-        <p>Send old URLs somewhere new</p>
+        <h1 data-lang-key data-lang-en="Redirects" data-lang-fa="انتقالها">Redirects</h1>
+        <p data-lang-key data-lang-en="Send old URLs somewhere new" data-lang-fa="نشانیهای قدیمی را به مقصد جدید بفرستید">Send old URLs somewhere new</p>
       </div>
     </header>
 
     <div class="admin-content">
       <section class="card">
-        <h2 style="font-size:var(--step-1);margin-bottom:1rem;">Add a redirect</h2>
+        <h2 style="font-size:var(--step-1);margin-bottom:1rem;" data-lang-key data-lang-en="Add a redirect" data-lang-fa="افزودن انتقال">Add a redirect</h2>
         <form method="post" action="/admin/redirects" class="form">
           <input type="hidden" name="csrf_token" value="{{ view.csrf_token }}">
           <div class="form-row">
             <div class="field">
-              <label for="from_path">From</label>
+              <label for="from_path" data-lang-key data-lang-en="From" data-lang-fa="از">From</label>
               <input id="from_path" type="text" name="from_path" required placeholder="/old-blog">
             </div>
             <div class="field">
-              <label for="to_path">To</label>
+              <label for="to_path" data-lang-key data-lang-en="To" data-lang-fa="به">To</label>
               <input id="to_path" type="text" name="to_path" required placeholder="/blog">
             </div>
             <div class="field">
-              <label for="status_code">Status</label>
+              <label for="status_code" data-lang-key data-lang-en="Status" data-lang-fa="وضعیت">Status</label>
               <select id="status_code" name="status_code">
-                <option value="301">301 — permanent</option>
-                <option value="302">302 — temporary</option>
-                <option value="307">307 — temporary (keep method)</option>
-                <option value="308">308 — permanent (keep method)</option>
+                <option value="301" data-lang-key data-lang-en="301 — permanent" data-lang-fa="۳۰۱ — دائمی">301 — permanent</option>
+                <option value="302" data-lang-key data-lang-en="302 — temporary" data-lang-fa="۳۰۲ — موقت">302 — temporary</option>
+                <option value="307" data-lang-key data-lang-en="307 — temporary (keep method)" data-lang-fa="۳۰۷ — موقت (حفظ روش)">307 — temporary (keep method)</option>
+                <option value="308" data-lang-key data-lang-en="308 — permanent (keep method)" data-lang-fa="۳۰۸ — دائمی (حفظ روش)">308 — permanent (keep method)</option>
               </select>
             </div>
           </div>
           <div class="form-actions">
-            <button class="btn btn-primary" type="submit">Create redirect</button>
+            <button class="btn btn-primary" type="submit" data-lang-key data-lang-en="Create redirect" data-lang-fa="ایجاد انتقال">Create redirect</button>
           </div>
         </form>
       </section>
 
       <div class="table-wrap">
         {% if view.redirects.is_empty() %}
-        <div class="empty-state" style="border:none;"><strong>No redirects.</strong></div>
+        <div class="empty-state" style="border:none;"><strong data-lang-key data-lang-en="No redirects." data-lang-fa="انتقالی نیست.">No redirects.</strong></div>
         {% else %}
         <table class="data">
           <thead>
             <tr>
-              <th>From</th>
-              <th>To</th>
-              <th>Status</th>
-              <th>Hits</th>
-              <th>Created</th>
-              <th style="text-align:right;">Actions</th>
+              <th data-lang-key data-lang-en="From" data-lang-fa="از">From</th>
+              <th data-lang-key data-lang-en="To" data-lang-fa="به">To</th>
+              <th data-lang-key data-lang-en="Status" data-lang-fa="وضعیت">Status</th>
+              <th data-lang-key data-lang-en="Hits" data-lang-fa="بازدیدها">Hits</th>
+              <th data-lang-key data-lang-en="Created" data-lang-fa="تاریخ ایجاد">Created</th>
+              <th style="text-align:right;" data-lang-key data-lang-en="Actions" data-lang-fa="عملیات">Actions</th>
             </tr>
           </thead>
           <tbody>

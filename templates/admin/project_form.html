@@ -10,11 +10,11 @@
   <div class="admin-main">
     <header class="admin-topbar">
       <div>
-        <h1>{% if view.is_new %}New project{% else %}Edit project{% endif %}</h1>
-        <p>{% if view.is_new %}Add a case study to the portfolio.{% else %}Last updated {{ view.project.as_ref().unwrap().updated_at }}{% endif %}</p>
+        <h1>{% if view.is_new %}<span data-lang-key data-lang-en="New project" data-lang-fa="پروژه جدید">New project</span>{% else %}<span data-lang-key data-lang-en="Edit project" data-lang-fa="ویرایش پروژه">Edit project</span>{% endif %}</h1>
+        <p>{% if view.is_new %}<span data-lang-key data-lang-en="Add a case study to the portfolio." data-lang-fa="یک مطالعه موردی به نمونهکارها اضافه کنید.">Add a case study to the portfolio.</span>{% else %}<span data-lang-key data-lang-en="Last updated" data-lang-fa="آخرین بهروزرسانی">Last updated</span> {{ view.project.as_ref().unwrap().updated_at }}{% endif %}</p>
       </div>
       <div class="flex">
-        <a class="btn btn-sm btn-ghost" href="/admin/projects">Cancel</a>
+        <a class="btn btn-sm btn-ghost" href="/admin/projects" data-lang-key data-lang-en="Cancel" data-lang-fa="لغو">Cancel</a>
       </div>
     </header>
 
@@ -30,23 +30,23 @@
           <section class="card">
             <div class="form">
               <div class="field">
-                <label for="title">Title</label>
-                <input id="title" type="text" name="title" required data-slug-source
+                <label for="title" data-lang-key data-lang-en="Title" data-lang-fa="عنوان">Title</label>
+                <input id="title" type="text" name="title" required data-slug-source data-lang-key data-lang-en="iran-game" data-lang-fa="بازی-ایران"
                        value="{% if !view.is_new %}{{ view.project.as_ref().unwrap().title }}{% endif %}"
                        placeholder="iran-game">
               </div>
               <div class="field">
-                <label for="slug">Slug</label>
+                <label for="slug" data-lang-key data-lang-en="Slug" data-lang-fa="اسلاگ">Slug</label>
                 <input id="slug" type="text" name="slug" data-slug-target
                        value="{% if !view.is_new %}{{ view.project.as_ref().unwrap().slug }}{% endif %}">
               </div>
               <div class="field">
-                <label for="summary">Summary</label>
-                <textarea id="summary" name="summary" style="min-height:90px;"
+                <label for="summary" data-lang-key data-lang-en="Summary" data-lang-fa="خلاصه">Summary</label>
+                <textarea id="summary" name="summary" style="min-height:90px;" data-lang-key data-lang-en="One or two sentences for the project card." data-lang-fa="یک یا دو جمله برای کارت پروژه."
                           placeholder="One or two sentences for the project card.">{% if !view.is_new %}{{ view.project.as_ref().unwrap().summary }}{% endif %}</textarea>
               </div>
               <div class="field">
-                <label for="description">Case study (Markdown)</label>
+                <label for="description" data-lang-key data-lang-en="Case study (Markdown)" data-lang-fa="مطالعه موردی (مارکداون)">Case study (Markdown)</label>
                 <textarea id="description" name="description" class="mono" style="min-height:420px;">{% if !view.is_new %}{{ view.project.as_ref().unwrap().description_md }}{% endif %}</textarea>
               </div>
             </div>
@@ -54,68 +54,68 @@
 
           <div class="stack">
             <section class="card">
-              <h2 style="font-size:var(--step-1);margin-bottom:1rem;">Details</h2>
+              <h2 style="font-size:var(--step-1);margin-bottom:1rem;" data-lang-key data-lang-en="Details" data-lang-fa="جزئیات">Details</h2>
               <div class="form">
                 <div class="field">
-                  <label for="status">Status</label>
+                  <label for="status" data-lang-key data-lang-en="Status" data-lang-fa="وضعیت">Status</label>
                   <select id="status" name="status">
-                    <option value="active" {% if !view.is_new && view.project.as_ref().unwrap().status == "active" %}selected{% endif %}>Active</option>
-                    <option value="draft" {% if !view.is_new && view.project.as_ref().unwrap().status == "draft" %}selected{% endif %}>Draft</option>
-                    <option value="archived" {% if !view.is_new && view.project.as_ref().unwrap().status == "archived" %}selected{% endif %}>Archived</option>
+                    <option value="active" data-lang-key data-lang-en="Active" data-lang-fa="فعال" {% if !view.is_new && view.project.as_ref().unwrap().status == "active" %}selected{% endif %}>Active</option>
+                    <option value="draft" data-lang-key data-lang-en="Draft" data-lang-fa="پیشنویس" {% if !view.is_new && view.project.as_ref().unwrap().status == "draft" %}selected{% endif %}>Draft</option>
+                    <option value="archived" data-lang-key data-lang-en="Archived" data-lang-fa="بایگانیشده" {% if !view.is_new && view.project.as_ref().unwrap().status == "archived" %}selected{% endif %}>Archived</option>
                   </select>
                 </div>
                 <div class="field">
-                  <label for="tech_stack">Technology stack</label>
-                  <input id="tech_stack" type="text" name="tech_stack"
+                  <label for="tech_stack" data-lang-key data-lang-en="Technology stack" data-lang-fa="پشته فناوری">Technology stack</label>
+                  <input id="tech_stack" type="text" name="tech_stack" data-lang-key data-lang-en="Rust, Tokio, PostgreSQL" data-lang-fa="Rust، Tokio، PostgreSQL"
                          value="{% if !view.is_new %}{{ view.project.as_ref().unwrap().tech_stack }}{% endif %}"
                          placeholder="Rust, Tokio, PostgreSQL">
-                  <span class="hint">Comma separated.</span>
+                  <span class="hint" data-lang-key data-lang-en="Comma separated." data-lang-fa="با ویرگول جدا کنید.">Comma separated.</span>
                 </div>
                 <div class="field">
-                  <label for="client">Client</label>
+                  <label for="client" data-lang-key data-lang-en="Client" data-lang-fa="مشتری">Client</label>
                   <input id="client" type="text" name="client"
                          value="{% if !view.is_new %}{{ view.project.as_ref().unwrap().client }}{% endif %}">
                 </div>
                 <div class="field">
-                  <label for="repo_url">Repository URL</label>
-                  <input id="repo_url" type="text" name="repo_url"
+                  <label for="repo_url" data-lang-key data-lang-en="Repository URL" data-lang-fa="نشانی مخزن">Repository URL</label>
+                  <input id="repo_url" type="text" name="repo_url" data-lang-key data-lang-en="https://github.com/…" data-lang-fa="https://github.com/…"
                          value="{% if !view.is_new %}{{ view.project.as_ref().unwrap().repo_url }}{% endif %}"
                          placeholder="https://github.com/…">
                 </div>
                 <div class="field">
-                  <label for="live_url">Live URL</label>
-                  <input id="live_url" type="text" name="live_url"
+                  <label for="live_url" data-lang-key data-lang-en="Live URL" data-lang-fa="نشانی زنده">Live URL</label>
+                  <input id="live_url" type="text" name="live_url" data-lang-key data-lang-en="https://…" data-lang-fa="https://…"
                          value="{% if !view.is_new %}{{ view.project.as_ref().unwrap().live_url }}{% endif %}"
                          placeholder="https://…">
                 </div>
                 <div class="field">
-                  <label for="cover_image">Cover image</label>
-                  <input id="cover_image" type="text" name="cover_image"
+                  <label for="cover_image" data-lang-key data-lang-en="Cover image" data-lang-fa="تصویر جلد">Cover image</label>
+                  <input id="cover_image" type="text" name="cover_image" data-lang-key data-lang-en="/media/helios.png" data-lang-fa="/media/helios.png"
                          value="{% if !view.is_new %}{{ view.project.as_ref().unwrap().cover_image }}{% endif %}"
                          placeholder="/media/helios.png">
                 </div>
                 <div class="field">
-                  <label for="sort_order">Sort order</label>
+                  <label for="sort_order" data-lang-key data-lang-en="Sort order" data-lang-fa="ترتیب مرتبسازی">Sort order</label>
                   <input id="sort_order" type="number" name="sort_order"
                          value="{% if !view.is_new %}{{ view.project.as_ref().unwrap().sort_order }}{% else %}0{% endif %}">
                 </div>
                 <label class="checkbox">
                   <input type="checkbox" name="is_featured" value="on" {% if !view.is_new && view.project.as_ref().unwrap().is_featured %}checked{% endif %}>
-                  Feature on the home page
+                  <span data-lang-key data-lang-en="Feature on the home page" data-lang-fa="ویژه در صفحه اصلی">Feature on the home page</span>
                 </label>
               </div>
             </section>
 
             <section class="card">
-              <h2 style="font-size:var(--step-1);margin-bottom:1rem;">SEO</h2>
+              <h2 style="font-size:var(--step-1);margin-bottom:1rem;" data-lang-key data-lang-en="SEO" data-lang-fa="سئو">SEO</h2>
               <div class="form">
                 <div class="field">
-                  <label for="meta_title">Meta title</label>
+                  <label for="meta_title" data-lang-key data-lang-en="Meta title" data-lang-fa="عنوان متا">Meta title</label>
                   <input id="meta_title" type="text" name="meta_title"
                          value="{% if !view.is_new %}{{ view.project.as_ref().unwrap().meta_title }}{% endif %}">
                 </div>
                 <div class="field">
-                  <label for="meta_description">Meta description</label>
+                  <label for="meta_description" data-lang-key data-lang-en="Meta description" data-lang-fa="توضیحات متا">Meta description</label>
                   <textarea id="meta_description" name="meta_description" style="min-height:80px;">{% if !view.is_new %}{{ view.project.as_ref().unwrap().meta_description }}{% endif %}</textarea>
                 </div>
               </div>
@@ -123,8 +123,8 @@
 
             <section class="card">
               <div class="form-actions">
-                <button class="btn btn-primary" type="submit">{% if view.is_new %}Create project{% else %}Save changes{% endif %}</button>
-                <a class="btn btn-ghost" href="/admin/projects">Cancel</a>
+                <button class="btn btn-primary" type="submit">{% if view.is_new %}<span data-lang-key data-lang-en="Create project" data-lang-fa="ایجاد پروژه">Create project</span>{% else %}<span data-lang-key data-lang-en="Save changes" data-lang-fa="ذخیره تغییرات">Save changes</span>{% endif %}</button>
+                <a class="btn btn-ghost" href="/admin/projects" data-lang-key data-lang-en="Cancel" data-lang-fa="لغو">Cancel</a>
               </div>
             </section>
           </div>

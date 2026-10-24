@@ -10,8 +10,8 @@
   <div class="admin-main">
     <header class="admin-topbar">
       <div>
-        <h1>Newsletter</h1>
-        <p>{{ view.subscriber_count }} active subscriber(s)</p>
+        <h1 data-lang-key data-lang-en="Newsletter" data-lang-fa="خبرنامه">Newsletter</h1>
+        <p>{{ view.subscriber_count }} <span data-lang-key data-lang-en="active subscriber(s)" data-lang-fa="مشترک فعال">active subscriber(s)</span></p>
       </div>
     </header>
 
@@ -21,34 +21,34 @@
       {% endif %}
 
       <section class="card">
-        <h2 style="font-size:var(--step-1);margin-bottom:1rem;">Write a campaign</h2>
+        <h2 style="font-size:var(--step-1);margin-bottom:1rem;" data-lang-key data-lang-en="Write a campaign" data-lang-fa="نوشتن خبرنامه">Write a campaign</h2>
         <form method="post" action="/admin/newsletter/send" class="form">
           <input type="hidden" name="csrf_token" value="{{ view.csrf_token }}">
           <div class="field">
-            <label for="subject">Subject line</label>
-            <input id="subject" type="text" name="subject" required placeholder="What did you learn this week?">
+            <label for="subject" data-lang-key data-lang-en="Subject line" data-lang-fa="خط موضوع">Subject line</label>
+            <input id="subject" type="text" name="subject" required placeholder="What did you learn this week?" data-lang-key data-lang-en="What did you learn this week?" data-lang-fa="این هفته چه یاد گرفتی؟">
           </div>
           <div class="field">
-            <label for="body">Body (Markdown)</label>
-            <textarea id="body" name="body" class="mono" style="min-height:320px;" placeholder="Hi there,&#10;&#10;Here is what I have been thinking about…"></textarea>
-            <span class="hint">Write <code>&#123;&#123; name &#125;&#125;</code> to insert the subscriber&#8217;s name.</span>
+            <label for="body" data-lang-key data-lang-en="Body (Markdown)" data-lang-fa="متن (مارکداون)">Body (Markdown)</label>
+            <textarea id="body" name="body" class="mono" style="min-height:320px;" placeholder="Hi there,&#10;&#10;Here is what I have been thinking about…" data-lang-key data-lang-en="Hi there,&#10;&#10;Here is what I have been thinking about…" data-lang-fa="سلام،&#10;&#10;این چیزی است که این روزها به آن فکر میکردم…"></textarea>
+            <span class="hint"><span data-lang-key data-lang-en="Write" data-lang-fa="بنویس">Write</span> <code>&#123;&#123; name &#125;&#125;</code> <span data-lang-key data-lang-en="to insert the subscriber's name." data-lang-fa="تا نام مشترک درج شود.">to insert the subscriber&#8217;s name.</span></span>
           </div>
           <div class="form-actions">
-            <button class="btn btn-primary" type="submit">Send now</button>
-            <button class="btn" type="submit" name="save_only" value="on">Save as draft</button>
+            <button class="btn btn-primary" type="submit" data-lang-key data-lang-en="Send now" data-lang-fa="ارسال کن">Send now</button>
+            <button class="btn" type="submit" name="save_only" value="on" data-lang-key data-lang-en="Save as draft" data-lang-fa="ذخیره بهعنوان پیشنویس">Save as draft</button>
           </div>
         </form>
       </section>
 
       <section class="card">
-        <h2 style="font-size:var(--step-1);margin-bottom:1rem;">Past campaigns</h2>
+        <h2 style="font-size:var(--step-1);margin-bottom:1rem;" data-lang-key data-lang-en="Past campaigns" data-lang-fa="خبرنامههای گذشته">Past campaigns</h2>
         <div class="table-wrap" style="border:none;">
           {% if view.campaigns.is_empty() %}
-          <div class="empty-state" style="border:none;"><strong>No campaigns yet.</strong></div>
+          <div class="empty-state" style="border:none;"><strong data-lang-key data-lang-en="No campaigns yet." data-lang-fa="هنوز خبرنامهای نیست.">No campaigns yet.</strong></div>
           {% else %}
           <table class="data" style="min-width:0;">
             <thead>
-              <tr><th>Subject</th><th>Status</th><th>Recipients</th><th>Sent</th></tr>
+              <tr><th data-lang-key data-lang-en="Subject" data-lang-fa="موضوع">Subject</th><th data-lang-key data-lang-en="Status" data-lang-fa="وضعیت">Status</th><th data-lang-key data-lang-en="Recipients" data-lang-fa="گیرندگان">Recipients</th><th data-lang-key data-lang-en="Sent" data-lang-fa="تاریخ ارسال">Sent</th></tr>
             </thead>
             <tbody>
               {% for campaign in view.campaigns %}

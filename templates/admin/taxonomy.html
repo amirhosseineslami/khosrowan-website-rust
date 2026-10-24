@@ -10,41 +10,41 @@
   <div class="admin-main">
     <header class="admin-topbar">
       <div>
-        <h1>Tags &amp; categories</h1>
-        <p>Organise your writing</p>
+        <h1 data-lang-key data-lang-en="Tags & categories" data-lang-fa="برچسبها و دستهها">Tags &amp; categories</h1>
+        <p data-lang-key data-lang-en="Organise your writing" data-lang-fa="نوشتههای خود را سازماندهی کنید">Organise your writing</p>
       </div>
     </header>
 
     <div class="admin-content">
       <div class="admin-grid-2" style="align-items:start;">
         <section class="card">
-          <h2 style="font-size:var(--step-1);margin-bottom:1rem;">Tags</h2>
+          <h2 style="font-size:var(--step-1);margin-bottom:1rem;" data-lang-key data-lang-en="Tags" data-lang-fa="برچسبها">Tags</h2>
 
           <form method="post" action="/admin/taxonomy/tags" class="form" style="margin-bottom:1.2rem;">
             <input type="hidden" name="csrf_token" value="{{ view.base.csrf_token }}">
             <div class="form-row">
               <div class="field">
-                <label for="tag-name">Name</label>
+                <label for="tag-name" data-lang-key data-lang-en="Name" data-lang-fa="نام">Name</label>
                 <input id="tag-name" type="text" name="name" required placeholder="rust">
               </div>
               <div class="field">
-                <label for="tag-color">Colour</label>
+                <label for="tag-color" data-lang-key data-lang-en="Colour" data-lang-fa="رنگ">Colour</label>
                 <input id="tag-color" type="text" name="color" placeholder="#6366f1">
               </div>
             </div>
             <div class="field">
-              <label for="tag-desc">Description</label>
-              <input id="tag-desc" type="text" name="description" placeholder="Posts about the Rust programming language">
+              <label for="tag-desc" data-lang-key data-lang-en="Description" data-lang-fa="توضیحات">Description</label>
+              <input id="tag-desc" type="text" name="description" placeholder="Posts about the Rust programming language" data-lang-key data-lang-en="Posts about the Rust programming language" data-lang-fa="پستها درباره زبان برنامهنویسی راست">
             </div>
             <div class="form-actions">
-              <button class="btn btn-primary btn-sm" type="submit">Add tag</button>
+              <button class="btn btn-primary btn-sm" type="submit" data-lang-key data-lang-en="Add tag" data-lang-fa="افزودن برچسب">Add tag</button>
             </div>
           </form>
 
           <div class="table-wrap">
             <table class="data" style="min-width:0;">
               <thead>
-                <tr><th>Tag</th><th>Posts</th><th style="text-align:right;">Actions</th></tr>
+                <tr><th data-lang-key data-lang-en="Tag" data-lang-fa="برچسب">Tag</th><th data-lang-key data-lang-en="Posts" data-lang-fa="پستها">Posts</th><th style="text-align:right;" data-lang-key data-lang-en="Actions" data-lang-fa="عملیات">Actions</th></tr>
               </thead>
               <tbody>
                 {% for tag in view.tags %}
@@ -75,27 +75,27 @@
         </section>
 
         <section class="card">
-          <h2 style="font-size:var(--step-1);margin-bottom:1rem;">Categories</h2>
+          <h2 style="font-size:var(--step-1);margin-bottom:1rem;" data-lang-key data-lang-en="Categories" data-lang-fa="دستهها">Categories</h2>
 
           <form method="post" action="/admin/taxonomy/categories" class="form" style="margin-bottom:1.2rem;">
             <input type="hidden" name="csrf_token" value="{{ view.base.csrf_token }}">
             <div class="field">
-              <label for="cat-name">Name</label>
+              <label for="cat-name" data-lang-key data-lang-en="Name" data-lang-fa="نام">Name</label>
               <input id="cat-name" type="text" name="name" required placeholder="Engineering">
             </div>
             <div class="field">
-              <label for="cat-desc">Description</label>
-              <input id="cat-desc" type="text" name="description" placeholder="Deep dives into software engineering practice.">
+              <label for="cat-desc" data-lang-key data-lang-en="Description" data-lang-fa="توضیحات">Description</label>
+              <input id="cat-desc" type="text" name="description" placeholder="Deep dives into software engineering practice." data-lang-key data-lang-en="Deep dives into software engineering practice." data-lang-fa="مطالعه عمیق در عمل مهندسی نرمافزار.">
             </div>
             <div class="form-actions">
-              <button class="btn btn-primary btn-sm" type="submit">Add category</button>
+              <button class="btn btn-primary btn-sm" type="submit" data-lang-key data-lang-en="Add category" data-lang-fa="افزودن دسته">Add category</button>
             </div>
           </form>
 
           <div class="table-wrap">
             <table class="data" style="min-width:0;">
               <thead>
-                <tr><th>Category</th><th>Posts</th><th style="text-align:right;">Actions</th></tr>
+                <tr><th data-lang-key data-lang-en="Category" data-lang-fa="دسته">Category</th><th data-lang-key data-lang-en="Posts" data-lang-fa="پستها">Posts</th><th style="text-align:right;" data-lang-key data-lang-en="Actions" data-lang-fa="عملیات">Actions</th></tr>
               </thead>
               <tbody>
                 {% for category in view.categories %}
