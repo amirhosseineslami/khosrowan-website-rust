@@ -9,8 +9,8 @@
 .DS_Store
 *.log
 
-# Compiled server binary (build artifact, rebuilt on deploy)
-/personal-site
+# The release binary is committed to the repo root so the server's startup
+# script can download it from GitHub raw.
 
 # Accidental ImageMagick PS dumps (junk)
 json,base64
