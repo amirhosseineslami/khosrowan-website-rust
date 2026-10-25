@@ -1,0 +1,52 @@
+baseURL = "/"
+languageCode = "fa"
+title = "خسروان"
+theme = "khosrowan"
+defaultContentLanguage = "fa"
+enableRobotsTXT = false
+
+[params]
+  title_en = "Khosrowan"
+  subtitle = "مهندسی برق و کنترل · هوش مصنوعی و رباتیک"
+  subtitle_en = "Electrical & Control Engineering · AI & Robotics"
+  description = "دانشجوی مهندسی برق (گرایش کنترل) در دانشگاه علم و صنعت ایران"
+  tagline = "پژوهش در رباتیک و سیستم‌های هوشمند."
+  email = "amirhossein.eslami.ac@gmail.com"
+  location = "تهران، ایران · دانشگاه علم و صنعت ایران"
+  location_en = "Tehran, Iran · Iran University of Science and Technology"
+  available = true
+  availability_note = "آماده همکاری‌های پژوهشی، کارآموزی و منتورینگ"
+  default_theme = "dark"
+  favicon = "/assets/img/favicon.svg"
+  og_image = "/assets/img/og-default.svg"
+  cv_file = "/assets/files/cv.pdf"
+
+[[params.social]]
+  name = "github"
+  url = "https://github.com/amirhosseineslami"
+  label = "گیت‌هاب"
+
+[[params.social]]
+  name = "linkedin"
+  url = "https://www.linkedin.com/in/amir-hossein-eslami"
+  label = "لینکدین"
+
+[[params.social]]
+  name = "website"
+  url = "https://about.me/amirhosseineslami"
+  label = "نمونه‌کار"
+
+[[params.social]]
+  name = "orcid"
+  url = "https://orcid.org/0009-0000-5547-1764"
+  label = "ORCID"
+
+[[params.social]]
+  name = "email"
+  url = "mailto:amirhossein.eslami.ac@gmail.com"
+  label = "ایمیل"
+
+[[params.social]]
+  name = "rss"
+  url = "/feed.xml"
+  label = "خوراک RSS"

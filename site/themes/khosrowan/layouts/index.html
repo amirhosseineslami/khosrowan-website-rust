@@ -1,0 +1,60 @@
+{{ define "main" }}
+{{ $posts := where .Site.RegularPages "Section" "posts" }}
+{{ $projects := where .Site.RegularPages "Section" "projects" }}
+
+<section class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <h1 class="hero-title">{{ .Site.Params.hero_headline | default "پژوهش در رباتیک و سیستم‌های هوشمند." }}</h1>
+        <p class="hero-lede">{{ .Site.Params.tagline }}</p>
+        {{ with .Site.Params.availability_note }}
+        <p class="text-muted hero-note">{{ . }}</p>
+        {{ end }}
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">از وبلاگ</span>
+        <h2>تازه‌ترین نوشته‌ها</h2>
+      </div>
+      <a class="link-arrow" href="/blog">همه مقاله‌ها</a>
+    </div>
+    <div class="post-grid">
+      {{ range first 3 $posts }}
+      <article class="post-card">
+        <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+        {{ with .Description }}<p>{{ . }}</p>{{ end }}
+        <time datetime="{{ .Date }}">{{ .Date.Format "2006-01-02" }}</time>
+      </article>
+      {{ end }}
+    </div>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">نمونه‌کارها</span>
+        <h2>پروژه‌های برگزیده</h2>
+      </div>
+      <a class="link-arrow" href="/projects">همه پروژه‌ها</a>
+    </div>
+    <div class="post-grid">
+      {{ range where $projects "Params.featured" true }}
+      <article class="post-card">
+        <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+        {{ with .Description }}<p>{{ . }}</p>{{ end }}
+        {{ with .Params.tech }}<div class="post-tags">{{ range . }}<span>{{ . }}</span>{{ end }}</div>{{ end }}
+      </article>
+      {{ end }}
+    </div>
+  </div>
+</section>
+{{ end }}

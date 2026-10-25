@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="fa" dir="rtl" data-theme="{{ .Site.Params.default_theme | default "dark" }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} — {{ .Site.Title }}{{ end }}</title>
+  {{ with .Site.Params.description }}<meta name="description" content="{{ . }}">{{ end }}
+  <link rel="icon" href="{{ .Site.Params.favicon | default "/assets/img/favicon.svg" }}">
+  {{ with .Site.Params.og_image }}<meta property="og:image" content="{{ . }}">{{ end }}
+  <meta property="og:title" content="{{ .Title }}">
+  <meta property="og:type" content="website">
+  <link rel="alternate" type="application/rss+xml" title="{{ .Site.Title }}" href="/feed.xml">
+  <link rel="stylesheet" href="/assets/css/fonts.css">
+  <link rel="stylesheet" href="/assets/css/theme.css">
+</head>
+<body>
+{{ partial "header.html" . }}
+<main id="main">
+{{ block "main" . }}{{ end }}
+</main>
+{{ partial "footer.html" . }}
+<script src="/assets/js/main.js"></script>
+</body>
+</html>

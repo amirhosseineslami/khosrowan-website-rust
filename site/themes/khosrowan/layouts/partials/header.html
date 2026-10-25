@@ -1,0 +1,13 @@
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="/">
+      <span class="brand-mark">{{ .Site.Params.logo_text | default "خ" }}</span>
+      <span class="brand-name">{{ .Site.Title }}</span>
+    </a>
+    <nav class="nav" aria-label="اصلی">
+      <a href="/blog">{{ if hasPrefix .Site.Language.Lang "fa" }}وبلاگ{{ else }}Blog{{ end }}</a>
+      <a href="/projects">{{ if hasPrefix .Site.Language.Lang "fa" }}پروژه‌ها{{ else }}Projects{{ end }}</a>
+      <a href="/about">{{ if hasPrefix .Site.Language.Lang "fa" }}درباره{{ else }}About{{ end }}</a>
+    </nav>
+  </div>
+</header>

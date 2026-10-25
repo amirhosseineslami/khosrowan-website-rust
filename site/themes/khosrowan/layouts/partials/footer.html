@@ -1,0 +1,15 @@
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <p class="footer-note">
+        {{ .Site.Params.tagline | default .Site.Params.description }}
+      </p>
+      <ul class="footer-social">
+        {{ range .Site.Params.social }}
+        <li><a href="{{ .url }}" rel="noopener">{{ .label }}</a></li>
+        {{ end }}
+      </ul>
+    </div>
+    <p class="footer-copy">© {{ now.Format "2006" }} {{ .Site.Title }}</p>
+  </div>
+</footer>
