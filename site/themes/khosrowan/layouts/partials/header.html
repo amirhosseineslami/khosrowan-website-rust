@@ -1,14 +1,23 @@
-<header class="site-header">
+<header class="site-header" data-header>
   <div class="container header-inner">
     <a class="brand" href="/">
       <span class="brand-mark">{{ .Site.Params.logo_text | default "خ" }}</span>
       <span class="brand-name">{{ .Site.Title }}</span>
     </a>
-    <nav class="nav" aria-label="اصلی">
+    <nav class="nav" data-nav-links aria-label="اصلی">
       <a href="/blog">وبلاگ</a>
       <a href="/projects">پروژه‌ها</a>
       <a href="/about">درباره</a>
       <a href="/uses">ابزارها</a>
     </nav>
+    <div style="display:flex;align-items:center;gap:var(--space-xs)">
+      <button class="theme-toggle" data-theme-toggle type="button" aria-label="تغییر تم">
+        <span data-icon="sun" style="display:none">☀️</span>
+        <span data-icon="moon">🌙</span>
+      </button>
+      <button class="nav-toggle" data-nav-toggle type="button" aria-label="منو" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
   </div>
 </header>

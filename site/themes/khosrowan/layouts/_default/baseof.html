@@ -9,9 +9,22 @@
   {{ with .Site.Params.og_image }}<meta property="og:image" content="{{ . }}">{{ end }}
   <meta property="og:title" content="{{ .Title }}">
   <meta property="og:type" content="website">
+  <meta property="og:site_name" content="{{ .Site.Title }}">
+  <meta name="twitter:card" content="summary">
   <link rel="alternate" type="application/rss+xml" title="{{ .Site.Title }}" href="/feed.xml">
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/theme.css">
+  <script>
+    (function () {
+      try {
+        var stored = localStorage.getItem("ps-theme");
+        var theme = stored || document.documentElement.getAttribute("data-theme") || "dark";
+        if (stored && theme !== document.documentElement.getAttribute("data-theme")) {
+          document.documentElement.setAttribute("data-theme", theme);
+        }
+      } catch (e) {}
+    })();
+  </script>
 </head>
 <body>
 {{ partial "header.html" . }}

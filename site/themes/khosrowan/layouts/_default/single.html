@@ -1,8 +1,13 @@
 {{ define "main" }}
-<article class="container narrow">
+<div class="reading-progress" data-progress></div>
+<article class="container narrow" data-article>
   <header class="page-header">
     <h1>{{ .Title }}</h1>
-    {{ with .Date }}<time datetime="{{ . }}">{{ .Format "2006-01-02" }}</time>{{ end }}
+    <div class="post-meta">
+      {{ with .Date }}<time datetime="{{ . }}">{{ .Format "2006-01-02" }}</time>{{ end }}
+      {{ with .ReadingTime }}<span>{{ . }} دقیقه مطالعه</span>{{ end }}
+      {{ with .WordCount }}<span>{{ . }} واژه</span>{{ end }}
+    </div>
     {{ with .Params.categories }}<div class="post-tags">{{ range . }}<span class="tag">{{ . }}</span>{{ end }}</div>{{ end }}
   </header>
   <div class="prose">

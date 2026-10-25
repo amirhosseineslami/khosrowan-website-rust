@@ -6,11 +6,25 @@
   <div class="container">
     <div class="hero-grid">
       <div>
-        <h1 class="hero-title">{{ .Site.Params.hero_headline | default "پژوهش در رباتیک و سیستم‌های هوشمند." }}</h1>
-        <p class="hero-lede">{{ .Site.Params.tagline }}</p>
+        <span class="eyebrow">{{ .Site.Params.subtitle }}</span>
+        <h1 class="hero-title">
+          <span data-rotator data-words="رباتیک|سیستم‌های هوشمند|کنترل غیرمتمرکز|بینایی ماشین|یادگیری تقویتی">
+            <span data-rotator-text>{{ .Site.Params.hero_headline | default "پژوهش در رباتیک و سیستم‌های هوشمند." }}</span>
+          </span>
+        </h1>
+        <p class="hero-lede">{{ .Site.Params.hero_subheadline | default .Site.Params.tagline }}</p>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="/about">درباره من</a>
+          <a class="btn btn-ghost" href="/projects">پروژه‌ها</a>
+        </div>
         {{ with .Site.Params.availability_note }}
         <p class="text-muted hero-note">{{ . }}</p>
         {{ end }}
+      </div>
+      <div class="hero-visual">
+        <div class="avatar-wrap">
+          <img src="/assets/img/profile.svg" alt="تصویر انتزاعی پرتره" width="220" height="220" loading="lazy">
+        </div>
       </div>
     </div>
   </div>
@@ -23,14 +37,15 @@
         <span class="eyebrow">از وبلاگ</span>
         <h2>تازه‌ترین نوشته‌ها</h2>
       </div>
-      <a class="link-arrow" href="/blog">همه مقاله‌ها</a>
+      <a class="link-arrow" href="/blog">همه مقاله‌ها ←</a>
     </div>
     <div class="post-grid">
       {{ range first 3 $posts }}
-      <article class="post-card">
+      <article class="post-card reveal">
         <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
         {{ with .Description }}<p>{{ . }}</p>{{ end }}
         <time datetime="{{ .Date }}">{{ .Date.Format "2006-01-02" }}</time>
+        {{ with .Params.tags }}<div class="post-tags">{{ range . }}<span>{{ . }}</span>{{ end }}</div>{{ end }}
       </article>
       {{ end }}
     </div>
@@ -44,11 +59,11 @@
         <span class="eyebrow">نمونه‌کارها</span>
         <h2>پروژه‌های برگزیده</h2>
       </div>
-      <a class="link-arrow" href="/projects">همه پروژه‌ها</a>
+      <a class="link-arrow" href="/projects">همه پروژه‌ها ←</a>
     </div>
     <div class="post-grid">
       {{ range where $projects "Params.featured" true }}
-      <article class="post-card">
+      <article class="post-card reveal">
         <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
         {{ with .Description }}<p>{{ . }}</p>{{ end }}
         {{ with .Params.tech }}<div class="post-tags">{{ range . }}<span>{{ . }}</span>{{ end }}</div>{{ end }}

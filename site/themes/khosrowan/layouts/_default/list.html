@@ -1,14 +1,17 @@
 {{ define "main" }}
 <section class="container">
   <header class="page-header">
+    <span class="eyebrow">{{ .Section }}</span>
     <h1>{{ .Title }}</h1>
   </header>
   <div class="post-grid">
     {{ range .Paginator.Pages }}
-    <article class="post-card">
+    <article class="post-card reveal">
       <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
       {{ with .Description }}<p>{{ . }}</p>{{ end }}
       <time datetime="{{ .Date }}">{{ .Date.Format "2006-01-02" }}</time>
+      {{ with .Params.tech }}<div class="post-tags">{{ range . }}<span>{{ . }}</span>{{ end }}</div>{{ end }}
+      {{ with .Params.tags }}<div class="post-tags">{{ range . }}<span>{{ . }}</span>{{ end }}</div>{{ end }}
     </article>
     {{ end }}
   </div>
