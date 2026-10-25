@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Yolo on خسروان</title><link>/tags/yolo/</link><description>Recent content in Yolo on خسروان</description><generator>Hugo</generator><language>fa</language><lastBuildDate>Wed, 30 Sep 2026 00:00:00 +0000</lastBuildDate><atom:link href="/tags/yolo/feed.xml" rel="self" type="application/rss+xml"/><item><title>تشخیص خودرو در تصاویر هوایی با YOLOv8</title><link>/blog/detecting-cars-in-aerial-images-with-yolov8/</link><pubDate>Wed, 30 Sep 2026 00:00:00 +0000</pubDate><guid>/blog/detecting-cars-in-aerial-images-with-yolov8/</guid><description>&lt;h2 id="مسئله">مسئله&lt;/h2>
+&lt;p>تصاویر هوایی پارکینگ‌ها یک مسئله دیداری فریبنده دشوار ارائه می‌دهند: خودروها کوچک، متراکم، اغلب پوشیده و از زاویه‌های غیرمعمول دیده می‌شوند.&lt;/p>
+&lt;h2 id="رویکرد">رویکرد&lt;/h2>
+&lt;p>یک مدل YOLOv8 را روی تصاویر هوایی تنظیم دقیق کردم و سپس با استفاده از تشخیص‌ها، تعداد خودروهای حاضر در یک پارکینگ را تخمین زدم.&lt;/p>
+&lt;h3 id="خط-لوله">خط لوله&lt;/h3>
+&lt;ol>
+&lt;li>&lt;strong>داده‌ها&lt;/strong> — تصاویر هوایی دارای حاشیه‌نویسی از مناطق پارکینگ.&lt;/li>
+&lt;li>&lt;strong>آموزش&lt;/strong> — یک مدل YOLOv8 که روی ستون فقرات تنظیم دقیق شد و انتخاب دقیق اندازه تصویر برای قابل تشخیص نگه‌داشتن خودروهای کوچک.&lt;/li>
+&lt;li>&lt;strong>استنتاج&lt;/strong> — اجرای مدل روی فریم‌های هوایی جدید.&lt;/li>
+&lt;li>&lt;strong>شمارش&lt;/strong> — تجمیع تشخیص‌ها در یک شمار خودرو و ثبت آن به‌عنوان نتیجه.&lt;/li>
+&lt;/ol>
+&lt;h2 id="درسهای-عملی">درس‌های عملی&lt;/h2>
+&lt;ul>
+&lt;li>&lt;strong>اشیا کوچک به تفکیک نیاز دارند.&lt;/strong> خودروهای کوچک در اندازه‌های ورودی پیش‌فرض ناپدید می‌شوند؛ افزایش وضوح استنتاج، بزرگ‌ترین دستاورد دقت بود.&lt;/li>
+&lt;li>&lt;strong>آستانه اطمینان اهمیت دارد.&lt;/strong> پایین خیلی زیاد، سایه‌ها را «خودرو» می‌کند؛ بالا خیلی زیاد، خودروهای زیر درختان را از دست می‌دهید.&lt;/li>
+&lt;li>&lt;strong>تقویت داده.&lt;/strong> چرخش افقی و چرخش به مدل کمک کرد با جهت‌گیری دلخواه دوربین کنار بیاید.&lt;/li>
+&lt;/ul>
+&lt;p>سیستم نهایی خودروها را تشخیص می‌دهد و شمار هر تصویر را ثبت می‌کند — یک پایه تمیز و مفید برای تحلیل پارکینگ هوشمند.&lt;/p></description></item></channel></rss>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Research on خسروان</title><link>/tags/research/</link><description>Recent content in Research on خسروان</description><generator>Hugo</generator><language>fa</language><lastBuildDate>Thu, 22 Oct 2026 00:00:00 +0000</lastBuildDate><atom:link href="/tags/research/feed.xml" rel="self" type="application/rss+xml"/><item><title>چرا سنجش حداقلی در کنترل آرایش اهمیت دارد</title><link>/blog/why-minimal-sensing-matters-in-formation-control/</link><pubDate>Thu, 22 Oct 2026 00:00:00 +0000</pubDate><guid>/blog/why-minimal-sensing-matters-in-formation-control/</guid><description>&lt;h2 id="استدلال">استدلال&lt;/h2>
+&lt;p>بسیاری از کنترل ربات فرض می‌کند حس غنی وجود دارد: بازخورد کامل حالت، GPS و ارتباط قابل‌اعتماد. اما استقرارهای واقعی — گروه‌ها، ناوگان ارزان، ربات‌های موجود در محیط‌های بدون GNSS — اغلب هیچ‌کدام را ندارند.&lt;/p>
+&lt;h2 id="سنجش-حداقلی">سنجش حداقلی&lt;/h2>
+&lt;p>«سنجش حداقلی» یعنی انجام یک وظیفه با کمترین اطلاعات ممکن. برای کنترل آرایش این می‌تواند به این معنا باشد:&lt;/p>
+&lt;ul>
+&lt;li>بدون مکانیابی خارجی — فقط اندازه‌گیری‌های محلی و نسبی (مثلاً فاصله و جهت به همسایه‌ها).&lt;/li>
+&lt;li>بدون هماهنگ‌کننده مرکزی — تصمیمات محلی و غیرمتمرکزند.&lt;/li>
+&lt;li>ارتباط محدود — یا اصلاً هیچ، اتکای کامل به ادراک محلی.&lt;/li>
+&lt;/ul>
+&lt;h2 id="چرا-اهمیت-دارد">چرا اهمیت دارد&lt;/h2>
+&lt;ol>
+&lt;li>&lt;strong>هزینه&lt;/strong> — سنسورهای کمتر و ارزان‌تر ناوگان‌ها را مقرون به صرفه می‌کند.&lt;/li>
+&lt;li>&lt;strong>تاب‌آوری&lt;/strong> — وابستگی‌های کمتر یعنی نقاط شکست منفرد کمتر.&lt;/li>
+&lt;li>&lt;strong>ایمنی&lt;/strong> — رفتار ایمن و غیرمتمرکز به از دست رفتن یک ربات یا یک پیوند مقاوم است.&lt;/li>
+&lt;/ol>
+&lt;h2 id="پرسش-باز">پرسش باز&lt;/h2>
+&lt;p>چگونه &lt;em>ایمنی&lt;/em> (بدون برخورد، خطای محدود) را تضمین می‌کنیم در حالی که هر ربات فقط یک برش از جهان را می‌بیند؟ آن تنش بین اطلاعات محلی و تضمین‌های سراسری، به نظر من، جذاب‌ترین مسئله این حوزه است — و مسئله‌ای است که در حال حاضر روی آن کار می‌کنم.&lt;/p></description></item><item><title>حل دستگاه معادلات با الگوریتم ژنتیک</title><link>/blog/solving-equations-with-a-genetic-algorithm/</link><pubDate>Mon, 12 Oct 2026 00:00:00 +0000</pubDate><guid>/blog/solving-equations-with-a-genetic-algorithm/</guid><description>&lt;h2 id="چرا-الگوریتم-ژنتیک">چرا الگوریتم ژنتیک؟&lt;/h2>
+&lt;p>برخی دستگاه معادلات — به‌ویژه دستگاه‌های غیرخطی — به‌شکل تحلیلی دشوارند. یک الگوریتم ژنتیک فضای راه‌حل را همان‌طور که زیست‌شناسی به دنبال ارگانیسم‌های مناسب می‌گردد، جستجو می‌کند.&lt;/p>
+&lt;h2 id="دستور-پخت">دستور پخت&lt;/h2>
+&lt;ol>
+&lt;li>&lt;strong>رمزگذاری&lt;/strong> — هر راه‌حل کاندید یک کروموزوم حاوی مقادیر متغیرهاست.&lt;/li>
+&lt;li>&lt;strong>جمعیت اولیه&lt;/strong> — حدس‌های تصادفی.&lt;/li>
+&lt;li>&lt;strong>برازش&lt;/strong> — کاندید چقدر به ارضای هر معادله نزدیک است (مجموع مجذور باقی‌مانده‌ها).&lt;/li>
+&lt;li>&lt;strong>انتخاب&lt;/strong> — کاندیدهای برازنده‌تر احتمال بیشتری برای والد شدن دارند.&lt;/li>
+&lt;li>&lt;strong>تقاطع و جهش&lt;/strong> — ترکیب و اختلال برای کاوش مناطق جدید.&lt;/li>
+&lt;li>&lt;strong>تکرار&lt;/strong> — تا همگرایی جمعیت روی یک راه‌حل کم‌خطا.&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>fitness &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">1.0&lt;/span> &lt;span style="color:#f92672">/&lt;/span> (&lt;span style="color:#ae81ff">1.0&lt;/span> &lt;span style="color:#f92672">+&lt;/span> total_error)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="رساندن-به-همگرایی">رساندن به همگرایی&lt;/h2>
+&lt;ul>
+&lt;li>&lt;strong>نرخ جهش&lt;/strong> یک دیال بین کاوش و بهره‌برداری است. خیلی زیاد، جمعیت هرگز آرام نمی‌گیرد؛ خیلی کم، در بهینه محلی متوقف می‌شود.&lt;/li>
+&lt;li>&lt;strong>زیت‌گرایی&lt;/strong> — همیشه بهترین فرد را به نسل بعد ببرید تا بهترین پاسخ را از دست ندهید.&lt;/li>
+&lt;li>&lt;strong>تجزیه معادله&lt;/strong> — از تجزیه نمادین برای تایپکردن طبیعی معادلات غیرخطی توسط کاربر استفاده کردم.&lt;/li>
+&lt;/ul>
+&lt;p>نتیجه یک حل‌کننده کوچک و تعاملی است که هم حالت خطی ۲ متغیره و هم دستگاه‌های غیرخطی با ابعاد بالاتر را مدیریت می‌کند.&lt;/p></description></item></channel></rss>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Reinforcement-Learning on خسروان</title><link>/tags/reinforcement-learning/</link><description>Recent content in Reinforcement-Learning on خسروان</description><generator>Hugo</generator><language>fa</language><lastBuildDate>Thu, 24 Sep 2026 00:00:00 +0000</lastBuildDate><atom:link href="/tags/reinforcement-learning/feed.xml" rel="self" type="application/rss+xml"/><item><title>ساخت ربات کرمی‌شکل با یادگیری تقویتی</title><link>/blog/building-a-worm-like-crawling-robot-with-rl/</link><pubDate>Thu, 24 Sep 2026 00:00:00 +0000</pubDate><guid>/blog/building-a-worm-like-crawling-robot-with-rl/</guid><description>&lt;h2 id="رباتی-که-خزیدن-را-یاد-میگیرد">رباتی که خزیدن را یاد می‌گیرد&lt;/h2>
+&lt;p>فرضیه ساده بود: یک ربات کرمی از سروو و آردوینو بسازیم و به‌جای کدنویسی دستی، با یادگیری تقویتی حرکت خزیدن را کشف کنیم.&lt;/p>
+&lt;h3 id="سختافزار">سخت‌افزار&lt;/h3>
+&lt;ul>
+&lt;li>یک برد آردوینو که پنج سروو موتور را در یک خط هدایت می‌کند و یک کرم بخش‌بندی‌شده را شبیه‌سازی می‌کند.&lt;/li>
+&lt;li>هر بخش به‌طور مستقل خم می‌شود و کل بدنه با هم برای حرکت رو به جلو کار می‌کند.&lt;/li>
+&lt;/ul>
+&lt;h3 id="چیدمان-یادگیری">چیدمان یادگیری&lt;/h3>
+&lt;p>حالت، نمایشی فشرده از زاویه سرووهاست. کنش، مجموعه زاویه‌های هدف برای گام زمانی بعد است. پاداش، ربات را به حداکثر جابه‌جایی رو به جلو در عین حفظ محدودیت‌های ایمن مفاصل سوق می‌دهد:&lt;/p></description></item></channel></rss>

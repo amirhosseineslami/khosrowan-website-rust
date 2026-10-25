@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Control-Systems on خسروان</title><link>/categories/control-systems/</link><description>Recent content in Control-Systems on خسروان</description><generator>Hugo</generator><language>fa</language><lastBuildDate>Thu, 22 Oct 2026 00:00:00 +0000</lastBuildDate><atom:link href="/categories/control-systems/feed.xml" rel="self" type="application/rss+xml"/><item><title>چرا سنجش حداقلی در کنترل آرایش اهمیت دارد</title><link>/blog/why-minimal-sensing-matters-in-formation-control/</link><pubDate>Thu, 22 Oct 2026 00:00:00 +0000</pubDate><guid>/blog/why-minimal-sensing-matters-in-formation-control/</guid><description>&lt;h2 id="استدلال">استدلال&lt;/h2>
+&lt;p>بسیاری از کنترل ربات فرض می‌کند حس غنی وجود دارد: بازخورد کامل حالت، GPS و ارتباط قابل‌اعتماد. اما استقرارهای واقعی — گروه‌ها، ناوگان ارزان، ربات‌های موجود در محیط‌های بدون GNSS — اغلب هیچ‌کدام را ندارند.&lt;/p>
+&lt;h2 id="سنجش-حداقلی">سنجش حداقلی&lt;/h2>
+&lt;p>«سنجش حداقلی» یعنی انجام یک وظیفه با کمترین اطلاعات ممکن. برای کنترل آرایش این می‌تواند به این معنا باشد:&lt;/p>
+&lt;ul>
+&lt;li>بدون مکانیابی خارجی — فقط اندازه‌گیری‌های محلی و نسبی (مثلاً فاصله و جهت به همسایه‌ها).&lt;/li>
+&lt;li>بدون هماهنگ‌کننده مرکزی — تصمیمات محلی و غیرمتمرکزند.&lt;/li>
+&lt;li>ارتباط محدود — یا اصلاً هیچ، اتکای کامل به ادراک محلی.&lt;/li>
+&lt;/ul>
+&lt;h2 id="چرا-اهمیت-دارد">چرا اهمیت دارد&lt;/h2>
+&lt;ol>
+&lt;li>&lt;strong>هزینه&lt;/strong> — سنسورهای کمتر و ارزان‌تر ناوگان‌ها را مقرون به صرفه می‌کند.&lt;/li>
+&lt;li>&lt;strong>تاب‌آوری&lt;/strong> — وابستگی‌های کمتر یعنی نقاط شکست منفرد کمتر.&lt;/li>
+&lt;li>&lt;strong>ایمنی&lt;/strong> — رفتار ایمن و غیرمتمرکز به از دست رفتن یک ربات یا یک پیوند مقاوم است.&lt;/li>
+&lt;/ol>
+&lt;h2 id="پرسش-باز">پرسش باز&lt;/h2>
+&lt;p>چگونه &lt;em>ایمنی&lt;/em> (بدون برخورد، خطای محدود) را تضمین می‌کنیم در حالی که هر ربات فقط یک برش از جهان را می‌بیند؟ آن تنش بین اطلاعات محلی و تضمین‌های سراسری، به نظر من، جذاب‌ترین مسئله این حوزه است — و مسئله‌ای است که در حال حاضر روی آن کار می‌کنم.&lt;/p></description></item></channel></rss>

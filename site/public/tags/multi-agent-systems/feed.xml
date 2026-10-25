@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Multi-Agent-Systems on خسروان</title><link>/tags/multi-agent-systems/</link><description>Recent content in Multi-Agent-Systems on خسروان</description><generator>Hugo</generator><language>fa</language><lastBuildDate>Sun, 18 Oct 2026 00:00:00 +0000</lastBuildDate><atom:link href="/tags/multi-agent-systems/feed.xml" rel="self" type="application/rss+xml"/><item><title>یادداشت‌هایی درباره یادگیری تقویتی چندعاملی</title><link>/blog/notes-on-multi-agent-reinforcement-learning/</link><pubDate>Sun, 18 Oct 2026 00:00:00 +0000</pubDate><guid>/blog/notes-on-multi-agent-reinforcement-learning/</guid><description>&lt;h2 id="چرا-یادگیری-تقویتی-چندعاملی-دشوار-است">چرا یادگیری تقویتی چندعاملی دشوار است&lt;/h2>
+&lt;p>در یادگیری تقویتی تک‌عاملی، محیط در حالی که عامل یاد می‌گیرد ایستاست. با داشتن چند عامل، محیط هر عامل شامل &lt;em>سایر عوامل&lt;/em> نیز می‌شود که آن‌ها هم در حال یادگیری‌اند. این ناپایداری، دشواری اصلی است.&lt;/p>
+&lt;h2 id="رویکردها">رویکردها&lt;/h2>
+&lt;ul>
+&lt;li>&lt;strong>یادگیری مستقل&lt;/strong> — هر عامل دیگران را بخشی از محیط در نظر می‌گیرد. ساده اما شکننده: وقتی دیگران تغییر می‌کنند، «محیط» شما زیر پایتان تغییر می‌کند.&lt;/li>
+&lt;li>&lt;strong>آموزش متمرکز، اجرای غیرمتمرکز&lt;/strong> — عامل‌ها در طول آموزش اطلاعات را به اشتراک می‌گذارند (مثلاً یک منتقد مرکزی) اما هنگام اجرا بر اساس مشاهده‌های محلی عمل می‌کنند. این نقطه مطلوب برای بسیاری از وظایف رباتیک است.&lt;/li>
+&lt;li>&lt;strong>ارتباطات&lt;/strong> — اجازه مبادله پیام بین عامل‌ها، یادگیری آنچه &lt;em>ارتباط&lt;/em> برقرار شود در کنار آنچه &lt;em>انجام&lt;/em> شود.&lt;/li>
+&lt;/ul>
+&lt;h2 id="مرتبط-با-پژوهش-من">مرتبط با پژوهش من&lt;/h2>
+&lt;p>کنترل آرایش ربات‌های متحرک به‌طور طبیعی یک مسئله چندعاملی است. هر ربات باید آرایش را حفظ کند و همزمان از برخورد و از دست رفتن پیام جلوگیری کند. ایده‌های یادگیری تقویتی چندعاملی — منتقدهای مرکزی و شکل‌دهی پاداش برای هماهنگی — مستقیماً به این تنظیم نگاشت می‌شوند.&lt;/p></description></item></channel></rss>

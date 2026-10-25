@@ -5,6 +5,15 @@ theme = "khosrowan"
 defaultContentLanguage = "fa"
 enableRobotsTXT = false
 
+[outputs]
+  home = ["HTML", "RSS"]
+
+[outputFormats]
+  [outputFormats.RSS]
+    mediatype = "application/rss+xml"
+    baseName = "feed"
+    isPlainText = true
+
 [params]
   title_en = "Khosrowan"
   subtitle = "مهندسی برق و کنترل · هوش مصنوعی و رباتیک"
